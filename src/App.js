@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import PhonoChangeApplier from './PhonoChangeApplier';
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
       <header className="App-header">
         Phono Change Applier
       </header>
+      <PhonoChangeApplier />
     </div>
   );
 }
