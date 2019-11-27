@@ -18,10 +18,10 @@ describe('Features', () => {
   it('renders the correct subtitle', () => {
     const { getByTestId } = render(<Features />);
     expect(getByTestId('Features')).toHaveTextContent('Phonetic Features');
-  })
+  });
   
-  // it('renders lexicon from state', () => {
-  //   const { getByTestId } = render(<Features />);
-  //   expect(getByTestId('Features'));
-  // })
-})
+  it('renders features from state', () => {
+    const { getByTestId } = render(<Features phonemes={ [{n:[ 'nasal', 'occlusive' ]}] }/>);
+    expect(getByTestId('Features-list')).toContainHTML('<li>[+ nasal] = n</li><li>[+ occlusive] = n</li>');
+  });
+});

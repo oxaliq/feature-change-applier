@@ -5,12 +5,17 @@ import ProtoLang from './components/ProtoLang';
 import Features from './components/Features';
 
 const PhonoChangeApplier = () => {
-  const [ lexicon, setLexicon ] = useState(['one'])
+  const [ lexicon, setLexicon ] = useState(['one']);
+  const [ phonemes, setPhonemes ] = useState(
+    [ 
+      { phoneme: [ 'feature' ] } 
+    ]
+  );
 
   return (
     <div className="PhonoChangeApplier" data-testid="PhonoChangeApplier">
       <ProtoLang lexicon={lexicon} setLexicon={setLexicon}/>
-      <Features />
+      <Features phonemes={phonemes} setPhonemes={setPhonemes}/>
     </div>
   );
 }
