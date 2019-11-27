@@ -12,9 +12,16 @@ it('renders ProtoLang without crashing', () => {
   ReactDOM.unmountComponentAtNode(div);
 });
 
+
+
 describe('ProtoLang', () => {
-  it('renders the correct title', () => {
+  it('renders the correct subtitle', () => {
     const { getByTestId } = render(<ProtoLang />);
     expect(getByTestId('ProtoLang')).toHaveTextContent('Proto Language Lexicon');
+  })
+  
+  it('renders lexicon from state', () => {
+    const { getByTestId } = render(<ProtoLang lexicon={['one']}/>);
+    expect(getByTestId('ProtoLang-Lexicon')).toHaveFormValues({lexicon: 'one'});
   })
 })

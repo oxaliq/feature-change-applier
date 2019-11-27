@@ -5,9 +5,7 @@ import PhonoChangeApplier from './PhonoChangeApplier';
 function App() {
   return (
     <div className="App" data-testid="App">
-      <header className="App-header">
-        Phono Change Applier
-      </header>
+      <h1>Phono Change Applier</h1>
       <PhonoChangeApplier />
     </div>
   );
