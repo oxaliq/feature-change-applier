@@ -6,10 +6,8 @@ import Features from './components/Features';
 
 const PhonoChangeApplier = () => {
   const [ lexicon, setLexicon ] = useState(['one']);
-  const [ phonemes, setPhonemes ] = useState(
-    [ 
+  const [ phonemes, setPhonemes ] = useState( 
       { phoneme: [ 'feature' ] } 
-    ]
   );
 
   return (

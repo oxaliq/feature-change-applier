@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Features from './Features';
 import renderer from 'react-test-renderer';
 import { exportAllDeclaration } from '@babel/types';
-import {render} from '@testing-library/react';
+import {render, fireEvent} from '@testing-library/react';
 import extendExpect from '@testing-library/jest-dom/extend-expect'
 
 it('renders Features without crashing', () => {
@@ -20,8 +20,22 @@ describe('Features', () => {
     expect(getByTestId('Features')).toHaveTextContent('Phonetic Features');
   });
   
-  it('renders features from state', () => {
+  it('renders features from phonemes hook', () => {
     const { getByTestId } = render(<Features phonemes={ [{n:[ 'nasal', 'occlusive' ]}] }/>);
     expect(getByTestId('Features-list')).toContainHTML('<li>[+ nasal] = n</li><li>[+ occlusive] = n</li>');
   });
+
+  it('adds new features and new phonemes from features and newPhonemes hooks', () => {
+    const { getByTestId } = render(<Features />);
+    getByTestId('Features-form')
+  })
+
+  it('adds features from form to state', () => {
+    const phonemes = [];
+    const setPhonemes = jest.fn()
+    const { getByTestId } = render(<Features phonemes={phonemes} setPhonemes={setPhonemes}/>);
+    // mock function for adding feature to state ([+ nasal] = n)
+    
+    expect(getByTestId('Features-list')).toContainHTML('<li>[+ nasal] = n</li>');
+  })
 });
