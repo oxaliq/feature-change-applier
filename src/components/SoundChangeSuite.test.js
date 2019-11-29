@@ -15,11 +15,11 @@ it('renders SoundChangeSuite without crashing', () => {
 describe('SoundChangeSuite', () => {
   it('renders the correct subtitle', () => {
     const { getByTestId } = render(<SoundChangeSuite epoch={{'Epoch Name': ['sound change rule']}}/>);
-    expect(getByTestId('SoundChangeSuite')).toHaveTextContent('Epoch Name');
+    expect(getByTestId('Epoch Name_SoundChangeSuite')).toHaveTextContent('Epoch Name');
   });
 
   it('renders a suite of soundchanges', () => {
-    const { getByTestId } = render(<SoundChangeSuite />);
-    
+    const { getByTestId } = render(<SoundChangeSuite epoch={{'Epoch Name': ['sound>change/environment']}}/>);
+    expect(getByTestId('Epoch Name_SoundChangeSuite_changes')).toHaveFormValues({changes: 'sound>change/environment'})
   })
 });
