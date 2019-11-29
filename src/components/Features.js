@@ -12,24 +12,27 @@ const parseFeaturesFromPhonemeObject = phonemeObject => {
   return Object.keys(featureMap).map(feature => <li key={`feature__${feature}`}>{`[+ ${feature}] = `}{featureMap[feature].join('|')}</li>);
 }
 
+const getPhonemesFromFeatureSubmission = (props, newPhonemes, feature) => {
+  let newPhonemeObject = newPhonemes.split('/').reduce((phonemeObject, newPhoneme) => {
+    newPhoneme = newPhoneme.trim();
+    phonemeObject = phonemeObject[newPhoneme]
+      ? {...phonemeObject, [newPhoneme]: [...phonemeObject[newPhoneme], feature]}
+      : {...phonemeObject, [newPhoneme]: [feature]}
+    return phonemeObject;
+  }, {...props.phonemes})
+  return newPhonemeObject;
+}
+
 const Features = (props) => {
   const [feature, setFeature] = useState('nasal')
   const [newPhonemes, setNewPhonemes] = useState('n / m / ŋ')
-
+  
   const newFeaturesSubmit = e => {
     e.preventDefault();
     
-    let newPhonemeObject = newPhonemes.split('/').reduce((phonemeObject, newPhoneme) => {
-      // console.log([...phonemeObject[newPhoneme], feature])
-      newPhoneme = newPhoneme.trim();
-      phonemeObject = phonemeObject[newPhoneme]
-        ? {...phonemeObject, [newPhoneme]: [...phonemeObject[newPhoneme], feature]}
-        : {...phonemeObject, [newPhoneme]: [feature]}
-      return phonemeObject;
-    }, {...props.phonemes})
-    
+    let newPhonemeObject = getPhonemesFromFeatureSubmission(props, newPhonemes, feature);
     props.setPhonemes(newPhonemeObject);
-
+    
     setFeature('');
     setNewPhonemes('');
   }
