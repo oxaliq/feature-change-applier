@@ -3,7 +3,7 @@ import './Epochs.scss';
 
 import SoundChangeSuite from './SoundChangeSuite';
 
-const Epochs = () => {
+const Epochs = props => {
   return (
     <div className="Epochs" data-testid="Epochs">
       <h3>Sound Change Epochs</h3>

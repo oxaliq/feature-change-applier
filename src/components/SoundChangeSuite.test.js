@@ -14,7 +14,7 @@ it('renders SoundChangeSuite without crashing', () => {
 
 describe('SoundChangeSuite', () => {
   it('renders the correct subtitle', () => {
-    const { getByTestId } = render(<SoundChangeSuite />);
+    const { getByTestId } = render(<SoundChangeSuite epoch={{'Epoch Name': ['sound change rule']}}/>);
     expect(getByTestId('SoundChangeSuite')).toHaveTextContent('Epoch Name');
   });
 
