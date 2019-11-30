@@ -4,6 +4,7 @@ import './PhonoChangeApplier.scss';
 import ProtoLang from './components/ProtoLang';
 import Features from './components/Features';
 import Epochs from './components/Epochs';
+import Options from './components/Options';
 
 const PhonoChangeApplier = () => {
   const [ lexicon, setLexicon ] = useState(['one']);
@@ -17,6 +18,7 @@ const PhonoChangeApplier = () => {
       <ProtoLang lexicon={lexicon} setLexicon={setLexicon}/>
       <Features phonemes={phonemes} setPhonemes={setPhonemes}/>
       <Epochs epochs={epochs} setEpochs={setEpochs}/>
+      <Options />
     </div>
   );
 }

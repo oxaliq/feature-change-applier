@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Features from './Features';
 import renderer from 'react-test-renderer';
-import { exportAllDeclaration } from '@babel/types';
 import {render, fireEvent} from '@testing-library/react';
 import extendExpect from '@testing-library/jest-dom/extend-expect'
 
