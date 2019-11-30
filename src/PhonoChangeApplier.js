@@ -12,13 +12,14 @@ const PhonoChangeApplier = () => {
       { phoneme: [ 'feature' ] } 
   );
   const [ epochs, setEpochs ] = useState([{name: 'epoch 1', changes:['[+ feature]>[- feature]/_#']}]);
+  const [ options, setOptions ] = useState({output: 'default', save: false})
 
   return (
     <div className="PhonoChangeApplier" data-testid="PhonoChangeApplier">
       <ProtoLang lexicon={lexicon} setLexicon={setLexicon}/>
       <Features phonemes={phonemes} setPhonemes={setPhonemes}/>
       <Epochs epochs={epochs} setEpochs={setEpochs}/>
-      <Options />
+      <Options options={options} setOptions={setOptions}/>
     </div>
   );
 }
