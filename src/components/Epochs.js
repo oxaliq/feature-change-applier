@@ -28,7 +28,14 @@ const Epochs = props => {
   return (
     <div className="Epochs" data-testid="Epochs">
       <h3>Sound Change Epochs</h3>
-      {props.epochs ? props.epochs.map((epoch, idx) => <SoundChangeSuite key={`epochname-${idx}`} epochIndex={idx} epoch={epoch} updateEpoch={updateEpoch} removeEpoch={removeEpoch}/>) : <></>}
+      {props.epochs 
+        ? props.epochs.map((epoch, idx) => {
+        return <SoundChangeSuite 
+          key={`epochname-${idx}`} epochIndex={idx} epoch={epoch} 
+          updateEpoch={updateEpoch} removeEpoch={removeEpoch}
+          error={props.errors[epoch.name]}
+        />}) 
+        : <></>}
       <form onSubmit={e=>addEpoch(e, props)}>
         <input type="submit" name="add-epoch" value="Add Epoch" ></input>
       </form>

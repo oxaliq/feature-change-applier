@@ -23,6 +23,9 @@ const SoundChangeSuite = props => {
           )} 
         ></textarea>
         
+        {props.error 
+          ? <p><span className="error-message">{`Formatting errors in line(s) ${props.error.join(', ')}`}</span></p>
+          : <></>}
         <textarea 
           name="changes" 
           id="" cols="30" rows="10" 

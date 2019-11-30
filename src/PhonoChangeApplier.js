@@ -15,11 +15,12 @@ const PhonoChangeApplier = () => {
   const [ epochs, setEpochs ] = useState([{name: 'epoch 1', changes:['[+ feature]>[- feature]/_#']}]);
   const [ options, setOptions ] = useState({output: 'default', save: false})
   const [ results, setResults ] = useState([])
+  const [ errors, setErrors ] = useState({})
   
   const runChanges = e => {
     e.preventDefault();
-    // validate rules
-    let error = epochs.reduce((errorObject, epoch) => {
+
+    let ruleError = epochs.reduce((errorObject, epoch) => {
       epoch.changes.map((change, index) => {
         if (!change.match(/>.*\/.*_/)) errorObject[epoch.name] 
           ? errorObject[epoch.name].push(index) 
@@ -27,16 +28,18 @@ const PhonoChangeApplier = () => {
       })
       return errorObject;
     }, {})
-    console.log(error)
-    // validate lexicon
     
+    if (Object.entries(ruleError).length) return setErrors(ruleError)
+    setErrors({});
+    
+    // setResults
   }
 
   return (
     <div className="PhonoChangeApplier" data-testid="PhonoChangeApplier">
       <ProtoLang lexicon={lexicon} setLexicon={setLexicon}/>
       <Features phonemes={phonemes} setPhonemes={setPhonemes}/>
-      <Epochs epochs={epochs} setEpochs={setEpochs}/>
+      <Epochs epochs={epochs} setEpochs={setEpochs} errors={errors}/>
       <Options options={options} setOptions={setOptions} runChanges={runChanges}/>
       <Output results={results} setResults={setResults}/>
     </div>
