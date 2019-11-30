@@ -6,7 +6,7 @@ import SoundChangeSuite from './SoundChangeSuite';
 const addEpoch = (e, props) => {
   e.preventDefault()
   let index = props.epochs.length + 1;
-  props.setEpochs([...props.epochs, {name: `epoch ${index}`, changes:['[+ feature]>[+ new feature]/[]_[]']}])
+  props.setEpochs([...props.epochs, {name: `epoch ${index}`, changes:['[+ feature]>[- feature]/_#']}])
 }
 
 
