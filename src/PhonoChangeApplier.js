@@ -19,9 +19,15 @@ const PhonoChangeApplier = () => {
   const runChanges = e => {
     e.preventDefault();
     // validate rules
-    console.log(epochs.forEach(epoch => {
-      if (epoch.changes.find(change => !change.match(/>.*\/.*_/))) console.log({error: 'improper rule formatting'});
-    }))
+    let error = epochs.reduce((errorObject, epoch) => {
+      epoch.changes.map((change, index) => {
+        if (!change.match(/>.*\/.*_/)) errorObject[epoch.name] 
+          ? errorObject[epoch.name].push(index) 
+          : errorObject[epoch.name] = [index]
+      })
+      return errorObject;
+    }, {})
+    console.log(error)
     // validate lexicon
     
   }
