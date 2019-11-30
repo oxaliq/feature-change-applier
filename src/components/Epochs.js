@@ -7,7 +7,7 @@ const Epochs = props => {
   return (
     <div className="Epochs" data-testid="Epochs">
       <h3>Sound Change Epochs</h3>
-      <SoundChangeSuite />
+      {props.epochs ? props.epochs.map(epoch => <SoundChangeSuite key={epoch.name} epoch={epoch}/>) : <></>}
     </div>
   );
 }

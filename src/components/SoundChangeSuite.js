@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './SoundChangeSuite.scss';
 
 const SoundChangeSuite = props => {
-  let epochName = props.epoch ? Object.keys(props.epoch)[0] : 'Changes';
+  const [ epoch, setEpoch ] = useState(props.epoch ? props.epoch : {name:'', changes:['']})
   return (
-    <div className="SoundChangeSuite" data-testid={`${epochName}_SoundChangeSuite`}>
-      <h4>{epochName}</h4>
-      <form className="SoundChangeSuite__form" data-testid={`${epochName}_SoundChangeSuite_changes`}>
-        <textarea name="changes" id="" cols="30" rows="10" value={props.epoch ? props.epoch[epochName][0] : ''} onChange={e=>e.target.value}></textarea>
+    <div className="SoundChangeSuite" data-testid={`${epoch.name}_SoundChangeSuite`}>
+      <h4>{epoch.name}</h4>
+      <form className="SoundChangeSuite__form" data-testid={`${epoch.name}_SoundChangeSuite_changes`}>
+        <textarea name="epoch" id="" cols="30" rows="1" value={epoch.name} onChange={e=>setEpoch({...epoch, name:e.target.value})} ></textarea>
+        <textarea name="changes" id="" cols="30" rows="10" 
+          value={epoch.changes.join('\n')} 
+          onChange={e=>setEpoch({...epoch, changes:e.target.value.split(/\n/)})}
+        ></textarea>
       </form>
     </div>
   );
