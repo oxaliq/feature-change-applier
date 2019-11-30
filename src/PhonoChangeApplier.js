@@ -14,6 +14,7 @@ const PhonoChangeApplier = () => {
   );
   const [ epochs, setEpochs ] = useState([{name: 'epoch 1', changes:['[+ feature]>[- feature]/_#']}]);
   const [ options, setOptions ] = useState({output: 'default', save: false})
+  const [ results, setResults ] = useState([])
   
   const runChanges = e => {
     e.preventDefault();
@@ -26,7 +27,7 @@ const PhonoChangeApplier = () => {
       <Features phonemes={phonemes} setPhonemes={setPhonemes}/>
       <Epochs epochs={epochs} setEpochs={setEpochs}/>
       <Options options={options} setOptions={setOptions} runChanges={runChanges}/>
-      <Output />
+      <Output results={results} setResults={setResults}/>
     </div>
   );
 }
