@@ -13,6 +13,9 @@ const SoundChangeSuite = props => {
           onChange={e=>setEpoch({...epoch, changes:e.target.value.split(/\n/)})}
         ></textarea>
       </form>
+      <form onSubmit={e=>props.removeEpoch(e, epoch.name)}>
+        <input type="submit" name="remove-epoch" value={`remove ${epoch.name}`}></input>
+      </form>
     </div>
   );
 }

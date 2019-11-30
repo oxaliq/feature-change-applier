@@ -10,7 +10,7 @@ const PhonoChangeApplier = () => {
   const [ phonemes, setPhonemes ] = useState( 
       { phoneme: [ 'feature' ] } 
   );
-  const [ epochs, setEpochs ] = useState([{name: 'epoch one', changes:['sound>change/environment']}]);
+  const [ epochs, setEpochs ] = useState([{name: 'epoch 1', changes:['[+ feature]>[+ new feature]/[]_[]']}]);
 
   return (
     <div className="PhonoChangeApplier" data-testid="PhonoChangeApplier">
