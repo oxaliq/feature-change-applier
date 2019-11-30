@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Options.scss';
+import ls from 'local-storage';
 
 const Options = props => {
+  const [ load, setLoad ] = useState('');
+
   const handleRadioChange = e => {
     props.setOptions({...props.options, [e.target.name]: e.target.id})
   }
@@ -9,7 +12,6 @@ const Options = props => {
   const handleCheckChange = e => {
     props.setOptions({...props.options, [e.target.name]: e.target.checked})
   }
-
   return (
     <div className="Options" data-testid="Options">
       <h3>Modeling Options</h3>
@@ -52,6 +54,21 @@ const Options = props => {
         <label htmlFor="save">Store session on Run</label>
         
         <input type="submit"></input>
+      </form>
+
+
+      <form onSubmit={() => {}}>
+        <label>
+          Load from a prior run:
+          <select value={load} onChange={e=>setLoad(e.target.value)}>
+            {localStorage.phonoChange 
+              ? ls.get('phonoChange').map(priorRun => {
+                return <option key={priorRun.name} value={priorRun.name}>{priorRun.name}</option>
+              }
+            ) : <></>}
+          </select>
+        </label>
+        <input type="submit" value="Submit" />
       </form>
     </div>
   );
