@@ -15,7 +15,8 @@ const Options = props => {
   return (
     <div className="Options" data-testid="Options">
       <h3>Modeling Options</h3>
-      <form onSubmit={()=>{}} data-testid="Options-form">
+
+      <form onSubmit={e=>props.runChanges(e)} data-testid="Options-form">
         
         {/* <h5>Output</h5> */}
 
@@ -53,7 +54,7 @@ const Options = props => {
         />
         <label htmlFor="save">Store session on Run</label>
         
-        <input type="submit"></input>
+        <input type="submit" value="Run Changes"></input>
       </form>
 
 
