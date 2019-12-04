@@ -32,6 +32,7 @@ const Features = (props) => {
     
     let newPhonemeObject = getPhonemesFromFeatureSubmission(props, newPhonemes, feature);
     props.setPhonemes(newPhonemeObject);
+    if (!props.features || !props.features.includes(feature)) props.setFeatures([...props.features, feature])
     
     setFeature('');
     setNewPhonemes('');
