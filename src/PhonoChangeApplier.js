@@ -23,7 +23,7 @@ const PhonoChangeApplier = () => {
       tʰ: [ 'occlusive', 'plosive', 'obstruent', 'alveolar', 'aspirated' ],
     } 
   );
-  const [ epochs, setEpochs ] = useState([{name: 'epoch 1', changes:['[+ rounded]>[+ unrounded]/_#']}]);
+  const [ epochs, setEpochs ] = useState([{name: 'epoch 1', changes:['[+ rounded]>[- rounded + unrounded]/_#']}]);
   const [ options, setOptions ] = useState({output: 'default', save: false})
   const [ results, setResults ] = useState([])
   const [ errors, setErrors ] = useState({})
@@ -73,17 +73,20 @@ const PhonoChangeApplier = () => {
         }
         startingIndex = index;
       })
+      lexemeBundle.unshift(['#'])
+      lexemeBundle.push(['#'])
       lexicalFeatureBundles.push(lexemeBundle);
     })
+    console.log(lexicalFeatureBundles)
     
     // decompose rules
     let allEpochs = epochs.map(epoch => {
       let ruleBundle = epoch.changes.map(rule => {
         return {
-          input: rule.split('>')[0],
+          input: rule.split('>')[0].replace(/\[|\]|\+/g, '').trim(),
           result: rule.split('>')[1].split('/')[0],
-          preInput: rule.split('/')[1].split('_')[0],
-          postInput: rule.split('/')[1].split('_')[1],
+          preInput: rule.split('/')[1].split('_')[0].replace(/\[|\]|\+/g, '').trim(),
+          postInput: rule.split('/')[1].split('_')[1].replace(/\[|\]|\+/g, '').trim(),
         }
       })
       return {epoch: epoch.name, rules: ruleBundle}
@@ -91,6 +94,19 @@ const PhonoChangeApplier = () => {
 
     console.log(allEpochs)
     // apply sound changes
+    allEpochs.reduce((diachronicLexicon, epoch) => {
+      let startingLexicon = diachronicLexicon.length 
+        ? diachronicLexicon[diachronicLexicon.length - 1]
+        : lexicalFeatureBundles;
+      let currentRules = epoch.rules;
+      let resultingLexicon = startingLexicon.forEach(lexeme => {
+        currentRules.forEach(rule => {
+          let ruleEnvironment = [[rule.preInput], [rule.input], [rule.postInput]];
+          console.log(ruleEnvironment)
+        })
+      })
+      diachronicLexicon.push(resultingLexicon) 
+    },[])
 
     // handle output
   }
