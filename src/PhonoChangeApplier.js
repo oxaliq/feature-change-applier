@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useReducer } from 'react';
 import './PhonoChangeApplier.scss';
 
 // import ls from 'local-storage';
@@ -9,7 +9,15 @@ import Epochs from './components/Epochs';
 import Options from './components/Options';
 import Output from './components/Output';
 
+import {initState, stateReducer} from './reducers/stateReducer';
+
 const PhonoChangeApplier = () => {
+  const [ state, dispatch ] = useReducer(
+    stateReducer,
+    {},
+    initState
+  )
+
   const [ lexicon, setLexicon ] = useState(['mun', 'tʰu', 'tɯm', 'utʰ']);
   const [ phonemes, setPhonemes ] = useState( 
     // ! candidate for trie to avoid situations where >2 graph phonemes 
