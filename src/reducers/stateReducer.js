@@ -1,12 +1,3 @@
-export const initState = () => {
-  return {
-    epochs: [],
-    lexicon: [],
-    phones: {},
-    features: {}
-  }
-}
-
 const addPhones = (phones, phone) => {
   let node = {};
   phone.split('').forEach((graph, index) => {
@@ -110,4 +101,82 @@ export const stateReducer = (state, action) => {
     default:
       return state;
   }
+}
+
+export const initState = () => {
+  const state = {
+    epochs: [
+      {
+        name: 'epoch 1',
+        changes: [
+          '[+ occlusive - nasal]>[+ occlusive nasal]/n_',
+          'at>ta/_#',
+          '[+ sonorant - low rounded high back]>_/_',
+          'nn>nun/_',
+          '[+ nasal][+ obstruent]>[+ nasal obstruent aspirated ]/#_',
+          '[+ sonorant rounded]>[+ sonorant - rounded]/_#'
+        ]
+      }
+    ],
+    lexicon: [
+      'anta', 'anat', 'anət', 'anna', 'tan', 'ənta'
+    ],
+    phones: {
+      a: {
+        grapheme: 'a', features: {
+          sonorant: true, back: true, low: true, high: false, rounded: false
+        }
+      },
+      u: {
+        grapheme: 'u', features: {
+          sonorant: true, back: true, low: false, high: true, rounded: true, 
+        }
+      },
+      ɯ: {
+        grapheme: 'ɯ', features: {
+          sonorant: true, back: true, low: false, high: true, rounded: false,
+        }
+      },
+      ə: {
+        grapheme: 'ə', features: {
+          sonorant: true, low: false, rounded: false, high: false, back: false
+        }
+      },
+      t: {
+        grapheme: 't', features: {
+          occlusive: true, coronal: true, obstruent: true
+        }
+      },
+      n: {
+        grapheme: 'a', features: {
+          sonorant: true, nasal: true, occlusive: true, coronal: true
+        },
+        t: {
+          ʰ: {
+            grapheme: 'ntʰ', features: {
+              occlusive: true, nasal: true, coronal: true, obstruent: true, aspirated: true
+            }
+          }
+        }
+      }
+    },
+    options: {},
+    results: {},
+    errors: {},
+    features: {}
+  };
+  state.features = {
+    sonorant: { positive:[ state.phones.a, state.phones.u, state.phones.ɯ, state.phones.ə, state.phones.n], negative: [] },
+    back: { positive:[ state.phones.a, state.phones.u, state.phones.ɯ ], negative: [ state.phones.ə ] },
+    low: { positive:[ state.phones.a ], negative: [ state.phones.u, state.phones.ɯ, state.phones.ə ] },
+    high: { positive:[ state.phones.u, state.phones.ɯ ], negative: [ state.phones.a, state.phones.ə ] },
+    rounded: { positive:[ state.phones.u ], negative: [ state.phones.a, state.phones.ɯ, state.phones.ə ] },
+    occlusive: { positive:[ state.phones.t, state.phones.n, state.phones.n.t.ʰ ], negative: [] },
+    coronal: { positive:[ state.phones.t, state.phones.n, state.phones.n.t.ʰ ], negative: [] },
+    obstruent: { positive:[ state.phones.t, state.phones.n, state.phones.n.t.ʰ ], negative: [] },
+    nasal: { positive:[ state.phones.n ], negative: [] },
+    aspirated: { positive:[ state.phones.n.t.ʰ ], negative: [] },
+  }
+
+  return state;
 }
