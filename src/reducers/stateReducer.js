@@ -57,6 +57,20 @@ const stateReducer = (state, action) => {
       return {...state, epochs: [...state.epochs, newEpoch]}
     }
 
+    case 'SET_EPOCH': {
+      let mutatedEpochs = state.epochs;
+      let index = [action.value.index]
+
+      mutatedEpochs[index].name = action.value.name 
+        ? action.value.name 
+        : mutatedEpochs[index].name;
+
+      mutatedEpochs[index].changes = action.value.changes 
+        ? action.value.changes 
+        : mutatedEpochs[index].changes;
+      return {...state, epochs: [...mutatedEpochs]}
+    }
+
     case 'ADD_FEATURE': {
       let positivePhones = action.value.positivePhones || [];
       let negativePhones = action.value.negativePhones || [];

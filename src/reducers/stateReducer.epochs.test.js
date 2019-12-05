@@ -20,4 +20,18 @@ describe('Epochs', () => {
     const action = {type: 'ADD_EPOCH', value: { name: 'epoch 2', changes: []}};
     expect(stateReducer(state, action)).toEqual({...state, epochs: [...state.epochs, action.value]})
   })
+  
+  it('epoch name mutation returns new epochs list with mutation', () => {
+    const firstAction = {type: 'ADD_EPOCH', value: { name: 'epoch 2', changes: []}};
+    const secondAction = {type: 'SET_EPOCH', value: { index: 0, name: 'proto-lang'}};
+    const secondState = stateReducer(state, firstAction);
+    expect(stateReducer(secondState, secondAction)).toEqual(
+      {...state, 
+        epochs: [
+          {name: 'proto-lang', changes: []},
+          {name: 'epoch 2', changes: []}
+        ]
+      }
+    );
+  });
 });
