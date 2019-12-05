@@ -1,17 +1,16 @@
 import {stateReducer} from './stateReducer';
 
 describe('Phones', () => {
-  const n_phone = {features: {nasal: true}}
-  const state = {
-    features: [
-      'nasal'
-    ],
-    phones: { n: n_phone }
-  };
-
+  const n_phone = {features: {nasal: true}, grapheme: 'n'};
+  const state = {};
   beforeEach(()=> {
-    state.features = [ 'nasal' ];
     state.phones= { n: n_phone };
+    state.features = {
+      nasal: {
+        positive: [state.phones.n],
+        negative: []
+      }
+    };
   })
 
   it('phones returned unaltered', () => {
@@ -23,7 +22,7 @@ describe('Phones', () => {
     const action = {type: 'ADD_FEATURE', value: {feature: 'anterior', positivePhones: ['n']}};
     expect(stateReducer(state, action)).toEqual(
       {...state, 
-        features:[...state.features, action.value.feature],
+        features:{...state.features, anterior: { positive: [state.phones.n], negative: [] }},
         phones:{...state.phones, n:{...state.phones.n, features: {...state.phones.n.features, anterior: true}}}
       }
       )
@@ -33,8 +32,8 @@ describe('Phones', () => {
     const action = {type: 'ADD_FEATURE', value: {feature: 'sonorant', negativePhones: ['t']}};
     expect(stateReducer(state, action)).toEqual(
       {...state,
-        features:[...state.features, action.value.feature],
-        phones:{...state.phones, t:{features:{sonorant: false}}}
+        features:{...state.features, sonorant: { positive: [], negative: [state.phones.t] }},
+        phones:{...state.phones, t:{features:{sonorant: false}, grapheme: 't'}}
       }
     );
   });
@@ -43,9 +42,9 @@ describe('Phones', () => {
     const action = {type: 'ADD_FEATURE', value: {feature: 'sonorant', positivePhones: ['n'], negativePhones: ['t']}};
     expect(stateReducer(state, action)).toEqual(
       {...state,
-        features:[...state.features, action.value.feature],
+        features:{...state.features, sonorant: { positive: [state.phones.n], negative: [state.phones.t] }},
         phones:{...state.phones, 
-          t:{features:{sonorant: false}},
+          t:{features:{sonorant: false}, grapheme: 't'},
           n:{...state.phones.n, features: {...state.phones.n.features, sonorant: true}}
         }
       }
@@ -56,11 +55,16 @@ describe('Phones', () => {
     const action = {type: 'ADD_FEATURE', value: {feature: 'aspirated', positivePhones: ['ntʰ'], negativePhones: ['n','t']}};
     expect(stateReducer(state, action)).toEqual(
       {...state,
-        features:[...state.features, action.value.feature],
+        features:{...state.features, 
+          aspirated: {
+            positive: [state.phones.n.t.ʰ], 
+            negative: [state.phones.n, state.phones.t]
+          } 
+        },
         phones:{...state.phones, 
-          t:{features:{aspirated: false}},
+          t:{features:{aspirated: false}, grapheme: 't'},
           n:{...state.phones.n, features: {...state.phones.n.features, aspirated: false},
-            t: {ʰ:{features:{aspirated:true}}}
+            t: {ʰ:{features:{aspirated:true}, grapheme: 'ntʰ'}}
           }
         }
       }

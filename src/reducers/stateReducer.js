@@ -5,13 +5,22 @@ const initState = () => {
 }
 
 const addPhones = (phones, phone) => {
-  let node = {}
+  let node = {};
   phone.split('').forEach((graph, index) => {
     if (index) node[graph] = {}
     if (!index && !phones[graph]) phones[graph] = {} 
     node = index === 0 ? phones[graph] : node[graph];
+    if (index === phone.length - 1) node.grapheme = phone;
   })
   return phones;
+}
+
+const findPhone = (phones, phone) => {
+  let node;
+  phone.split('').forEach((graph, index) => {
+    node = index === 0 ? phones[graph] : node[graph];
+  });
+  return node;
 }
 
 const addFeatureToPhone = (phones, phone, featureKey, featureValue) => {
@@ -44,20 +53,38 @@ const stateReducer = (state, action) => {
     }
 
     case 'ADD_FEATURE': {
-      let newFeature = action.value.feature;
       let positivePhones = action.value.positivePhones || [];
       let negativePhones = action.value.negativePhones || [];
+      let newFeatureName = action.value.feature;
       
       let newPhoneObject = [
         ...positivePhones, ...negativePhones
       ].reduce((phoneObject, phone) => addPhones(phoneObject, phone), state.phones)
-      if (positivePhones) positivePhones = positivePhones.reduce(
-        (phoneObject, positivePhone) => addFeatureToPhone(phoneObject, positivePhone, newFeature, true)
-        , newPhoneObject);
-      if (negativePhones) negativePhones = negativePhones.reduce(
-        (phoneObject, positivePhone) => addFeatureToPhone(phoneObject, positivePhone, newFeature, false)
-        , newPhoneObject);
-      return {...state, features:[...state.features, newFeature], phones: newPhoneObject}
+      
+      if (positivePhones) {
+
+        positivePhones.reduce(
+          (phoneObject, positivePhone) => addFeatureToPhone(phoneObject, positivePhone, newFeatureName, true)
+          , newPhoneObject
+        );
+
+        positivePhones = positivePhones.map( positivePhone => findPhone(newPhoneObject, positivePhone) )
+        // console.log(positivePhones)
+      }
+      
+      if (negativePhones) {
+        
+        negativePhones.reduce(
+          (phoneObject, positivePhone) => addFeatureToPhone(phoneObject, positivePhone, newFeatureName, false)
+          , newPhoneObject
+          );
+          
+        negativePhones = negativePhones.map( negativePhone => findPhone(newPhoneObject, negativePhone) )
+        // console.log(negativePhones)
+      }
+      
+      let newFeature = {[action.value.feature]: {positive: positivePhones, negative: negativePhones}};
+      return {...state, features:{...state.features, ...newFeature}, phones: newPhoneObject}
     }
 
     default:
