@@ -52,6 +52,11 @@ const stateReducer = (state, action) => {
       return {...state, lexicon: newLexicon}
     }
 
+    case 'ADD_EPOCH': {
+      let newEpoch = action.value;
+      return {...state, epochs: [...state.epochs, newEpoch]}
+    }
+
     case 'ADD_FEATURE': {
       let positivePhones = action.value.positivePhones || [];
       let negativePhones = action.value.negativePhones || [];
@@ -69,7 +74,6 @@ const stateReducer = (state, action) => {
         );
 
         positivePhones = positivePhones.map( positivePhone => findPhone(newPhoneObject, positivePhone) )
-        // console.log(positivePhones)
       }
       
       if (negativePhones) {
@@ -80,7 +84,6 @@ const stateReducer = (state, action) => {
           );
           
         negativePhones = negativePhones.map( negativePhone => findPhone(newPhoneObject, negativePhone) )
-        // console.log(negativePhones)
       }
       
       let newFeature = {[action.value.feature]: {positive: positivePhones, negative: negativePhones}};
