@@ -5,17 +5,20 @@ const initState = () => {
 }
 
 const addPhones = (phones, phone) => {
+  let node = {}
   phone.split('').forEach((graph, index) => {
-    if (!phones[graph]) phones[graph] = {}
+    if (index) node[graph] = {}
+    if (!index && !phones[graph]) phones[graph] = {} 
+    node = index === 0 ? phones[graph] : node[graph];
   })
   return phones;
 }
 
-const addPositiveFeature = (phones, positivePhone, feature) => {
+const addFeatureToPhone = (phones, phone, featureKey, featureValue) => {
   let node = {}
-  positivePhone.split('').forEach((graph, index) => {
-    node = index === 0 ? node = phones[graph] : node = node[graph];
-    if (index === positivePhone.split('').length - 1) node.features = {...node.features, [feature]: true}
+  phone.split('').forEach((graph, index) => {
+    node = index === 0 ? phones[graph] : node[graph];
+    if (index === phone.split('').length - 1) node.features = {...node.features, [featureKey]: featureValue}
   })
   return phones;
 }
@@ -48,11 +51,12 @@ const stateReducer = (state, action) => {
       let newPhoneObject = [
         ...positivePhones, ...negativePhones
       ].reduce((phoneObject, phone) => addPhones(phoneObject, phone), state.phones)
-      
       if (positivePhones) positivePhones = positivePhones.reduce(
-        (phoneObject, positivePhone) => addPositiveFeature(phoneObject, positivePhone, newFeature)
+        (phoneObject, positivePhone) => addFeatureToPhone(phoneObject, positivePhone, newFeature, true)
         , newPhoneObject);
-
+      if (negativePhones) negativePhones = negativePhones.reduce(
+        (phoneObject, positivePhone) => addFeatureToPhone(phoneObject, positivePhone, newFeature, false)
+        , newPhoneObject);
       return {...state, features:[...state.features, newFeature], phones: newPhoneObject}
     }
 
