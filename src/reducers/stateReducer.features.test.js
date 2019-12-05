@@ -5,7 +5,7 @@ describe('Features', () => {
     features: [
       'low', 'high','back', 'rounded', 'sonorant', 
       'nasal', 'obstruent', 'occlusive', 'plosive', 
-      'prenasalized', 'aspirated', 'coronal', 'anterior'
+      'prenasalized', 'aspirated', 'coronal'
     ]
   };
   
@@ -13,5 +13,10 @@ describe('Features', () => {
     const action = {type: ''};
     expect(stateReducer(state, action)).toBe(state);
   });
+
+  it('feature addition returns new feature list', () => {
+    const action = {type: 'ADD_FEATURE', value: {feature: 'anterior'}};
+    expect(stateReducer(state, action)).toEqual({...state, features:[...state.features, action.value.feature]})
+  })
 
 });

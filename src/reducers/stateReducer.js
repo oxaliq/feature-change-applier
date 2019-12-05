@@ -24,6 +24,11 @@ const stateReducer = (state, action) => {
       return {...state, lexicon: newLexicon}
     }
 
+    case 'ADD_FEATURE': {
+      let newFeature = action.value.feature;
+      return {...state, features:[...state.features, newFeature]}
+    }
+
     default:
       return state;
   }
