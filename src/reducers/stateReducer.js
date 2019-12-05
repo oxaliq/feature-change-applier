@@ -4,6 +4,22 @@ const initState = () => {
   }
 }
 
+const addPhones = (phones, phone) => {
+  phone.split('').forEach((graph, index) => {
+    if (!phones[graph]) phones[graph] = {}
+  })
+  return phones;
+}
+
+const addPositiveFeature = (phones, positivePhone, feature) => {
+  let node = {}
+  positivePhone.split('').forEach((graph, index) => {
+    node = index === 0 ? node = phones[graph] : node = node[graph];
+    if (index === positivePhone.split('').length - 1) node.features = {...node.features, [feature]: true}
+  })
+  return phones;
+}
+
 const stateReducer = (state, action) => {
   switch (action.type) {
     case 'INIT': {
@@ -26,7 +42,18 @@ const stateReducer = (state, action) => {
 
     case 'ADD_FEATURE': {
       let newFeature = action.value.feature;
-      return {...state, features:[...state.features, newFeature]}
+      let positivePhones = action.value.positivePhones || [];
+      let negativePhones = action.value.negativePhones || [];
+      
+      let newPhoneObject = [
+        ...positivePhones, ...negativePhones
+      ].reduce((phoneObject, phone) => addPhones(phoneObject, phone), state.phones)
+      
+      if (positivePhones) positivePhones = positivePhones.reduce(
+        (phoneObject, positivePhone) => addPositiveFeature(phoneObject, positivePhone, newFeature)
+        , newPhoneObject);
+
+      return {...state, features:[...state.features, newFeature], phones: newPhoneObject}
     }
 
     default:
