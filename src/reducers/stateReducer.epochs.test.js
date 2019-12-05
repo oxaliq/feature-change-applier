@@ -34,4 +34,19 @@ describe('Epochs', () => {
       }
     );
   });
+  
+  it('epoch changes mutation returns new epochs list with mutation', () => {
+    const firstAction = {type: 'ADD_EPOCH', value: { name: 'epoch 2', changes: []}};
+    const secondAction = {type: 'SET_EPOCH', value: { index: 0, changes: ['n>t/_#', '[+plosive]>[+nasal -plosive]/_n']}};
+    const secondState = stateReducer(state, firstAction);
+    expect(stateReducer(secondState, secondAction)).toEqual(
+      {...state, 
+        epochs: [
+          {name: 'epoch 1', changes: ['n>t/_#', '[+plosive]>[+nasal -plosive]/_n']},
+          {name: 'epoch 2', changes: []}
+        ]
+      }
+    );
+  });
+
 });

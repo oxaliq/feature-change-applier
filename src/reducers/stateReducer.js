@@ -1,6 +1,9 @@
-const initState = () => {
+export const initState = () => {
   return {
-
+    epochs: [],
+    lexicon: [],
+    phones: {},
+    features: {}
   }
 }
 
@@ -32,7 +35,7 @@ const addFeatureToPhone = (phones, phone, featureKey, featureValue) => {
   return phones;
 }
 
-const stateReducer = (state, action) => {
+export const stateReducer = (state, action) => {
   switch (action.type) {
     case 'INIT': {
       return initState();
@@ -108,5 +111,3 @@ const stateReducer = (state, action) => {
       return state;
   }
 }
-
-module.exports = {initState, stateReducer}
