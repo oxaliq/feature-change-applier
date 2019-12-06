@@ -26,6 +26,32 @@ const addFeatureToPhone = (phones, phone, featureKey, featureValue) => {
   return phones;
 }
 
+const findFeatures = (phones, lexeme) => {
+  let featureBundle = []
+  let lastIndex = lexeme.length - 1;
+  let node = {};
+  [...lexeme].forEach((graph, index) => {
+    if (!index) return node = phones[graph]
+    if (index === lastIndex) return node[graph] 
+      ? featureBundle.push(node[graph])
+      : featureBundle.push(node, phones[graph])
+    if (!node[graph] && node.features) {
+      featureBundle.push(node)
+      return node = phones[graph]
+    }
+    if (!node[graph])
+    return node = node[graph]
+  })
+  return featureBundle;
+}
+
+const decomposeRule = rule => {
+  let decomposedChange = rule.split('>');
+  decomposedChange = [decomposedChange[0], ...decomposedChange[1].split('/')]
+  decomposedChange = [decomposedChange[0], decomposedChange[1], ...decomposedChange[2].split('_')];
+  return [...decomposedChange];
+}
+
 export const stateReducer = (state, action) => {
   switch (action.type) {
     case 'INIT': {
@@ -98,13 +124,41 @@ export const stateReducer = (state, action) => {
       return {...state, features:{...state.features, ...newFeature}, phones: newPhoneObject}
     }
 
+    case 'RUN': {
+      // ! one epoch only
+      // rule 0 '[+ occlusive - nasal]>[+ occlusive nasal]/n_'
+      let ruleBundle = state.epochs[0].changes;
+      ruleBundle = ruleBundle.map(rule => decomposeRule(rule))
+
+      ruleBundle.map(rule => {
+        rule.forEach(position => {
+          console.log(position)
+        })
+      })
+
+      let featurePhoneBundle = state.lexicon.map(lexeme => findFeatures(state.phones, lexeme))
+      
+      console.log(featurePhoneBundle)
+      ruleBundle.forEach(rule => {
+        featurePhoneBundle.map(featurePhone => {
+          // if (findRules(featurePhone, )
+        })
+      })
+
+      let results = [];
+      return {...state, results: { pass: state.epochs[0].name, results } }
+    }
+
     default:
       return state;
   }
 }
 
-export const initState = () => {
+export const initState = changesArgument => {
   const state = {
+    lexicon: [
+      'anta', 'anat', 'anət', 'anna', 'tan', 'ənta'
+    ],
     epochs: [
       {
         name: 'epoch 1',
@@ -117,9 +171,6 @@ export const initState = () => {
           '[+ sonorant rounded]>[+ sonorant - rounded]/_#'
         ]
       }
-    ],
-    lexicon: [
-      'anta', 'anat', 'anət', 'anna', 'tan', 'ənta'
     ],
     phones: {
       a: {
@@ -145,18 +196,16 @@ export const initState = () => {
       t: {
         grapheme: 't', features: {
           occlusive: true, coronal: true, obstruent: true
+        },
+        ʰ: {
+          grapheme: 'tʰ', features: {
+            occlusive: true, coronal: true, obstruent: true, aspirated: true
+          }
         }
       },
       n: {
-        grapheme: 'a', features: {
+        grapheme: 'n', features: {
           sonorant: true, nasal: true, occlusive: true, coronal: true
-        },
-        t: {
-          ʰ: {
-            grapheme: 'ntʰ', features: {
-              occlusive: true, nasal: true, coronal: true, obstruent: true, aspirated: true
-            }
-          }
         }
       }
     },
@@ -171,12 +220,14 @@ export const initState = () => {
     low: { positive:[ state.phones.a ], negative: [ state.phones.u, state.phones.ɯ, state.phones.ə ] },
     high: { positive:[ state.phones.u, state.phones.ɯ ], negative: [ state.phones.a, state.phones.ə ] },
     rounded: { positive:[ state.phones.u ], negative: [ state.phones.a, state.phones.ɯ, state.phones.ə ] },
-    occlusive: { positive:[ state.phones.t, state.phones.n, state.phones.n.t.ʰ ], negative: [] },
-    coronal: { positive:[ state.phones.t, state.phones.n, state.phones.n.t.ʰ ], negative: [] },
-    obstruent: { positive:[ state.phones.t, state.phones.n, state.phones.n.t.ʰ ], negative: [] },
+    occlusive: { positive:[ state.phones.t, state.phones.n, state.phones.t.ʰ ], negative: [] },
+    coronal: { positive:[ state.phones.t, state.phones.n, state.phones.t.ʰ ], negative: [] },
+    obstruent: { positive:[ state.phones.t, state.phones.n, state.phones.t.ʰ ], negative: [] },
     nasal: { positive:[ state.phones.n ], negative: [] },
-    aspirated: { positive:[ state.phones.n.t.ʰ ], negative: [] },
+    aspirated: { positive:[ state.phones.t.ʰ ], negative: [] },
   }
+
+  if(changesArgument > -1) state.epochs[0].changes = state.epochs[0].changes.splice(changesArgument, 1)
 
   return state;
 }

@@ -3,7 +3,7 @@ import {stateReducer, initState} from './stateReducer';
 describe('Results', () => {
   let state = {};
   beforeEach(()=> {
-    state = initState();
+    state = {};
   })
 
   it('results returned unaltered', () => {
@@ -11,8 +11,15 @@ describe('Results', () => {
     expect(stateReducer(state, action)).toBe(state);
   });
 
-  it('results returned from test cases', () => {
-    
-  })
+  it('results returned from first sound change rule', () => {
+    const action = {type: 'RUN'};
+    state = initState(0)
+    expect(stateReducer(state, action).results).toEqual({
+      pass: 'epoch 1',
+      results: [
+        'anna', 'anat', 'anət', 'anna', 'tan', 'ənna'
+      ]
+    })
+  });
 
 });
