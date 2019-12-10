@@ -1,4 +1,24 @@
-const addPhones = (phones, phone) => {
+// @flow
+type stateType = {
+  lexicon: Array<?string>,
+  epochs: Array<?{name: string, changes: Array<string>}>,
+  phones: {[key: string]: phoneType},
+  options: {},
+  results: {},
+  errors: {},
+  features: featureType
+}
+
+type phoneType = {
+  grapheme: string,
+  features: {[key: string]: boolean}
+}
+
+type featureType = {
+  [key: string]: {[key: string]: Array<phoneType>}
+}
+
+const addPhones = (phones: {}, phone: string): {} => {
   let node = {};
   phone.split('').forEach((graph, index) => {
     if (index) node[graph] = {}
@@ -9,24 +29,27 @@ const addPhones = (phones, phone) => {
   return phones;
 }
 
-const findPhone = (phones, phone) => {
-  let node;
+const findPhone = (phones: {}, phone: string): {} => {
+  let node = {};
   phone.split('').forEach((graph, index) => {
     node = index === 0 ? phones[graph] : node[graph];
   });
   return node;
 }
 
-const addFeatureToPhone = (phones, phone, featureKey, featureValue) => {
-  let node = {}
-  phone.split('').forEach((graph, index) => {
-    node = index === 0 ? phones[graph] : node[graph];
-    if (index === phone.split('').length - 1) node.features = {...node.features, [featureKey]: featureValue}
-  })
-  return phones;
+const addFeatureToPhone = (
+    phones: {}, phone: string, featureKey: string, featureValue: boolean
+  ): {} => 
+  {
+    let node = {}
+    phone.split('').forEach((graph, index) => {
+      node = index === 0 ? phones[graph] : node[graph];
+      if (index === phone.split('').length - 1) node.features = {...node.features, [featureKey]: featureValue}
+    })
+    return phones;
 }
 
-const findFeatures = (phones, lexeme) => {
+const findFeatures = (phones: {}, lexeme:string): [] => {
   let featureBundle = []
   let lastIndex = lexeme.length - 1;
   let node = {};
@@ -45,14 +68,14 @@ const findFeatures = (phones, lexeme) => {
   return featureBundle;
 }
 
-const decomposeRule = rule => {
+const decomposeRule = (rule: string): string[] => {
   let decomposedChange = rule.split('>');
   decomposedChange = [decomposedChange[0], ...decomposedChange[1].split('/')]
   decomposedChange = [decomposedChange[0], decomposedChange[1], ...decomposedChange[2].split('_')];
   return [...decomposedChange];
 }
 
-export const stateReducer = (state, action) => {
+export const stateReducer = (state: stateType, action: {type: string, value: {}}) => {
   switch (action.type) {
     case 'INIT': {
       return initState();
@@ -154,7 +177,7 @@ export const stateReducer = (state, action) => {
   }
 }
 
-export const initState = changesArgument => {
+export const initState = (changesArgument: number = -1): stateType => {
   const state = {
     lexicon: [
       'anta', 'anat', 'anət', 'anna', 'tan', 'ənta'

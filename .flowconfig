@@ -1,4 +1,8 @@
 [ignore]
+.*/node_modules/.*
+.*/src/serviceWorker\.js
+.*/src/index\.js
+.*\.test
 
 [include]
 
@@ -7,5 +11,6 @@
 [lints]
 
 [options]
+; all=true
 
 [strict]
