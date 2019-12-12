@@ -9,7 +9,8 @@ import Epochs from './components/Epochs';
 import Options from './components/Options';
 import Output from './components/Output';
 
-import {initState, stateReducer} from './reducers/stateReducer';
+import {stateReducer} from './reducers/stateReducer';
+import {initState} from './reducers/stateReducer.init';
 
 const PhonoChangeApplier = () => {
   const [ state, dispatch ] = useReducer(

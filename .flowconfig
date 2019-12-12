@@ -11,6 +11,6 @@
 [lints]
 
 [options]
-; all=true
+; all=true 
 
 [strict]

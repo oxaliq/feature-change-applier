@@ -1,4 +1,5 @@
-import {stateReducer, initState} from './stateReducer';
+import {stateReducer} from './stateReducer';
+import {initState} from './stateReducer.init';
 
 describe('Results', () => {
   let state = {};
