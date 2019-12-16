@@ -11,14 +11,15 @@ export type epochAction = {
 }
 
 export const addEpoch = (state: stateType, action: epochAction): stateType => {
-  const newEpoch = { ...action.value, changes: ['']};
+  const newEpoch = { name: action.value.name, changes: action.value.changes || [''] };
   return {...state, epochs: [...state.epochs, newEpoch]}
 }
 
 export const setEpoch = (state: stateType, action: epochAction): stateType => {
-  let mutatedEpochs = state.epochs;
-  const index = action.value.index
-  if (!index) return state;
+  const index = action.value.index;
+  if (typeof index !== 'number') return state;
+  
+  const mutatedEpochs = state.epochs;
   mutatedEpochs[index].name = action.value.name 
     ? action.value.name 
     : mutatedEpochs[index].name;
