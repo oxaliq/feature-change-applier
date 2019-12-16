@@ -7,9 +7,6 @@ export type initAction = {
 
 export const initState = (changesArgument: number = -1): stateType => {
   const state = {
-    lexicon: [
-      {lexeme: 'anta', epoch: 'epoch 1'}, 'anat', 'anət', 'anna', 'tan', 'ənta'
-    ],
     epochs: [
       {
         name: 'epoch 1',
@@ -63,7 +60,8 @@ export const initState = (changesArgument: number = -1): stateType => {
     options: {},
     results: {},
     errors: {},
-    features: {}
+    features: {},
+    lexicon: []
   };
   state.features = {
     sonorant: { positive:[ state.phones.a, state.phones.u, state.phones.ɯ, state.phones.ə, state.phones.n], negative: [] },
@@ -77,6 +75,14 @@ export const initState = (changesArgument: number = -1): stateType => {
     nasal: { positive:[ state.phones.n ], negative: [] },
     aspirated: { positive:[ state.phones.t.ʰ ], negative: [] },
   }
+  state.lexicon = [
+      {lexeme: 'anta', epoch: state.epochs[0]}, 
+      {lexeme: 'anat', epoch: state.epochs[0]},
+      {lexeme: 'anət', epoch: state.epochs[0]},
+      {lexeme: 'anna', epoch: state.epochs[0]}, 
+      {lexeme: 'tan', epoch: state.epochs[0]},
+      {lexeme: 'ənta', epoch: state.epochs[0]}
+  ]
 
   if(changesArgument > -1) state.epochs[0].changes = state.epochs[0].changes.splice(changesArgument, 1)
 
