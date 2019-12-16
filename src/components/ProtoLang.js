@@ -9,8 +9,8 @@ const ProtoLang = (props) => {
       <form data-testid="ProtoLang-Lexicon">
         <textarea
           name="lexicon" 
-          value={props.lexicon ? props.lexicon.join("\n") : ''}
-          onChange={e=>props.setLexicon(e.target.value.split(/\n/))}
+          value={props.lexicon ? props.lexicon.map(lexeme => `${lexeme.lexeme} \t#${lexeme.epoch.name}`).join('\n'): ''}
+          onChange={e=>props.dispatch({action: 'SET_LEXION', value: e.target.value.split(/\n/)})}
           >
         </textarea>
       </form>

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import ProtoLang from './ProtoLang';
 import renderer from 'react-test-renderer';
 import { exportAllDeclaration } from '@babel/types';
-import {render} from '@testing-library/react';
+import { render } from '@testing-library/react';
 import extendExpect from '@testing-library/jest-dom/extend-expect'
 
 it('renders ProtoLang without crashing', () => {
@@ -21,7 +21,11 @@ describe('ProtoLang', () => {
   })
   
   it('renders lexicon from state', () => {
-    const { getByTestId } = render(<ProtoLang lexicon={['one']}/>);
-    expect(getByTestId('ProtoLang-Lexicon')).toHaveFormValues({lexicon: 'one'});
+    const { getByTestId } = render(<ProtoLang lexicon={[{ lexeme:'one', epoch:{name: 'epoch-one', changes: []} }]}/>);
+    expect(getByTestId('ProtoLang-Lexicon')).toHaveFormValues({lexicon: 'one #epoch-one'});
+  })
+
+  it('', () => {
+
   })
 })

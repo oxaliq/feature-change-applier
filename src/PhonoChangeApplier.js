@@ -122,7 +122,7 @@ const PhonoChangeApplier = () => {
 
   return (
     <div className="PhonoChangeApplier" data-testid="PhonoChangeApplier">
-      <ProtoLang lexicon={lexicon} setLexicon={setLexicon}/>
+      <ProtoLang lexicon={state.lexicon} dispatch={dispatch}/>
       <Features phonemes={phonemes} setPhonemes={setPhonemes} features={features} setFeatures={setFeatures}/>
       <Epochs epochs={epochs} setEpochs={setEpochs} errors={errors}/>
       <Options options={options} setOptions={setOptions} runChanges={runChanges}/>
