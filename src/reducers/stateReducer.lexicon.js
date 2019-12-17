@@ -35,6 +35,7 @@ export const addLexeme = (state: stateType, action: addLexemeAction): stateType 
 }
 
 export const setLexicon = (state: stateType, action: setLexiconAction): stateType => {
+  console.log('dispatched')
   let newLexicon = action.value;
   newLexicon = newLexicon.map(lexeme => makeLexeme(lexeme.lexeme, lexeme.epoch, state));
   return {...state, lexicon: newLexicon}
