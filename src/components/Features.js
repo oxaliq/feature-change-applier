@@ -1,15 +1,29 @@
+// @flow
 import React, {useState} from 'react';
 import './Features.scss';
 
-const parseFeaturesFromPhonemeObject = phonemeObject => {
-  let featureMap = Object.keys(phonemeObject).reduce((featureObject, phonemeName) => {
-    let phoneme = phonemeObject[phonemeName];
-    phoneme.forEach(feature => {
-      featureObject[feature] ? featureObject[feature].push(phonemeName) : featureObject[feature] = [ phonemeName ]
+const parseFeaturesFromPhonemeObject = phonesObject => {
+
+  let featureMap = Object.keys(phonesObject).reduce((featureObject, phoneName) => {
+    let phone = phonesObject[phoneName];
+    Object.keys(phone.features).forEach(feature => {
+      if (!featureObject[feature]) featureObject[feature] = {plus: [], minus: []}
+      if (phone.features[feature]) featureObject[feature].plus.push(phone.grapheme)
+      else featureObject[feature].minus.push(phone.grapheme)
     });
     return featureObject;
-  },{})
-  return Object.keys(featureMap).map(feature => <li key={`feature__${feature}`}>{`[+ ${feature}] = `}{featureMap[feature].join('|')}</li>);
+  }, {})
+
+  return Object.keys(featureMap).map(feature => {
+    const plusPhones = featureMap[feature].plus.join('|');
+    const minusPhones = featureMap[feature].minus.join('|');
+    return (
+      <li key={`feature__${feature}`}>
+        <span className="plus-phones">{`[+ ${feature}] = ${plusPhones}`}{'\t\t\t'}</span>
+        <span className="minus-phones">{`[- ${feature}] = ${minusPhones}`}</span>
+      </li>
+    )
+  });
 }
 
 const getPhonemesFromFeatureSubmission = (props, newPhonemes, feature) => {
@@ -42,7 +56,7 @@ const Features = (props) => {
     <div className="Features" data-testid="Features">
       <h3>Phonetic Features</h3>
       <ul className="Features__list" data-testid="Features-list">
-        {props.phonemes ? <>{parseFeaturesFromPhonemeObject(props.phonemes)}</> : <></>}
+        {props.phones ? <>{parseFeaturesFromPhonemeObject(props.phones)}</> : <></>}
       </ul>
       <form className="Features__form" data-testid="Features-form">
         <input 

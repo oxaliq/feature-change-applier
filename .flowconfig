@@ -14,3 +14,7 @@
 ; all=true 
 
 [strict]
+
+[untyped]
+.*\.scss
+.*\.css

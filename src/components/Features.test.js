@@ -20,21 +20,13 @@ describe('Features', () => {
   });
   
   it('renders features from phonemes hook', () => {
-    const { getByTestId } = render(<Features phonemes={ {n:[ 'nasal', 'occlusive' ]} }/>);
-    expect(getByTestId('Features-list')).toContainHTML('<li>[+ nasal] = n</li><li>[+ occlusive] = n</li>');
-  });
-
-  // it('adds new features and new phonemes from features and newPhonemes hooks', () => {
-  //   const { getByTestId } = render(<Features />);
-  //   getByTestId('Features-form')
-  // })
-
-  // it('adds features from form to hooks', () => {
-  //   const phonemes = [];
-  //   const setPhonemes = jest.fn()
-  //   const { getByTestId } = render(<Features phonemes={phonemes} setPhonemes={setPhonemes}/>);
-  //   // mock function for adding feature to state ([+ nasal] = n)
+    const { getByTestId } = render(<Features phones={ 
+      {n:{ 
+        grapheme: 'n', 
+        features: { nasal: true, occlusive: true, vowel: false } }} 
+    }/>);
     
-  //   expect(getByTestId('Features-list')).toContainHTML('<li>[+ nasal] = n</li>');
-  // })
+    expect(getByTestId('Features-list'))
+      .toContainHTML('<li>[+ nasal] = n</li><li>[+ occlusive] = n</li><li>[- vowel] = n</li>');
+  });
 });

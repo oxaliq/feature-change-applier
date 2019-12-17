@@ -18,11 +18,11 @@ const PhonoChangeApplier = () => {
     {},
     initState
   )
-
+  // ! DONE
   const [ lexicon, setLexicon ] = useState(['mun', 'tʰu', 'tɯm', 'utʰ']);
+
+  // ! UNDONE
   const [ phonemes, setPhonemes ] = useState( 
-    // ! candidate for trie to avoid situations where >2 graph phonemes 
-    // ! are uncaught by lexeme decomposition when <n graph phonemes are not present
     { 
       n: [ 'occlusive', 'sonorant', 'obstruent', 'nasal', 'alveolar' ], 
       m: [ 'occlusive', 'sonorant', 'obstruent', 'nasal', 'bilabial' ], 
@@ -123,7 +123,7 @@ const PhonoChangeApplier = () => {
   return (
     <div className="PhonoChangeApplier" data-testid="PhonoChangeApplier">
       <ProtoLang lexicon={state.lexicon} dispatch={dispatch}/>
-      <Features phonemes={phonemes} setPhonemes={setPhonemes} features={features} setFeatures={setFeatures}/>
+      <Features phones={state.phones} features={state.features} diispatch={dispatch}/>
       <Epochs epochs={epochs} setEpochs={setEpochs} errors={errors}/>
       <Options options={options} setOptions={setOptions} runChanges={runChanges}/>
       <Output results={results} setResults={setResults}/>

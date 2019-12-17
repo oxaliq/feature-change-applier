@@ -66,7 +66,6 @@ export const stateReducer = (state: stateType, action: actionType): stateType =>
     }
 
     default:
-      console.log('default')
       return state;
   }
 }
