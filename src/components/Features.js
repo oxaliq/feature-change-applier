@@ -4,6 +4,36 @@ import './Features.scss';
 
 import type { featureAction } from '../reducers/stateReducer.features';
 
+const parsePhonesFromFeatureObject = featureObject => {
+  
+  const getFeatureMap = (featureObject) => {
+    return Object.keys(featureObject).map(feature => {
+      const plusPhones = featureObject[feature].positive.map(phone => phone.grapheme).join('|');
+      const minusPhones = featureObject[feature].negative.map(phone => phone.grapheme).join('|');
+      return {[feature]: {plus: plusPhones, minus: minusPhones}}
+    })
+  }
+
+  const getFeatureMapJSX = (featureMap) => {
+    return featureMap.map((feature, index) => {
+      const featureName = Object.keys(feature)
+      const plusPhones = feature[featureName].plus;
+      const minusPhones = feature[featureName].minus;
+      return (
+        <li key={`feature__${featureName}`}>
+          <span className="plus-phones">{`[+ ${featureName}] = ${plusPhones}`}</span>
+          <span className="minus-phones">{`[- ${featureName}] = ${minusPhones}`}</span>
+        </li>
+      )
+    })
+  }
+
+  const featureMap = getFeatureMap(featureObject);
+  console.log(featureMap)
+  const featureMapJSX = getFeatureMapJSX(featureMap);
+  return featureMapJSX;
+}
+
 const parseFeaturesFromPhonemeObject = phonesObject => {
 
   const getFeatureMap = (phonesObject) => {
@@ -92,7 +122,7 @@ const Features = (props) => {
       <h3>Phonetic Features</h3>
       
       <ul className="Features__list" data-testid="Features-list">
-        {props.phones ? <>{parseFeaturesFromPhonemeObject(props.phones)}</> : <></>}
+        {props.phones ? <>{parsePhonesFromFeatureObject(props.features)}</> : <></>}
       </ul>
 
       <form className="Features__form" data-testid="Features-form">

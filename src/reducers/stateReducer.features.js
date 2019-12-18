@@ -45,7 +45,6 @@ export const addFeature = (state: stateType, action: featureAction): stateType =
   let positivePhones = action.value.positivePhones || [];
   let negativePhones = action.value.negativePhones || [];
   let newFeatureName = action.value.feature;
-      
   let newPhoneObject = [
     ...positivePhones, ...negativePhones
   ].reduce((phoneObject, phone) => addPhones(phoneObject, phone), state.phones)
