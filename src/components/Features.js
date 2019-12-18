@@ -29,39 +29,6 @@ const parsePhonesFromFeatureObject = featureObject => {
   }
 
   const featureMap = getFeatureMap(featureObject);
-  console.log(featureMap)
-  const featureMapJSX = getFeatureMapJSX(featureMap);
-  return featureMapJSX;
-}
-
-const parseFeaturesFromPhonemeObject = phonesObject => {
-
-  const getFeatureMap = (phonesObject) => {
-    return Object.keys(phonesObject).reduce((featureObject, phoneName) => {
-      let phone = phonesObject[phoneName];
-      Object.keys(phone.features).forEach(feature => {
-        if (!featureObject[feature]) featureObject[feature] = {plus: [], minus: []}
-        if (phone.features[feature]) featureObject[feature].plus.push(phone.grapheme)
-        else featureObject[feature].minus.push(phone.grapheme)
-      });
-      return featureObject;
-    }, {})
-  }
-
-  const getFeatureMapJSX = (featureMap) => {
-    return Object.keys(featureMap).map(feature => {
-      const plusPhones = featureMap[feature].plus.join('|');
-      const minusPhones = featureMap[feature].minus.join('|');
-      return (
-        <li key={`feature__${feature}`}>
-          <span className="plus-phones">{`[+ ${feature}] = ${plusPhones}`}</span>
-          <span className="minus-phones">{`[- ${feature}] = ${minusPhones}`}</span>
-        </li>
-      )
-    });
-  }
-
-  const featureMap = getFeatureMap(phonesObject);
   const featureMapJSX = getFeatureMapJSX(featureMap);
   return featureMapJSX;
 }
