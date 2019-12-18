@@ -2,28 +2,60 @@
 import React, {useState} from 'react';
 import './Features.scss';
 
+import type { featureAction } from '../reducers/stateReducer.features';
+
 const parseFeaturesFromPhonemeObject = phonesObject => {
 
-  let featureMap = Object.keys(phonesObject).reduce((featureObject, phoneName) => {
-    let phone = phonesObject[phoneName];
-    Object.keys(phone.features).forEach(feature => {
-      if (!featureObject[feature]) featureObject[feature] = {plus: [], minus: []}
-      if (phone.features[feature]) featureObject[feature].plus.push(phone.grapheme)
-      else featureObject[feature].minus.push(phone.grapheme)
-    });
-    return featureObject;
-  }, {})
+  const getFeatureMap = (phonesObject) => {
+    return Object.keys(phonesObject).reduce((featureObject, phoneName) => {
+      let phone = phonesObject[phoneName];
+      Object.keys(phone.features).forEach(feature => {
+        if (!featureObject[feature]) featureObject[feature] = {plus: [], minus: []}
+        if (phone.features[feature]) featureObject[feature].plus.push(phone.grapheme)
+        else featureObject[feature].minus.push(phone.grapheme)
+      });
+      return featureObject;
+    }, {})
+  }
 
-  return Object.keys(featureMap).map(feature => {
-    const plusPhones = featureMap[feature].plus.join('|');
-    const minusPhones = featureMap[feature].minus.join('|');
-    return (
-      <li key={`feature__${feature}`}>
-        <span className="plus-phones">{`[+ ${feature}] = ${plusPhones}`}{'\t\t\t'}</span>
-        <span className="minus-phones">{`[- ${feature}] = ${minusPhones}`}</span>
-      </li>
-    )
-  });
+  const getFeatureMapJSX = (featureMap) => {
+    return Object.keys(featureMap).map(feature => {
+      const plusPhones = featureMap[feature].plus.join('|');
+      const minusPhones = featureMap[feature].minus.join('|');
+      return (
+        <li key={`feature__${feature}`}>
+          <span className="plus-phones">{`[+ ${feature}] = ${plusPhones}`}</span>
+          <span className="minus-phones">{`[- ${feature}] = ${minusPhones}`}</span>
+        </li>
+      )
+    });
+  }
+
+  const featureMap = getFeatureMap(phonesObject);
+  const featureMapJSX = getFeatureMapJSX(featureMap);
+  return featureMapJSX;
+}
+
+const buildReducerAction = (e, newPositivePhones, newNegativePhones, feature): featureAction => {
+  e.preventDefault();
+  const positivePhones = []
+  newPositivePhones !== '' 
+    ? newPositivePhones.split('/').forEach(phone => positivePhones.push(phone.trim()))
+    : positivePhones.push('')
+    
+  const negativePhones = []
+  newNegativePhones !== '' 
+    ? newNegativePhones.split('/').forEach(phone => negativePhones.push(phone.trim()))
+    : negativePhones.push('')
+
+  return {
+    type: "ADD_FEATURE",
+    value: {
+      positivePhones,
+      negativePhones,
+      feature
+    }
+  }
 }
 
 const getPhonemesFromFeatureSubmission = (props, newPhonemes, feature) => {
@@ -38,34 +70,60 @@ const getPhonemesFromFeatureSubmission = (props, newPhonemes, feature) => {
 }
 
 const Features = (props) => {
-  const [feature, setFeature] = useState('nasal')
-  const [newPhonemes, setNewPhonemes] = useState('n / m / ŋ')
+  const [feature, setFeature] = useState('aspirated')
+  const [ newPositivePhones, setNewPositivePhones ] = useState('tʰ / pʰ / kʰ');
+  const [ newNegativePhones, setNewNegativePhones ] = useState('t / p / k');
   
   const newFeaturesSubmit = e => {
     e.preventDefault();
     
-    let newPhonemeObject = getPhonemesFromFeatureSubmission(props, newPhonemes, feature);
-    props.setPhonemes(newPhonemeObject);
-    if (!props.features || !props.features.includes(feature)) props.setFeatures([...props.features, feature])
+    // let newPhonemeObject = getPhonemesFromFeatureSubmission(props, newPhonemes, feature);
+    // props.setPhonemes(newPhonemeObject);
+    // if (!props.features || !props.features.includes(feature)) props.setFeatures([...props.features, feature])
     
     setFeature('');
-    setNewPhonemes('');
+    setNewPositivePhones('');
+    setNewNegativePhones('');
   }
 
   return (
     <div className="Features" data-testid="Features">
+      
       <h3>Phonetic Features</h3>
+      
       <ul className="Features__list" data-testid="Features-list">
         {props.phones ? <>{parseFeaturesFromPhonemeObject(props.phones)}</> : <></>}
       </ul>
+
       <form className="Features__form" data-testid="Features-form">
         <input 
           type="text" name="feature" 
           value={feature} onChange={e=> setFeature(e.target.value)}
+          ></input>
+
+        {/* ! Positive Phones */}
+        <label htmlFor="positive-phones">+</label>
+        <input 
+          id="positive-phones"
+          type="text" name="phonemes" 
+          value={newPositivePhones} onChange={e=> setNewPositivePhones(e.target.value)}
         ></input>
-        <input type="text" name="phonemes" value={newPhonemes} onChange={e=> setNewPhonemes(e.target.value)}></input>
-        <input type="submit" onClick={newFeaturesSubmit} value="Add feature"></input>
+        
+        {/* ! Negative Phones */}
+        <label htmlFor="negative-phones">-</label>
+        <input 
+          id="negative-phones"
+          type="text" name="phonemes" 
+          value={newNegativePhones} onChange={e=> setNewNegativePhones(e.target.value)}
+        ></input>
+
+        <input 
+          type="submit" 
+          onClick={e => props.dispatch(buildReducerAction(e, newPositivePhones, newNegativePhones, feature))} 
+          value="Add feature"
+        ></input>
       </form>
+
     </div>
   );
 }

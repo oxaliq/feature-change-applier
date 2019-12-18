@@ -27,6 +27,6 @@ describe('Features', () => {
     }/>);
     
     expect(getByTestId('Features-list'))
-      .toContainHTML('<li>[+ nasal] = n</li><li>[+ occlusive] = n</li><li>[- vowel] = n</li>');
+      .toContainHTML('<ul class="Features__list" data-testid="Features-list"><li><span class="plus-phones">[+ nasal] = n</span><span class="minus-phones">[- nasal] = </span></li><li><span class="plus-phones">[+ occlusive] = n</span><span class="minus-phones">[- occlusive] = </span></li><li><span class="plus-phones">[+ vowel] = </span><span class="minus-phones">[- vowel] = n</span></li></ul>');
   });
 });
