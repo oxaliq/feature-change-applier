@@ -5,6 +5,8 @@ import { addEpoch, setEpoch, removeEpoch } from './stateReducer.epochs';
 import type { epochAction } from './stateReducer.epochs';
 import { addFeature } from './stateReducer.features';
 import type { featureAction } from './stateReducer.features';
+import type { optionsAction } from './stateReducer.options';
+import { setOptions } from './stateReducer.options';
 import { run } from './stateReducer.results';
 import type { resultsAction } from './stateReducer.results'
 import { initState } from './stateReducer.init';
@@ -52,6 +54,8 @@ export const stateReducer = (state: stateType, action: actionType): stateType =>
     case 'REMOVE_EPOCH': return removeEpoch(state, action);
 
     case 'ADD_FEATURE': return addFeature(state, action);
+
+    case 'SET_OPTIONS': return setOptions(state, action);
 
     case 'RUN': return run(state, action);
 
