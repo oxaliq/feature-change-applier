@@ -6,11 +6,27 @@ const Options = props => {
   const [ load, setLoad ] = useState('');
 
   const handleRadioChange = e => {
-    // props.setOptions({...props.options, [e.target.name]: e.target.id})
+    const option = e.target.name;
+    const setValue = e.target.id;
+    props.dispatch({
+      type: 'SET_OPTIONS',
+      value: {
+        option,
+        setValue
+      }
+    });
   }
-
+  
   const handleCheckChange = e => {
-    // props.setOptions({...props.options, [e.target.name]: e.target.checked})
+    const option = e.target.name;
+    const setValue = e.target.checked ? 'true' : 'false';
+    props.dispatch({
+      type: 'SET_OPTIONS',
+      value: {
+        option,
+        setValue
+      }
+    });
   }
 
   const handleFormSubmit = e => {
