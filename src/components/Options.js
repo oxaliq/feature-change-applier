@@ -6,17 +6,22 @@ const Options = props => {
   const [ load, setLoad ] = useState('');
 
   const handleRadioChange = e => {
-    props.setOptions({...props.options, [e.target.name]: e.target.id})
+    // props.setOptions({...props.options, [e.target.name]: e.target.id})
   }
 
   const handleCheckChange = e => {
-    props.setOptions({...props.options, [e.target.name]: e.target.checked})
+    // props.setOptions({...props.options, [e.target.name]: e.target.checked})
   }
+
+  const handleFormSubmit = e => {
+    e.preventDefault();
+  }
+
   return (
     <div className="Options" data-testid="Options">
       <h3>Modeling Options</h3>
 
-      <form onSubmit={e=>props.runChanges(e)} data-testid="Options-form">
+      <form onSubmit={e=>handleFormSubmit(e)} data-testid="Options-form">
         
         {/* <h5>Output</h5> */}
 

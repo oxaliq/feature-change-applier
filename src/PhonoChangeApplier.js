@@ -124,10 +124,8 @@ const PhonoChangeApplier = () => {
     <div className="PhonoChangeApplier" data-testid="PhonoChangeApplier">
       <ProtoLang lexicon={state.lexicon} dispatch={dispatch}/>
       <Features phones={state.phones} features={state.features} dispatch={dispatch}/>
-      <Epochs epochs={state.epochs} dispatch={dispatch}
-      // setEpochs={setEpochs} 
-      />
-      <Options options={options} setOptions={setOptions} runChanges={runChanges}/>
+      <Epochs epochs={state.epochs} dispatch={dispatch} />
+      <Options options={state.options} dispatch={dispatch}/>
       <Output results={results} setResults={setResults}/>
     </div>
   );

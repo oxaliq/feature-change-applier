@@ -14,7 +14,7 @@ export type stateType = {
   lexicon: Array<{lexeme: string, epoch: epochType}>,
   epochs: Array<epochType>,
   phones: {[key: string]: phoneType},
-  options: {},
+  options: {output: string, save: boolean},
   results: {},
   errors: {},
   features: featureType

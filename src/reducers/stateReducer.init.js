@@ -57,7 +57,9 @@ export const initState = (changesArgument: number = -1): stateType => {
         }
       }
     },
-    options: {},
+    options: {
+      output: 'default', save: false
+    },
     results: {},
     errors: {},
     features: {},
