@@ -10,7 +10,10 @@ const Epochs = props => {
   const addEpoch = (e, props) => {
     e.preventDefault()
     let index = props.epochs.length + 1;
-    props.setEpochs([...props.epochs, {name: `epoch ${index}`, changes:['[+ feature]>[- feature]/_#']}])
+    props.dispatch({
+      type: 'ADD_EPOCH',
+      value: {name: `Epoch ${index}`}
+    })
   }
 
   const removeEpoch = (e, epochName) => {
@@ -33,7 +36,7 @@ const Epochs = props => {
         return <SoundChangeSuite 
           key={`epochname-${idx}`} epochIndex={idx} epoch={epoch} 
           updateEpoch={updateEpoch} removeEpoch={removeEpoch}
-          error={props.errors[epoch.name]}
+          // error={props.errors[epoch.name]}
         />}) 
         : <></>}
       <form onSubmit={e=>addEpoch(e, props)}>
