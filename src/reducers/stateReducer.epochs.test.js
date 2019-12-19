@@ -46,7 +46,17 @@ describe('Epochs', () => {
           {name: 'epoch 2', changes: ['']}
         ]
       }
-    );
+      );
+    });
+    
+    it('epochs returned with deleted epoch removed', () => {
+      const firstAction = {type: 'ADD_EPOCH', value: { name: 'epoch 2', changes: ['']}};
+      const stateWithTwoEpochs = stateReducer(state, firstAction);
+      const secondAction = {type: 'REMOVE_EPOCH', value: {index: 0, name: 'epoch 1'}}
+      expect(stateReducer(stateWithTwoEpochs, secondAction)).toEqual({
+        ...state,
+        epochs: [{ name: 'epoch 2', changes: ['']}]
+      });
   });
 
 });

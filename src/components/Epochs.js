@@ -18,14 +18,19 @@ const Epochs = props => {
 
   const removeEpoch = (e, epochName) => {
     e.preventDefault()
-    let newEpochs = props.epochs.filter(epoch => epoch.name !== epochName);
-    props.setEpochs(newEpochs)
+    props.dispatch({
+      type: 'REMOVE_EPOCH',
+      value: {name: epochName}
+    });
   }
 
   const updateEpoch = (epoch, epochIndex) => {
     let updatedEpochs = [...props.epochs]
     updatedEpochs[epochIndex] = epoch
-    props.setEpochs(updatedEpochs)
+    props.dispatch({
+      type: "SET_EPOCH",
+      value: epoch
+    })
   }
 
   return (

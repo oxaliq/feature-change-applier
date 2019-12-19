@@ -2,7 +2,7 @@
 import type { stateType } from './stateReducer';
 
 export type epochAction = {
-  type: "ADD_EPOCH" | "SET_EPOCH",
+  type: "ADD_EPOCH" | "SET_EPOCH" | "REMOVE_EPOCH",
   value: {
     index?: number,
     name: string,
@@ -27,5 +27,10 @@ export const setEpoch = (state: stateType, action: epochAction): stateType => {
   mutatedEpochs[index].changes = action.value.changes 
     ? action.value.changes 
     : mutatedEpochs[index].changes;
+  return {...state, epochs: [...mutatedEpochs]}
+}
+
+export const removeEpoch = (state: stateType, action: epochAction): stateType => {
+  const mutatedEpochs = state.epochs.filter(epoch => epoch.name !== action.value.name )
   return {...state, epochs: [...mutatedEpochs]}
 }

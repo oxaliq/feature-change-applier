@@ -1,7 +1,7 @@
 // @flow
 import { addLexeme, setLexicon } from './stateReducer.lexicon';
 import type { lexiconAction } from './stateReducer.lexicon';
-import { addEpoch, setEpoch } from './stateReducer.epochs';
+import { addEpoch, setEpoch, removeEpoch } from './stateReducer.epochs';
 import type { epochAction } from './stateReducer.epochs';
 import { addFeature } from './stateReducer.features';
 import type { featureAction } from './stateReducer.features';
@@ -41,31 +41,20 @@ export const stateReducer = (state: stateType, action: actionType): stateType =>
       return initState();
     }
     
-    case 'ADD_LEXEME': {
-      return addLexeme(state, action);
-    }
+    case 'ADD_LEXEME': return addLexeme(state, action);
     
-    case 'SET_LEXICON': {
-      return setLexicon(state, action);
-    }
+    case 'SET_LEXICON': return setLexicon(state, action);
 
-    case 'ADD_EPOCH': {
-      return addEpoch(state, action);
-    }
+    case 'ADD_EPOCH': return addEpoch(state, action);
 
-    case 'SET_EPOCH': {
-      return setEpoch(state, action);
-    }
+    case 'SET_EPOCH': return setEpoch(state, action);
 
-    case 'ADD_FEATURE': {
-      return addFeature(state, action);
-    }
+    case 'REMOVE_EPOCH': return removeEpoch(state, action);
 
-    case 'RUN': {
-      return run(state, action);
-    }
+    case 'ADD_FEATURE': return addFeature(state, action);
 
-    default:
-      return state;
+    case 'RUN': return run(state, action);
+
+    default: return state;
   }
 }
