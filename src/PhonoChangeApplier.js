@@ -126,7 +126,7 @@ const PhonoChangeApplier = () => {
       <Features phones={state.phones} features={state.features} dispatch={dispatch}/>
       <Epochs epochs={state.epochs} dispatch={dispatch} />
       <Options options={state.options} dispatch={dispatch}/>
-      <Output results={results} setResults={setResults}/>
+      <Output results={state.results} dispatch={dispatch}/>
     </div>
   );
 }

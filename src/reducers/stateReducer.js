@@ -17,7 +17,7 @@ export type stateType = {
   epochs: Array<epochType>,
   phones: {[key: string]: phoneType},
   options: {output: string, save: boolean},
-  results: {},
+  results: [],
   errors: {},
   features: featureType
 }

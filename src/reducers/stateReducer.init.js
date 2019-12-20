@@ -60,7 +60,7 @@ export const initState = (changesArgument: number = -1): stateType => {
     options: {
       output: 'default', save: false
     },
-    results: {},
+    results: [],
     errors: {},
     features: {},
     lexicon: []
