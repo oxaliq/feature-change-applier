@@ -21,7 +21,6 @@ const PhonoChangeApplier = () => {
   // ! DONE
   const [ lexicon, setLexicon ] = useState(['mun', 'tʰu', 'tɯm', 'utʰ']);
 
-  // ! UNDONE
   const [ phonemes, setPhonemes ] = useState( 
     { 
       n: [ 'occlusive', 'sonorant', 'obstruent', 'nasal', 'alveolar' ], 
@@ -31,14 +30,15 @@ const PhonoChangeApplier = () => {
       t: [ 'occlusive', 'plosive', 'obstruent', 'alveolar' ], 
       tʰ: [ 'occlusive', 'plosive', 'obstruent', 'alveolar', 'aspirated' ],
     } 
-  );
-  const [ epochs, setEpochs ] = useState([{name: 'epoch 1', changes:['[+ rounded]>[- rounded + unrounded]/_#']}]);
-  const [ options, setOptions ] = useState({output: 'default', save: false})
+    );
+    const [ epochs, setEpochs ] = useState([{name: 'epoch 1', changes:['[+ rounded]>[- rounded + unrounded]/_#']}]);
+    const [ options, setOptions ] = useState({output: 'default', save: false})
+    const [ features, setFeatures ] = useState(
+      ['occlusive', 'sonorant', 'obstruent', 'nasal', 'alveolar','bilabial',
+      'continuant','syllabic','high','back','rounded','unrounded', 'plosive','aspirated'])
+  // ! UNDONE
   const [ results, setResults ] = useState([])
   const [ errors, setErrors ] = useState({})
-  const [ features, setFeatures ] = useState(
-    ['occlusive', 'sonorant', 'obstruent', 'nasal', 'alveolar','bilabial',
-    'continuant','syllabic','high','back','rounded','unrounded', 'plosive','aspirated'])
 
   const runChanges = e => {
     e.preventDefault();
