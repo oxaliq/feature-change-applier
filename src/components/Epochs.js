@@ -25,11 +25,14 @@ const Epochs = props => {
   }
 
   const updateEpoch = (epoch, epochIndex) => {
-    let updatedEpochs = [...props.epochs]
-    updatedEpochs[epochIndex] = epoch
+    const dispatchValue = {
+      name: epoch.name,
+      index: epochIndex,
+      changes: epoch.changes
+    }
     props.dispatch({
       type: "SET_EPOCH",
-      value: epoch
+      value: dispatchValue
     })
   }
 

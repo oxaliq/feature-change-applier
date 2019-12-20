@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SoundChangeSuite.scss';
 
 const SoundChangeSuite = props => {
@@ -8,6 +8,10 @@ const SoundChangeSuite = props => {
     cb(e);
     props.updateEpoch(epoch, props.epochIndex);
   }
+  
+  useEffect(() => {
+    props.updateEpoch(epoch, props.epochIndex);
+  }, [epoch])
 
   return (
     <div className="SoundChangeSuite" data-testid={`${epoch.name}_SoundChangeSuite`}>
@@ -19,7 +23,9 @@ const SoundChangeSuite = props => {
           id="" cols="30" rows="1" 
           value={epoch.name} 
           onChange={e=>changeHandler(
-            e, () => setEpoch({...epoch, name:e.target.value})
+            e, () => {
+              setEpoch({...epoch, name:e.target.value})
+            }
           )} 
         ></textarea>
         
