@@ -29,15 +29,19 @@ const Options = props => {
     });
   }
 
-  const handleFormSubmit = e => {
+  const handleFormSubmit = (e, options) => {
     e.preventDefault();
+    props.dispatch({
+      type: 'RUN',
+      value: options
+    });
   }
 
   return (
     <div className="Options" data-testid="Options">
       <h3>Modeling Options</h3>
 
-      <form onSubmit={e=>handleFormSubmit(e)} data-testid="Options-form">
+      <form onSubmit={e=>handleFormSubmit(e, props.options)} data-testid="Options-form">
         
         {/* <h5>Output</h5> */}
 
@@ -79,7 +83,7 @@ const Options = props => {
       </form>
 
 
-      <form onSubmit={() => {}}>
+      <form onSubmit={()=>{}}>
         <label>
           Load from a prior run:
           <select value={load} onChange={e=>setLoad(e.target.value)}>
