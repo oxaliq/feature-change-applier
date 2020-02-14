@@ -11,12 +11,12 @@ export const initState = (changesArgument: number = -1): stateType => {
       {
         name: 'epoch 1',
         changes: [
-          '[+ occlusive - nasal]>[+ occlusive nasal]/n_',
-          'at>ta/_#',
-          '[+ sonorant - low rounded high back]>_/_',
-          'nn>nun/_',
-          '[+ nasal][+ obstruent]>[+ nasal obstruent aspirated ]/#_',
-          '[+ sonorant rounded]>[+ sonorant - rounded]/_#'
+          '[+ occlusive - nasal]>[+ occlusive nasal]/n_.',
+          'at>ta/._#',
+          '[+ sonorant - low rounded high back]>0/._.',
+          'nn>nun/._.',
+          '[+ nasal][+ obstruent]>[+ nasal obstruent aspirated ]/#_.',
+          '[+ sonorant rounded]>[+ sonorant - rounded]/._#'
         ]
       }
     ],

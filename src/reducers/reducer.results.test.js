@@ -31,10 +31,10 @@ describe('Results', () => {
           ],
           post: [],
         },
-        newFeatures: {occlusive: true, nasal: true}
+        newFeatures: [{occlusive: true, nasal: true}]
       }
     ];
-    expect(decomposeRules(epoch, phones)).toBe(result);
+    expect(decomposeRules(epoch, phones)).toStrictEqual(result);
   })
 
   // it('results returned from first sound change rule', () => {

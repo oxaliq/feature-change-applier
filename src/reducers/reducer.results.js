@@ -16,6 +16,15 @@ export type decomposedRulesType = [
   }
 ]
 
+type ruleBundle = {
+  environment: {
+    pre: string,
+    position: string,
+    post: string
+  },
+  newFeatures: string
+}
+
 const findFeaturesFromLexeme = (phones: {}, lexeme:string): [] => {
   let featureBundle = []
   let lastIndex = lexeme.length - 1;
@@ -54,10 +63,10 @@ const findFeaturesFromGrapheme = (phones: {}, lexeme:string): [] => {
   return featureBundle;
 }
 
-const decomposeRule = (rule: string) => {
-  let decomposedChange = rule.split('>');
-  decomposedChange = [decomposedChange[0], ...decomposedChange[1].split('/')]
-  decomposedChange = [decomposedChange[0], decomposedChange[1], ...decomposedChange[2].split('_')];
+const decomposeRule = (rule: string): ruleBundle => {
+  // splits rule at '>' '/' and '_' substrings resulting in array of length 4
+  const decomposedChange = rule.split(/>|\/|_/g); 
+  
   const ruleBundle = {
     environment: {
       pre: decomposedChange[2], 
@@ -71,16 +80,29 @@ const decomposeRule = (rule: string) => {
 
 const mapStringToFeatures = (ruleString, phones) => {
   if (ruleString) {
+    if (ruleString === '.') return [];
     const ruleBrackets = ruleString.match(/\[.*\]/)
     if (ruleBrackets) {
-      const ruleFeatures = ruleString.match(/(?!\[).*(?<!\])/)[0]
-      const plusIndex = ruleFeatures.indexOf('+');
-      const minusIndex = ruleFeatures.indexOf('-');
-      const positiveFeatures = ruleFeatures.slice(plusIndex + 1, minusIndex).trim().split(' ');
-      const positiveFeaturesMap = positiveFeatures.map(feature => ({[feature]: true}))
-      const negativeFeatures = ruleFeatures.slice(minusIndex +1).trim().split(' ');
-      const negativeFeaturesMap = negativeFeatures.map(feature => ({[feature]: false}))
-      return {...positiveFeaturesMap, ...negativeFeaturesMap}
+      const ruleFeatures = ruleString
+        .split('[')
+        // filter out empty strings
+        .filter(v => v)
+        .map((phoneme) => {
+          const positiveFeatures = phoneme.match(/(?=\+.).*(?<=\-)|(?=\+.).*(?!\-).*(?<=\])/g)
+          const positiveFeaturesMap = positiveFeatures ? positiveFeatures[0]
+          .trim().match(/\w+/g)
+          .reduce((map, feature) => ({...map, [feature]: true}), {})
+          : {}
+          
+          const negativeFeatures = phoneme.match(/(?=\-.).*(?<=\+)|(?=\-.).*(?!\+).*(?<=\])/g)
+          const negativeFeaturesMap = negativeFeatures ? negativeFeatures[0]
+          .trim().match(/\w+/g)
+          .reduce((map, feature) => ({...map, [feature]: false}), {})
+          : {}
+
+          return {...positiveFeaturesMap, ...negativeFeaturesMap}
+        })
+        return ruleFeatures;
     }
     const grapheme = ruleString;
     return findFeaturesFromGrapheme(phones, grapheme);
@@ -89,17 +111,12 @@ const mapStringToFeatures = (ruleString, phones) => {
 }
 
 const mapRuleBundleToFeatureBundle = (ruleBundle, phones) => {
-  // ! for each object in ruleBundle, map values to array of objects with feature-boolean key-value pairs
+  // for each object in ruleBundle, map values to array of objects with feature-boolean key-value pairs
   const featureBundle = {...ruleBundle};
-  console.log(featureBundle)
   featureBundle.environment.pre = mapStringToFeatures(featureBundle.environment.pre, phones);
-  console.log(featureBundle.environment.pre)
   featureBundle.environment.position = mapStringToFeatures(featureBundle.environment.position, phones);
-  console.log(featureBundle.environment.position)
   featureBundle.environment.post = mapStringToFeatures(featureBundle.environment.post, phones);
-  console.log(featureBundle.environment.post)
   featureBundle.newFeatures = mapStringToFeatures(featureBundle.newFeatures, phones);
-  console.log(featureBundle.newFeatures)
   return featureBundle;
 }
 
@@ -111,10 +128,27 @@ export const decomposeRules = (epoch: epochType, phones: {[key: string]: phoneTy
 }
 
 export const run = (state: stateType, action: resultsAction): stateType => {
-  // ! one epoch only
-  // rule 0 '[+ occlusive - nasal]>[+ occlusive nasal]/n_'
+
+  // for each epoch
+  // TODO iterate through each epoch
   let ruleBundle = state.epochs[0].changes;
-  ruleBundle = ruleBundle.map(rule => decomposeRule(rule))
+
+    // for each rule in epoch
+    ruleBundle = ruleBundle.map(rule => decomposeRule(rule))
+      // parse rule into feature bundles for 
+        // environment
+          // pre-target
+          // post-target
+        // target
+        // mutation
+      // for each item in lexicon
+        // match targets in environments
+        // mutate target
+        // temporarily store lexical item
+    // store lexical items in resulting epoch
+
+
+
   
   ruleBundle.map(rule => {
     rule.forEach(position => {
