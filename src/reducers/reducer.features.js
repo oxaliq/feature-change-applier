@@ -12,33 +12,38 @@ export type featureAction = {
 
 const addPhones = (phones: {}, phone: string): {} => {
   let node = {};
+
   phone.split('').forEach((graph, index) => {
     if (index) node[graph] = {}
     if (!index && !phones[graph]) phones[graph] = {} 
     node = index === 0 ? phones[graph] : node[graph];
     if (index === phone.length - 1) node.grapheme = phone;
   })
+
   return phones;
 }
 
 const findPhone = (phones: {}, phone: string): {} => {
-  let node = {};
-  phone.split('').forEach((graph, index) => {
-    node = index === 0 ? phones[graph] : node[graph];
-  });
-  return node;
+  return phone
+    .split('')
+    .reduce((node, graph, index) => {
+      node = index === 0 ? phones[graph] : node[graph];
+      return node;
+    }, {});
 }
 
 const addFeatureToPhone = (
   phones: {}, phone: string, featureKey: string, featureValue: boolean
-): {} => 
-{
-    let node = {}
-    phone.split('').forEach((graph, index) => {
-      node = index === 0 ? phones[graph] : node[graph];
-      if (index === phone.split('').length - 1) node.features = {...node.features, [featureKey]: featureValue}
-    })
-    return phones;
+): {} => {
+  let node = {}
+  phone.split('').forEach((graph, index) => {
+    node = index === 0 ? phones[graph] : node[graph];
+    
+    if (index === phone.split('').length - 1) {
+      node.features = {...node.features, [featureKey]: featureValue}
+    }
+  });
+  return phones;
 }
 
 export const addFeature = (state: stateType, action: featureAction): stateType => {
@@ -47,7 +52,8 @@ export const addFeature = (state: stateType, action: featureAction): stateType =
   let newFeatureName = action.value.feature;
   let newPhoneObject = [
     ...positivePhones, ...negativePhones
-  ].reduce((phoneObject, phone) => addPhones(phoneObject, phone), state.phones)
+  ]
+  .reduce((phoneObject, phone) => addPhones(phoneObject, phone), state.phones)
   
   if (positivePhones) {
 
