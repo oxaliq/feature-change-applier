@@ -1,5 +1,5 @@
 // @flow
-import type { stateType } from './stateReducer';
+import type { stateType } from './reducer';
 
 export type initAction = {
   type: "INIT"

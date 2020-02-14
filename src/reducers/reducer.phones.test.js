@@ -1,4 +1,4 @@
-import {stateReducer} from './stateReducer';
+import {stateReducer} from './reducer';
 
 describe('Phones', () => {
   const n_phone = {features: {nasal: true}, grapheme: 'n'};

@@ -1,6 +1,6 @@
-import { stateReducer } from './stateReducer';
-import { initState } from './stateReducer.init';
-import { decomposeRules } from './stateReducer.results';
+import { stateReducer } from './reducer';
+import { initState } from './reducer.init';
+import { decomposeRules } from './reducer.results';
 
 describe('Results', () => {
   let state = {};

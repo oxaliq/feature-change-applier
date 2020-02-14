@@ -1,5 +1,5 @@
 // @flow
-import type { stateType, epochType, phoneType } from './stateReducer';
+import type { stateType, epochType, phoneType } from './reducer';
 
 export type resultsAction = {
   type: 'RUN'

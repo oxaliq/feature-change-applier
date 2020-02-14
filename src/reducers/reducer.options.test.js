@@ -1,5 +1,5 @@
-import { stateReducer } from './stateReducer';
-import { initState } from './stateReducer.init';
+import { stateReducer } from './reducer';
+import { initState } from './reducer.init';
 
 describe('Options', () => {
   let state = {}

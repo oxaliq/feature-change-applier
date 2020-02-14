@@ -1,4 +1,4 @@
-import {stateReducer} from './stateReducer';
+import {stateReducer} from './reducer';
 
 describe('Lexicon', () => {
   const state = {

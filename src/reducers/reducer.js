@@ -1,16 +1,16 @@
 // @flow
-import { addLexeme, setLexicon } from './stateReducer.lexicon';
-import type { lexiconAction } from './stateReducer.lexicon';
-import { addEpoch, setEpoch, removeEpoch } from './stateReducer.epochs';
-import type { epochAction } from './stateReducer.epochs';
-import { addFeature } from './stateReducer.features';
-import type { featureAction } from './stateReducer.features';
-import type { optionsAction } from './stateReducer.options';
-import { setOptions } from './stateReducer.options';
-import { run } from './stateReducer.results';
-import type { resultsAction } from './stateReducer.results'
-import { initState } from './stateReducer.init';
-import type { initAction } from './stateReducer.init';
+import { addLexeme, setLexicon } from './reducer.lexicon';
+import type { lexiconAction } from './reducer.lexicon';
+import { addEpoch, setEpoch, removeEpoch } from './reducer.epochs';
+import type { epochAction } from './reducer.epochs';
+import { addFeature } from './reducer.features';
+import type { featureAction } from './reducer.features';
+import type { optionsAction } from './reducer.options';
+import { setOptions } from './reducer.options';
+import { run } from './reducer.results';
+import type { resultsAction } from './reducer.results'
+import { initState } from './reducer.init';
+import type { initAction } from './reducer.init';
 
 export type stateType = {
   lexicon: Array<{lexeme: string, epoch: epochType}>,

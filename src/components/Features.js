@@ -2,7 +2,7 @@
 import React, {useState} from 'react';
 import './Features.scss';
 
-import type { featureAction } from '../reducers/stateReducer.features';
+import type { featureAction } from '../reducers/reducer.features';
 
 const parsePhonesFromFeatureObject = featureObject => {
   
