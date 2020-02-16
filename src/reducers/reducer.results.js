@@ -127,44 +127,66 @@ export const decomposeRules = (epoch: epochType, phones: {[key: string]: phoneTy
   return featureBundle;
 }
 
+const isPhonemeBoundByRule = (phonemeFeatures, ruleFeatures) => {
+  if (!ruleFeatures) return true;
+  const match = ruleFeatures.filter((ruleFeature, index) => {
+    const phoneme = phonemeFeatures[index].features;
+    return Object.entries(ruleFeature).reduce((bool, entry) => {
+      if (!bool) return false;
+      if (!phoneme[entry[0]] && !entry[1]) return true;
+      if (phoneme[entry[0]] !== entry[1]) return false;
+      return true;
+    }, true);
+  })
+  return match.length === ruleFeatures.length ? true : false;
+}
+
+const swapPhoneme = (phoneme, newFeatures, features) => {
+  const newPhonemeFeatures = Object.entries(newFeatures).reduce((newPhoneme, [newFeature, newValue]) => {
+    return { ...newPhoneme, [newFeature]: newValue }
+  }, {...phoneme.features})
+  const newPhonemeCandidates = Object.entries(newPhonemeFeatures).map(([newFeature, newValue]) => {
+    return features[newFeature][newValue ? 'positive': 'negative']
+  })
+  const newPhoneme = newPhonemeCandidates.reduce((candidates, value, index, array) => {
+    return candidates.filter(candidate => value.map(val => val.grapheme).includes(candidate.grapheme))
+  }, newPhonemeCandidates[newPhonemeCandidates.length - 1])
+  return newPhoneme[0];
+}
+
+export const transformLexeme = (lexemeBundle, rule, features) => {
+  const {pre, post, position} = rule.environment;
+  const newLexeme = lexemeBundle.reduce((newLexeme, phoneme, index) => {
+    if ( index < pre.length || index >= lexemeBundle.length - post.length ) return [...newLexeme, phoneme];
+    if (!isPhonemeBoundByRule(lexemeBundle.slice(index - pre.length, index), pre)) return [...newLexeme, phoneme];
+    if (!isPhonemeBoundByRule([phoneme], rule.environment.position)) return [...newLexeme, phoneme];
+    if (!isPhonemeBoundByRule(lexemeBundle.slice(index, index + post.length), post)) return [...newLexeme, phoneme];
+    const newPhoneme = swapPhoneme(phoneme, rule.newFeatures[0], features);
+    return [...newLexeme, newPhoneme];
+  }, [])
+  return newLexeme;
+
+}
+
 export const run = (state: stateType, action: resultsAction): stateType => {
 
   // for each epoch
   // TODO iterate through each epoch
-  let ruleBundle = state.epochs[0].changes;
-
-    // for each rule in epoch
-    ruleBundle = ruleBundle.map(rule => decomposeRule(rule))
-      // parse rule into feature bundles for 
-        // environment
-          // pre-target
-          // post-target
-        // target
-        // mutation
-      // for each item in lexicon
-        // match targets in environments
-        // mutate target
-        // temporarily store lexical item
-    // store lexical items in resulting epoch
-
-
-
+  const epoch = state.epochs[0];
+  const phones = state.phones;
+  const lexicon = state.lexicon;
+  const features  = state.features;
+  const ruleBundle = decomposeRules(epoch, phones);
+  const lexiconBundle = lexicon.map(lexeme => findFeaturesFromLexeme(phones, lexeme.lexeme))
   
-  ruleBundle.map(rule => {
-    rule.forEach(position => {
-      console.log(position)
-    })
+  const results = lexiconBundle.map(lexemeBundle => {
+    return ruleBundle.reduce((lexeme, rule) => {
+      return transformLexeme(lexeme, rule, features);
+    }, lexemeBundle)
   })
   
-  let featurePhoneBundle = state.lexicon.map(lexeme => findFeaturesFromLexeme(state.phones, lexeme))
-  
-  console.log(featurePhoneBundle)
-  ruleBundle.forEach(rule => {
-    featurePhoneBundle.map(featurePhone => {
-      // if (findRules(featurePhone, )
-    })
-})
-
-  let results = [];
-  return {...state, results: { pass: state.epochs[0].name, results } }
+  const stringifiedResults = results.map(lexemeBundle => {
+    return Object.entries(lexemeBundle).map(phoneme => phoneme[1].grapheme).join('')
+  })
+  return {...state, results: { pass: state.epochs[0].name, results: stringifiedResults } }
 }
