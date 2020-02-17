@@ -82,8 +82,8 @@ const PhonoChangeApplier = () => {
         }
         startingIndex = index;
       })
-      lexemeBundle.unshift(['#'])
-      lexemeBundle.push(['#'])
+      // lexemeBundle.unshift(['#'])
+      // lexemeBundle.push(['#'])
       lexicalFeatureBundles.push(lexemeBundle);
     })
     console.log(lexicalFeatureBundles)

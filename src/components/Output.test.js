@@ -20,7 +20,7 @@ describe('Output', () => {
   });
   
   it('renders output lexicon list from output hook', () => {
-    const { getByTestId } = render(<Output results={['word', 'lex', 'word']}/>);
+    const { getByTestId } = render(<Output results={[{pass: 'test', lexicon: ['word', 'lex', 'word']}]}/>);
     expect(getByTestId('Output-lexicon')).toContainHTML('<p>word</p><p>lex</p><p>word</p>');
   });
 

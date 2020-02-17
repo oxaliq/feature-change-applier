@@ -192,10 +192,10 @@ export const run = (state: stateType, action: resultsAction): stateType => {
   const passResults = transformLexicon(lexiconBundle)(ruleBundle)(features);
   const stringifiedPassResults = passResults.map(stringifyResults);
   
-  const pass = { 
+  const pass = {
     pass: epoch.name,
-    results: stringifiedPassResults
+    lexicon: stringifiedPassResults
   }
 
-  return {...state, results: pass }
+  return {...state, results: [pass] }
 }

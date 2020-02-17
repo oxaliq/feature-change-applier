@@ -89,12 +89,28 @@ describe('Results', () => {
   it('results returned from first sound change rule', () => {
     const action = {type: 'RUN'};
     state = initState(0)
-    expect(stateReducer(state, action).results).toEqual({
-      pass: 'epoch 1',
-      results: [
-        'anna', 'anat', 'anət', 'anna', 'tan', 'ənna'
-      ]
-    })
+    expect(stateReducer(state, action).results).toEqual([
+      {
+        pass: 'epoch 1',
+        lexicon: [
+          'anna', 'anat', 'anət', 'anna', 'tan', 'ənna'
+        ]
+      }
+    ]);
+  });
+  
+  if('results returned from sound change suite', () => {
+    const action = {type: 'RUN'};
+    state = initState()
+    console.log(stateReducer(state, action).results)
+    expect(stateReducer(state, action).results).toEqual([
+      {
+        pass: 'epoch 1',
+        lexicon: [
+          'anna', 'anat', 'anət', 'anna', 'tan', 'ənna'
+        ]
+      }
+    ]);
   });
 
 });
