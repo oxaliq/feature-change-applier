@@ -137,6 +137,19 @@ describe('Results', () => {
       }
     ]);
   });
+
+  it('results returned through fifth sound change rule', () => {
+    const action = {type: 'RUN'};
+    state = initState(5)
+    expect(stateReducer(state, action).results).toEqual([
+      {
+        pass: 'epoch 1',
+        lexicon: [
+          'annu', 'anat', 'ant', 'annu', 'tʰan', 'nnu'
+        ]
+      }
+    ]);
+  });
   
   // if('results returned from sound change suite', () => {
   //   const action = {type: 'RUN'};
