@@ -5,15 +5,15 @@ export type initAction = {
   type: "INIT"
 }
 
-export const initState = (changesArgument: number = -1): stateType => {
+export const initState = (changesArgument: number): stateType => {
   const state = {
     epochs: [
       {
         name: 'epoch 1',
         changes: [
           '[+ occlusive - nasal]>[+ occlusive + nasal]/n_.',
-          // 'at>ta/._#',
-          // '[+ sonorant - low rounded high back]>0/._.',
+          'a>ɯ/._#',
+          '[+ sonorant - low rounded high back]>0/._.',
           // 'nn>nun/._.',
           // '[+ nasal][+ obstruent]>[+ nasal obstruent aspirated ]/#_.',
           // '[+ sonorant rounded]>[+ sonorant - rounded]/._#'
@@ -43,7 +43,7 @@ export const initState = (changesArgument: number = -1): stateType => {
       },
       t: {
         grapheme: 't', features: {
-          occlusive: true, coronal: true, obstruent: true
+          occlusive: true, coronal: true, obstruent: true, nasal: false
         },
         ʰ: {
           grapheme: 'tʰ', features: {
@@ -86,7 +86,7 @@ export const initState = (changesArgument: number = -1): stateType => {
       {lexeme: 'ənta', epoch: state.epochs[0]}
   ]
 
-  if(changesArgument > -1) state.epochs[0].changes = state.epochs[0].changes.splice(changesArgument, 1)
+  if(changesArgument > -1) state.epochs[0].changes = state.epochs[0].changes.splice(0, changesArgument)
 
   return state;
 }

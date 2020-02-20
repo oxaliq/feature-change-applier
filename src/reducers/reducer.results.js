@@ -43,6 +43,7 @@ const findFeaturesFromLexeme = (phones: {}, lexeme:string): [] => {
   })
   return featureBundle;
 }
+
 const findFeaturesFromGrapheme = (phones: {}, lexeme:string): [] => {
   let featureBundle = []
   let lastIndex = lexeme.length - 1;
@@ -94,6 +95,8 @@ const mapToPositiveAndNegativeFeatures = phoneme => (
 const mapStringToFeatures = (ruleString, phones) => {
   if (ruleString) {
     if (ruleString === '.') return [];
+    if (ruleString === '#') return ['#']
+    if (ruleString === '0') return [];
     const ruleBrackets = ruleString.match(/\[.*\]/)
     if (ruleBrackets) {
       return ruleString
@@ -129,6 +132,7 @@ const isPhonemeBoundByRule  = phonemeFeatures => (ruleFeature, index) => {
   const phoneme = phonemeFeatures[index].features;
   return Object.entries(ruleFeature).reduce((bool, [feature, value]) => {
     if (!bool) return false;
+    if (!phoneme.hasOwnProperty(feature)) return false;
     if (!phoneme[feature] && !value) return true;
     if (phoneme[feature] !== value) return false;
     return true;
@@ -141,9 +145,8 @@ const isEnvironmentBoundByRule = (phonemeFeatures, ruleFeatures) => {
     ? true : false;
 }
 
-
-
 const swapPhoneme = (phoneme, newFeatures, features) => {
+  if (!newFeatures) return {}
   const newPhonemeFeatures = Object.entries(newFeatures)
     .reduce((newPhoneme, [newFeature, newValue]) => ({ ...newPhoneme, [newFeature]: newValue })
     , {...phoneme.features});
@@ -154,12 +157,30 @@ const swapPhoneme = (phoneme, newFeatures, features) => {
     , newPhonemeCandidates[newPhonemeCandidates.length - 1])[0];
 }
 
+const transformLexemeInitial = (newLexeme, pre, post, position, phoneme, index, lexemeBundle, newFeatures, features) => {
+  if (index !== pre.length - 1) return [...newLexeme, phoneme];
+  if (!isEnvironmentBoundByRule([phoneme], position)) return [...newLexeme, phoneme];
+  if (!isEnvironmentBoundByRule(lexemeBundle.slice(index, index + post.length), post)) return [...newLexeme, phoneme];
+  const newPhoneme = swapPhoneme(phoneme, newFeatures[0], features);
+  return [...newLexeme, newPhoneme];
+}
+
+const transformLexemeCoda = (newLexeme, pre, post, position, phoneme, index, lexemeBundle, newFeatures, features) => {
+  if (index + post.length !== lexemeBundle.length) return [...newLexeme, phoneme];
+  if (!isEnvironmentBoundByRule(lexemeBundle.slice(index - pre.length, index), pre)) return [...newLexeme, phoneme];
+  if (!isEnvironmentBoundByRule([phoneme], position)) return [...newLexeme, phoneme];
+  const newPhoneme = swapPhoneme(phoneme, newFeatures[0], features);
+  return [...newLexeme, newPhoneme];
+}
+
 export const transformLexeme = (lexemeBundle, rule, features) => {
   const {pre, post, position} = rule.environment;
   const newLexeme = lexemeBundle.reduce((newLexeme, phoneme, index) => {
+    if (pre.find(val => val === '#')) return transformLexemeInitial(newLexeme, pre, post, position, phoneme, index, lexemeBundle, rule.newFeatures, features);
+    if (post.find(val => val === '#')) return transformLexemeCoda(newLexeme, pre, post, position, phoneme, index, lexemeBundle, rule.newFeatures, features);
     if ( index < pre.length || index >= lexemeBundle.length - post.length ) return [...newLexeme, phoneme];
     if (!isEnvironmentBoundByRule(lexemeBundle.slice(index - pre.length, index), pre)) return [...newLexeme, phoneme];
-    if (!isEnvironmentBoundByRule([phoneme], rule.environment.position)) return [...newLexeme, phoneme];
+    if (!isEnvironmentBoundByRule([phoneme], position)) return [...newLexeme, phoneme];
     if (!isEnvironmentBoundByRule(lexemeBundle.slice(index, index + post.length), post)) return [...newLexeme, phoneme];
     const newPhoneme = swapPhoneme(phoneme, rule.newFeatures[0], features);
     return [...newLexeme, newPhoneme];
@@ -173,7 +194,7 @@ const transformLexicon = lexiconBundle =>
   ruleBundle => 
   features => 
     lexiconBundle.map(lexemeBundle => ruleBundle.reduce(
-      (lexeme, rule) => transformLexeme(lexeme, rule, features)
+      (lexeme, rule, i) => transformLexeme(lexeme, rule, features)
       , lexemeBundle
     ))
 

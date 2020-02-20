@@ -55,7 +55,7 @@ describe('Results', () => {
       },
       {
         grapheme: 't',
-        features: { occlusive: true, coronal: true, obstruent: true }
+        features: { occlusive: true, coronal: true, obstruent: true, nasal: false }
       },
       {
         grapheme: 'a',
@@ -88,7 +88,7 @@ describe('Results', () => {
 
   it('results returned from first sound change rule', () => {
     const action = {type: 'RUN'};
-    state = initState(0)
+    state = initState(1)
     expect(stateReducer(state, action).results).toEqual([
       {
         pass: 'epoch 1',
@@ -99,18 +99,44 @@ describe('Results', () => {
     ]);
   });
   
-  if('results returned from sound change suite', () => {
+  it('results returned through second sound change rule', () => {
     const action = {type: 'RUN'};
-    state = initState()
-    console.log(stateReducer(state, action).results)
+    state = initState(2)
     expect(stateReducer(state, action).results).toEqual([
       {
         pass: 'epoch 1',
         lexicon: [
-          'anna', 'anat', 'anət', 'anna', 'tan', 'ənna'
+          'annɯ', 'anat', 'anət', 'annɯ', 'tan', 'ənnɯ'
         ]
       }
     ]);
   });
+
+  it('results returned through third sound change rule', () => {
+    const action = {type: 'RUN'};
+    state = initState(3)
+    expect(stateReducer(state, action).results).toEqual([
+      {
+        pass: 'epoch 1',
+        lexicon: [
+          'annɯ', 'anat', 'ant', 'annɯ', 'tan', 'nnɯ'
+        ]
+      }
+    ]);
+  });
+  
+  // if('results returned from sound change suite', () => {
+  //   const action = {type: 'RUN'};
+  //   state = initState()
+  //   console.log(stateReducer(state, action).results)
+  //   expect(stateReducer(state, action).results).toEqual([
+  //     {
+  //       pass: 'epoch 1',
+  //       lexicon: [
+  //         'anna', 'anta', 'anət', 'anna', 'tan', 'ənna'
+  //       ]
+  //     }
+  //   ]);
+  // });
 
 });
