@@ -55,6 +55,12 @@ describe('Results', () => {
     expect(decomposeRules(epoch, phones)).toEqual("Error in line 1: Too many '_' operators");
   })
 
+  it('rule with incorrect feature syntax returns helpful error message', () => {
+    const { phones } = initState();
+    const epoch = { name: 'error epoch', changes: [ '[+ occlusive - nasal = obstruent]>n/_' ] }
+    expect(decomposeRules(epoch, phones)).toEqual("Error in line 1: Unknown token '='");
+  })
+
   it('expect transform lexeme to apply rule to lexeme', () => {
     const lexemeBundle = getlexemeBundle();
     const resultsLexeme = [...lexemeBundle]

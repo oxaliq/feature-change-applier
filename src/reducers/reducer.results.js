@@ -89,20 +89,39 @@ const decomposeRule = (rule: string, index: number): ruleBundle => {
   }
 }
 
+const doesFeatureRuleContainUnknownToken = features => {
+  const unknownTokens = features
+  .match(/\W/g)
+  .filter(v => v !== '-' && v !== '+' && v !== ']' && v !== '[' && v !== ' ')
+  if (unknownTokens.length) throw `Unknown token '${unknownTokens[0]}'`;
+  return true
+}
+
 const getPositiveFeatures = phoneme => {
-  const positiveFeatures = phoneme.match(/(?=\+.).*(?<=\-)|(?=\+.).*(?!\-).*(?<=\])/g)
-  return positiveFeatures ? positiveFeatures[0]
-  .trim().match(/\w+/g)
-  .reduce((map, feature) => ({...map, [feature]: true}), {})
-  : {}
+  try {
+    const positiveFeatures = phoneme.match(/(?=\+.).*(?<=\-)|(?=\+.).*(?!\-).*(?<=\])/g)
+    if (positiveFeatures) doesFeatureRuleContainUnknownToken(positiveFeatures[0])
+    return positiveFeatures ? positiveFeatures[0]
+    .trim().match(/\w+/g)
+    .reduce((map, feature) => ({...map, [feature]: true}), {})
+    : {}
+  } catch (err) {
+    throw err;
+  }
 }
 
 const getNegativeFeatures = phoneme => {
-  const negativeFeatures = phoneme.match(/(?=\-.).*(?<=\+)|(?=\-.).*(?!\+).*(?<=\])/g)
-  return negativeFeatures ? negativeFeatures[0]
-  .trim().match(/\w+/g)
-  .reduce((map, feature) => ({...map, [feature]: false}), {})
-  : {}
+  try {
+    const negativeFeatures = phoneme.match(/(?=\-.).*(?<=\+)|(?=\-.).*(?!\+).*(?<=\])/g)
+    if (negativeFeatures) doesFeatureRuleContainUnknownToken(negativeFeatures[0])
+    return negativeFeatures ? negativeFeatures[0]
+    .trim()
+    .match(/\w+/g)
+    .reduce((map, feature) => ({...map, [feature]: false}), {})
+    : {}
+  } catch (err) {
+    throw err;
+  }
 }
 
 const mapToPositiveAndNegativeFeatures = phoneme => (
@@ -114,28 +133,36 @@ const mapStringToFeatures = (ruleString, phones) => {
     if (ruleString === '#') return ['#']
     if (ruleString === '0') return [];
     const ruleBrackets = ruleString.match(/\[.*\]/)
-    if (ruleBrackets) {
-      return ruleString
+    try {
+      if (ruleBrackets) {
+        return ruleString
         .split('[')
         // filter out empty strings
         .filter(v => v)
         .map(mapToPositiveAndNegativeFeatures)
+      }
+      return findFeaturesFromGrapheme(phones, ruleString);
+    } catch (err) {
+      throw err;
     }
-    return findFeaturesFromGrapheme(phones, ruleString);
   }
   return {};
 }
 
-const mapRuleBundleToFeatureBundle =  phones => ruleBundle => {
+const mapRuleBundleToFeatureBundle =  phones => ( ruleBundle, index ) => {
   // for each object in ruleBundle, map values to array of objects with feature-boolean key-value pairs
-  const { newFeatures, environment:{ pre, position, post } } = ruleBundle;
-  return {
-    environment: {
-      pre: mapStringToFeatures(pre, phones),
-      position: mapStringToFeatures(position, phones),
-      post: mapStringToFeatures(post, phones),
-    },
-    newFeatures: mapStringToFeatures(newFeatures, phones)
+  try {
+    const { newFeatures, environment:{ pre, position, post } } = ruleBundle;
+    return {
+      environment: {
+        pre: mapStringToFeatures(pre, phones),
+        position: mapStringToFeatures(position, phones),
+        post: mapStringToFeatures(post, phones),
+      },
+      newFeatures: mapStringToFeatures(newFeatures, phones)
+    }
+  } catch (err) {
+    throw errorMessage`Error in line ${index + 1}: ${err}`;
   }
 }
 
@@ -228,18 +255,21 @@ const stringifyResults = lexemeBundle => Object.entries(lexemeBundle).map(getGra
 export const run = (state: stateType, action: resultsAction): stateType => {
 
   // TODO iterate through each epoch
-  const epoch = state.epochs[0];
-
-  const { phones, lexicon, features } = state;
-
-  const ruleBundle = decomposeRules(epoch, phones);
-  const lexiconBundle = formBundleFromLexicon(lexicon)(phones); 
-  const passResults = transformLexicon(lexiconBundle)(ruleBundle)(features);
-  const stringifiedPassResults = passResults.map(stringifyResults);
-  const pass = {
-    pass: epoch.name,
-    lexicon: stringifiedPassResults
+  try {
+    const epoch = state.epochs[0];
+    const { phones, lexicon, features } = state;
+    
+    const ruleBundle = decomposeRules(epoch, phones);
+    const lexiconBundle = formBundleFromLexicon(lexicon)(phones); 
+    const passResults = transformLexicon(lexiconBundle)(ruleBundle)(features);
+    const stringifiedPassResults = passResults.map(stringifyResults);
+    const pass = {
+      pass: epoch.name,
+      lexicon: stringifiedPassResults
+    }
+    
+    return {...state, results: [pass] }
+  } catch (err) {
+    return err;
   }
-
-  return {...state, results: [pass] }
 }
