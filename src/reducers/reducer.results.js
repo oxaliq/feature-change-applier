@@ -214,7 +214,6 @@ export const run = (state: stateType, action: resultsAction): stateType => {
   const lexiconBundle = formBundleFromLexicon(lexicon)(phones); 
   const passResults = transformLexicon(lexiconBundle)(ruleBundle)(features);
   const stringifiedPassResults = passResults.map(stringifyResults);
-  console.log(passResults)
   const pass = {
     pass: epoch.name,
     lexicon: stringifiedPassResults

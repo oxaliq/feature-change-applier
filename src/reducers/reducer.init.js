@@ -14,7 +14,7 @@ export const initState = (changesArgument: number): stateType => {
           '[+ occlusive - nasal]>[+ occlusive + nasal]/n_.',
           'a>ɯ/._#',
           '[+ sonorant - low rounded high back]>0/._.',
-          // '[+ nasal][+ obstruent]>[+ nasal obstruent aspirated ]/#_.',
+          '[+ obstruent]>[+ obstruent aspirated ]/#_.',
           // 'nn>nun/._.',
           // '[+ sonorant rounded]>[+ sonorant - rounded]/._#'
         ]
@@ -74,8 +74,8 @@ export const initState = (changesArgument: number): stateType => {
     occlusive: { positive:[ state.phones.t, state.phones.n, state.phones.t.ʰ ], negative: [] },
     coronal: { positive:[ state.phones.t, state.phones.n, state.phones.t.ʰ ], negative: [] },
     obstruent: { positive:[ state.phones.t, state.phones.n, state.phones.t.ʰ ], negative: [] },
-    nasal: { positive:[ state.phones.n ], negative: [] },
-    aspirated: { positive:[ state.phones.t.ʰ ], negative: [] },
+    nasal: { positive:[ state.phones.n ], negative: [state.phones.t, state.phones.t.ʰ] },
+    aspirated: { positive:[ state.phones.t.ʰ ], negative: [ state.phones.t ] },
   }
   state.lexicon = [
       {lexeme: 'anta', epoch: state.epochs[0]}, 
