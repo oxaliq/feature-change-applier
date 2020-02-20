@@ -183,6 +183,8 @@ export const transformLexeme = (lexemeBundle, rule, features) => {
     if (!isEnvironmentBoundByRule([phoneme], position)) return [...newLexeme, phoneme];
     if (!isEnvironmentBoundByRule(lexemeBundle.slice(index, index + post.length), post)) return [...newLexeme, phoneme];
     const newPhoneme = swapPhoneme(phoneme, rule.newFeatures[0], features);
+    // if deletion occurs
+    if (!newPhoneme.grapheme) return [ ...newLexeme] ;
     return [...newLexeme, newPhoneme];
   }, [])
   return newLexeme;
@@ -212,7 +214,7 @@ export const run = (state: stateType, action: resultsAction): stateType => {
   const lexiconBundle = formBundleFromLexicon(lexicon)(phones); 
   const passResults = transformLexicon(lexiconBundle)(ruleBundle)(features);
   const stringifiedPassResults = passResults.map(stringifyResults);
-  
+  console.log(passResults)
   const pass = {
     pass: epoch.name,
     lexicon: stringifiedPassResults

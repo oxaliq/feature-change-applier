@@ -14,8 +14,8 @@ export const initState = (changesArgument: number): stateType => {
           '[+ occlusive - nasal]>[+ occlusive + nasal]/n_.',
           'a>ɯ/._#',
           '[+ sonorant - low rounded high back]>0/._.',
-          // 'nn>nun/._.',
           // '[+ nasal][+ obstruent]>[+ nasal obstruent aspirated ]/#_.',
+          // 'nn>nun/._.',
           // '[+ sonorant rounded]>[+ sonorant - rounded]/._#'
         ]
       }
