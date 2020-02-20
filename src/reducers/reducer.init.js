@@ -15,8 +15,8 @@ export const initState = (changesArgument: number): stateType => {
           'a>ɯ/._#',
           '[+ sonorant - low rounded high back]>0/._.',
           '[+ obstruent]>[+ obstruent aspirated ]/#_.',
-          '[+ sonorant - rounded]>[+ sonorant + rounded]/._#'
-          // 'nn>nun/._.',
+          '[+ sonorant - rounded]>[+ sonorant + rounded]/._#',
+          'nn>nun/._.'
         ]
       }
     ],

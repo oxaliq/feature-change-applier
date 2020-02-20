@@ -64,12 +64,28 @@ const findFeaturesFromGrapheme = (phones: {}, lexeme:string): [] => {
   return featureBundle;
 }
 
-const decomposeRule = (rule: string): ruleBundle => {
+const errorMessage = ([prefix, separator], location, err) => `${prefix}${location}${separator}${err}`
+
+const lintRule = (rule) => {
+  if (rule.match(/>/g) === null) throw `Insert '>' operator between target and result`
+  if (rule.match(/\//g) === null) throw `Insert '/' operator between change and environment`
+  if (rule.match(/_/g) === null) throw `Insert '_' operator in environment`
+  if (rule.match(/>/g).length > 1) throw `Too many '>' operators`
+  if (rule.match(/\//g).length > 1) throw `Too many '/' operators`
+  if (rule.match(/_/g).length > 1) throw `Too many '_' operators`
+  return rule.split(/>|\/|_/g);
+}
+
+const decomposeRule = (rule: string, index: number): ruleBundle => {
   // splits rule at '>' '/' and '_' substrings resulting in array of length 4
-  const [position, newFeatures, pre, post] = rule.split(/>|\/|_/g); 
-  return {
-    environment: { pre, position, post },
-    newFeatures
+  try {
+    const [position, newFeatures, pre, post] = lintRule(rule); 
+    return {
+      environment: { pre, position, post },
+      newFeatures
+    }
+  } catch (err) {
+    throw errorMessage`Error in line ${index + 1}: ${err}`;
   }
 }
 
@@ -125,7 +141,13 @@ const mapRuleBundleToFeatureBundle =  phones => ruleBundle => {
 
 export const decomposeRules = (epoch: epochType, phones: {[key: string]: phoneType}): decomposedRulesType => {
   const { changes } = epoch
-  return changes.map(decomposeRule).map(mapRuleBundleToFeatureBundle(phones));
+  try {
+    return changes
+      .map(decomposeRule)
+      .map(mapRuleBundleToFeatureBundle(phones));
+  } catch (err) {
+    return err;
+  }
 }
 
 const isPhonemeBoundByRule  = phonemeFeatures => (ruleFeature, index) => {
