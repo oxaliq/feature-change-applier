@@ -69,7 +69,7 @@ describe('Results', () => {
     expect(transformLexeme(lexemeBundle, rule, initState().features)).toEqual(resultsLexeme)
   })
 
-  it('results returned from first sound change rule', () => {
+  it('results returned from first sound change rule (feature matching)', () => {
     const action = {type: 'RUN'};
     state = initState(1)
     expect(stateReducer(state, action).results).toEqual([
@@ -82,7 +82,7 @@ describe('Results', () => {
     ]);
   });
   
-  it('results returned through second sound change rule', () => {
+  it('results returned through second sound change rule (phoneme matching)', () => {
     const action = {type: 'RUN'};
     state = initState(2)
     expect(stateReducer(state, action).results).toEqual([
@@ -95,7 +95,7 @@ describe('Results', () => {
     ]);
   });
 
-  it('results returned through third sound change rule', () => {
+  it('results returned through third sound change rule (phoneme dropping)', () => {
     const action = {type: 'RUN'};
     state = initState(3)
     expect(stateReducer(state, action).results).toEqual([
@@ -108,7 +108,7 @@ describe('Results', () => {
     ]);
   });
 
-  it('results returned through fourth sound change rule', () => {
+  it('results returned through fourth sound change rule (lexeme initial environment)', () => {
     const action = {type: 'RUN'};
     state = initState(4)
     expect(stateReducer(state, action).results).toEqual([
@@ -121,7 +121,7 @@ describe('Results', () => {
     ]);
   });
 
-  it('results returned through fifth sound change rule', () => {
+  it('results returned through fifth sound change rule (lexeme final environment)', () => {
     const action = {type: 'RUN'};
     state = initState(5)
     expect(stateReducer(state, action).results).toEqual([
@@ -135,18 +135,18 @@ describe('Results', () => {
   });
 
 
-  // it('results returned through sixth sound change rule', () => {
-  //   const action = {type: 'RUN'};
-  //   state = initState(5)
-  //   expect(stateReducer(state, action).results).toEqual([
-  //     {
-  //       pass: 'epoch 1',
-  //       lexicon: [
-  //         'anunu', 'anat', 'ant', 'anunu', 'tʰan', 'nunu'
-  //       ]
-  //     }
-  //   ]);
-  // });
+  it('results returned through sixth sound change rule (multi-phoneme target)', () => {
+    const action = {type: 'RUN'};
+    state = initState(5)
+    expect(stateReducer(state, action).results).toEqual([
+      {
+        pass: 'epoch 1',
+        lexicon: [
+          'annu', 'anta', 'ant', 'annu', 'tʰan', 'nnu'
+        ]
+      }
+    ]);
+  });
 
 });
 

@@ -67,9 +67,9 @@ const findFeaturesFromGrapheme = (phones: {}, lexeme:string): [] => {
 const errorMessage = ([prefix, separator], location, err) => `${prefix}${location}${separator}${err}`
 
 const lintRule = (rule) => {
-  if (rule.match(/>/g) === null) throw `Insert '>' operator between target and result`
-  if (rule.match(/\//g) === null) throw `Insert '/' operator between change and environment`
-  if (rule.match(/_/g) === null) throw `Insert '_' operator in environment`
+  if (!rule.match(/>/g)) throw `Insert '>' operator between target and result`
+  if (!rule.match(/\//g)) throw `Insert '/' operator between change and environment`
+  if (!rule.match(/_/g)) throw `Insert '_' operator in environment`
   if (rule.match(/>/g).length > 1) throw `Too many '>' operators`
   if (rule.match(/\//g).length > 1) throw `Too many '/' operators`
   if (rule.match(/_/g).length > 1) throw `Too many '_' operators`
@@ -77,55 +77,50 @@ const lintRule = (rule) => {
 }
 
 const decomposeRule = (rule: string, index: number): ruleBundle => {
-  // splits rule at '>' '/' and '_' substrings resulting in array of length 4
   try {
+    // splits rule at '>' '/' and '_' substrings resulting in array of length 4
     const [position, newFeatures, pre, post] = lintRule(rule); 
-    return {
-      environment: { pre, position, post },
-      newFeatures
-    }
+    return { environment: { pre, position, post }, newFeatures }
   } catch (err) {
     throw errorMessage`Error in line ${index + 1}: ${err}`;
   }
 }
 
+const isUnknownFeatureToken = token => token !== '-' && token !== '+' && token !== ']' && token !== '[' && token !== ' ';
+
 const doesFeatureRuleContainUnknownToken = features => {
   const unknownTokens = features
   .match(/\W/g)
-  .filter(v => v !== '-' && v !== '+' && v !== ']' && v !== '[' && v !== ' ')
+  .filter(isUnknownFeatureToken)
   if (unknownTokens.length) throw `Unknown token '${unknownTokens[0]}'`;
   return true
 }
 
-const getPositiveFeatures = phoneme => {
-  try {
-    const positiveFeatures = phoneme.match(/(?=\+.).*(?<=\-)|(?=\+.).*(?!\-).*(?<=\])/g)
-    if (positiveFeatures) doesFeatureRuleContainUnknownToken(positiveFeatures[0])
-    return positiveFeatures ? positiveFeatures[0]
-    .trim().match(/\w+/g)
-    .reduce((map, feature) => ({...map, [feature]: true}), {})
-    : {}
-  } catch (err) {
-    throw err;
-  }
-}
+const reduceFeaturesToBoolean = bool => (map, feature) => ({...map, [feature]: bool})
 
-const getNegativeFeatures = phoneme => {
+const getFeatures = (phoneme: string, featureBoolean): {} => {
   try {
-    const negativeFeatures = phoneme.match(/(?=\-.).*(?<=\+)|(?=\-.).*(?!\+).*(?<=\])/g)
-    if (negativeFeatures) doesFeatureRuleContainUnknownToken(negativeFeatures[0])
-    return negativeFeatures ? negativeFeatures[0]
-    .trim()
-    .match(/\w+/g)
-    .reduce((map, feature) => ({...map, [feature]: false}), {})
-    : {}
+    const featureMatch = featureBoolean
+    // regEx to pull positive features
+    ? /(?=\+.).*(?<=\-)|(?=\+.).*(?!\-).*(?<=\])/g 
+    // regEx to pull negative features
+    : /(?=\-.).*(?<=\+)|(?=\-.).*(?!\+).*(?<=\])/g
+    const [ features ] = phoneme.match(featureMatch) || [ null ];
+    if (features) {
+      doesFeatureRuleContainUnknownToken(features)
+      return features
+      .trim()
+      .match(/\w+/g)
+      .reduce(reduceFeaturesToBoolean(featureBoolean), {})
+    }
+    return {}
   } catch (err) {
     throw err;
   }
 }
 
 const mapToPositiveAndNegativeFeatures = phoneme => (
-  { ...getPositiveFeatures(phoneme), ...getNegativeFeatures(phoneme) } )
+  { ...getFeatures(phoneme, true), ...getFeatures(phoneme, false) } )
 
 const mapStringToFeatures = (ruleString, phones) => {
   if (ruleString) {
@@ -194,7 +189,7 @@ const isEnvironmentBoundByRule = (phonemeFeatures, ruleFeatures) => {
     ? true : false;
 }
 
-const swapPhoneme = (phoneme, newFeatures, features) => {
+const transformPhoneme = (phoneme, newFeatures, features) => {
   if (!newFeatures) return {}
   const newPhonemeFeatures = Object.entries(newFeatures)
     .reduce((newPhoneme, [newFeature, newValue]) => ({ ...newPhoneme, [newFeature]: newValue })
@@ -210,7 +205,7 @@ const transformLexemeInitial = (newLexeme, pre, post, position, phoneme, index, 
   if (index !== pre.length - 1) return [...newLexeme, phoneme];
   if (!isEnvironmentBoundByRule([phoneme], position)) return [...newLexeme, phoneme];
   if (!isEnvironmentBoundByRule(lexemeBundle.slice(index, index + post.length), post)) return [...newLexeme, phoneme];
-  const newPhoneme = swapPhoneme(phoneme, newFeatures[0], features);
+  const newPhoneme = transformPhoneme(phoneme, newFeatures[0], features);
   return [...newLexeme, newPhoneme];
 }
 
@@ -218,7 +213,7 @@ const transformLexemeCoda = (newLexeme, pre, post, position, phoneme, index, lex
   if (index + post.length !== lexemeBundle.length) return [...newLexeme, phoneme];
   if (!isEnvironmentBoundByRule(lexemeBundle.slice(index - pre.length, index), pre)) return [...newLexeme, phoneme];
   if (!isEnvironmentBoundByRule([phoneme], position)) return [...newLexeme, phoneme];
-  const newPhoneme = swapPhoneme(phoneme, newFeatures[0], features);
+  const newPhoneme = transformPhoneme(phoneme, newFeatures[0], features);
   return [...newLexeme, newPhoneme];
 }
 
@@ -231,7 +226,7 @@ export const transformLexeme = (lexemeBundle, rule, features) => {
     if (!isEnvironmentBoundByRule(lexemeBundle.slice(index - pre.length, index), pre)) return [...newLexeme, phoneme];
     if (!isEnvironmentBoundByRule([phoneme], position)) return [...newLexeme, phoneme];
     if (!isEnvironmentBoundByRule(lexemeBundle.slice(index, index + post.length), post)) return [...newLexeme, phoneme];
-    const newPhoneme = swapPhoneme(phoneme, rule.newFeatures[0], features);
+    const newPhoneme = transformPhoneme(phoneme, rule.newFeatures[0], features);
     // if deletion occurs
     if (!newPhoneme.grapheme) return [ ...newLexeme] ;
     return [...newLexeme, newPhoneme];
