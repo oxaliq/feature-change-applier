@@ -204,8 +204,10 @@ const transformPhoneme = (phoneme, newFeatures, features) => {
 const transformLexemeInitial = (newLexeme, pre, post, position, phoneme, index, lexemeBundle, newFeatures, features) => {
   if (index !== pre.length - 1) return [...newLexeme, phoneme];
   if (!isEnvironmentBoundByRule([phoneme], position)) return [...newLexeme, phoneme];
-  if (!isEnvironmentBoundByRule(lexemeBundle.slice(index, index + post.length), post)) return [...newLexeme, phoneme];
+  if (!isEnvironmentBoundByRule(lexemeBundle.slice(index + position.length, index + post.length + position.length), post)) return [...newLexeme, phoneme];
   const newPhoneme = transformPhoneme(phoneme, newFeatures[0], features);
+  // if deletion occurs
+  if (!newPhoneme.grapheme) return [ ...newLexeme] ;
   return [...newLexeme, newPhoneme];
 }
 
@@ -214,6 +216,8 @@ const transformLexemeCoda = (newLexeme, pre, post, position, phoneme, index, lex
   if (!isEnvironmentBoundByRule(lexemeBundle.slice(index - pre.length, index), pre)) return [...newLexeme, phoneme];
   if (!isEnvironmentBoundByRule([phoneme], position)) return [...newLexeme, phoneme];
   const newPhoneme = transformPhoneme(phoneme, newFeatures[0], features);
+  // if deletion occurs
+  if (!newPhoneme.grapheme) return [ ...newLexeme] ;
   return [...newLexeme, newPhoneme];
 }
 
@@ -245,26 +249,33 @@ const transformLexicon = lexiconBundle =>
     ))
 
 const getGraphemeFromEntry = ([_, phoneme]) => phoneme.grapheme
-const stringifyResults = lexemeBundle => Object.entries(lexemeBundle).map(getGraphemeFromEntry).join('')
+const stringifyResults = passResults => {
+  const lexicon = passResults.lexicon.map(lexeme => lexeme.map(phoneme => phoneme.grapheme).join(''))
+  return {...passResults, lexicon }
+}
 
 export const run = (state: stateType, action: resultsAction): stateType => {
 
   // TODO iterate through each epoch
   try {
-    const epoch = state.epochs[0];
-    const { phones, lexicon, features } = state;
-    
-    const ruleBundle = decomposeRules(epoch, phones);
-    const lexiconBundle = formBundleFromLexicon(lexicon)(phones); 
-    const passResults = transformLexicon(lexiconBundle)(ruleBundle)(features);
-    const stringifiedPassResults = passResults.map(stringifyResults);
-    const pass = {
-      pass: epoch.name,
-      lexicon: stringifiedPassResults
-    }
-    
-    return {...state, results: [pass] }
+    const passResults = state.epochs.reduce((results, epoch, _) => {
+      
+      const { phones, features } = state;
+      const lexicon = epoch.parent ? results.find(result => result.pass === epoch.parent).lexicon : state.lexicon
+      const ruleBundle = decomposeRules(epoch, phones);
+      const lexiconBundle = epoch.parent ? lexicon : formBundleFromLexicon(lexicon)(phones); 
+      const passResults = transformLexicon(lexiconBundle)(ruleBundle)(features)
+      const pass = {
+        pass: epoch.name,
+        lexicon: passResults
+      }
+      if ( epoch.parent ) pass.parent = epoch.parent;
+      return [...results, pass];
+    }, []);
+    const results = passResults.map(stringifyResults);
+    return {...state, results }
   } catch (err) {
+    console.log(err)
     return err;
   }
 }

@@ -134,20 +134,73 @@ describe('Results', () => {
     ]);
   });
 
+  // it('results returned through sixth sound change rule (multi-phoneme target)', () => {
+  //   const action = {type: 'RUN'};
+  //   state = initState(6)
+  //   expect(stateReducer(state, action).results).toEqual([
+  //     {
+  //       pass: 'epoch 1',
+  //       lexicon: [
+  //         'annu', 'anta', 'ant', 'annu', 'tʰan', 'nnu'
+  //       ]
+  //     }
+  //   ]);
+  // });
 
-  it('results returned through sixth sound change rule (multi-phoneme target)', () => {
+  it('results returned for multiple epochs without parent epoch', () => {
     const action = {type: 'RUN'};
-    state = initState(5)
+    state = initState(5);
+    const newEpoch = {
+      name: 'epoch 2',
+      changes: [
+        '[+ sonorant ]>0/#_.',
+        'n>0/#_n'
+      ]
+    }
+    state.epochs = [ ...state.epochs, newEpoch ]
     expect(stateReducer(state, action).results).toEqual([
       {
         pass: 'epoch 1',
         lexicon: [
-          'annu', 'anta', 'ant', 'annu', 'tʰan', 'nnu'
+          'annu', 'anat', 'ant', 'annu', 'tʰan', 'nnu'
+        ]
+      },
+      {
+        pass: 'epoch 2',
+        lexicon: [
+          'nta', 'nat', 'nət', 'na', 'tan', 'nta'
         ]
       }
-    ]);
-  });
+    ])
+  })
 
+  it('results returned for multiple epochs with parent epoch', () => {
+    const action = {type: 'RUN'};
+    state = initState(5);
+    const newEpoch = {
+      name: 'epoch 2',
+      parent: 'epoch 1',
+      changes: [
+        '[+ sonorant ]>0/#_.'
+      ]
+    }
+    state.epochs = [ ...state.epochs, newEpoch ]
+    expect(stateReducer(state, action).results).toEqual([
+      {
+        pass: 'epoch 1',
+        lexicon: [
+          'annu', 'anat', 'ant', 'annu', 'tʰan', 'nnu'
+        ]
+      },
+      {
+        pass: 'epoch 2',
+        parent: 'epoch 1',
+        lexicon: [
+          'nnu', 'nat', 'nt', 'nnu', 'tʰan', 'nu'
+        ]
+      }
+    ])
+  })
 });
 
 
