@@ -1,16 +1,14 @@
 import React, { useState, useReducer } from 'react';
 import './PhonoChangeApplier.scss';
 
-// import ls from 'local-storage';
-
 import ProtoLang from './components/ProtoLang';
 import Features from './components/Features';
 import Epochs from './components/Epochs';
 import Options from './components/Options';
 import Output from './components/Output';
 
-import {stateReducer} from './reducers/reducer';
-import {initState} from './reducers/reducer.init';
+import { stateReducer } from './reducers/reducer';
+import { initState } from './reducers/reducer.init';
 
 const PhonoChangeApplier = () => {
   const [ state, dispatch ] = useReducer(
@@ -18,26 +16,8 @@ const PhonoChangeApplier = () => {
     {},
     initState
   )
-  // ! DONE
-  const [ lexicon, setLexicon ] = useState(['mun', 'tʰu', 'tɯm', 'utʰ']);
-
-  const [ phonemes, setPhonemes ] = useState( 
-    { 
-      n: [ 'occlusive', 'sonorant', 'obstruent', 'nasal', 'alveolar' ], 
-      m: [ 'occlusive', 'sonorant', 'obstruent', 'nasal', 'bilabial' ], 
-      u: [ 'continuant', 'sonorant', 'syllabic', 'high', 'back', 'rounded' ], 
-      ɯ: [ 'continuant', 'sonorant', 'syllabic', 'high', 'back', 'unrounded' ], 
-      t: [ 'occlusive', 'plosive', 'obstruent', 'alveolar' ], 
-      tʰ: [ 'occlusive', 'plosive', 'obstruent', 'alveolar', 'aspirated' ],
-    } 
-    );
-    const [ epochs, setEpochs ] = useState([{name: 'epoch 1', changes:['[+ rounded]>[- rounded + unrounded]/_#']}]);
-    const [ options, setOptions ] = useState({output: 'default', save: false})
-    const [ features, setFeatures ] = useState(
-      ['occlusive', 'sonorant', 'obstruent', 'nasal', 'alveolar','bilabial',
-      'continuant','syllabic','high','back','rounded','unrounded', 'plosive','aspirated'])
+  const { lexicon, phones, phonemes, epochs, options, features, results } = state;
   // ! UNDONE
-  const [ results, setResults ] = useState([])
   const [ errors, setErrors ] = useState({})
 
   const runChanges = e => {
@@ -82,11 +62,8 @@ const PhonoChangeApplier = () => {
         }
         startingIndex = index;
       })
-      // lexemeBundle.unshift(['#'])
-      // lexemeBundle.push(['#'])
       lexicalFeatureBundles.push(lexemeBundle);
     })
-    console.log(lexicalFeatureBundles)
     
     // decompose rules
     let allEpochs = epochs.map(epoch => {
@@ -101,7 +78,6 @@ const PhonoChangeApplier = () => {
       return {epoch: epoch.name, rules: ruleBundle}
     })
 
-    console.log(allEpochs)
     // apply sound changes
     allEpochs.reduce((diachronicLexicon, epoch) => {
       let startingLexicon = diachronicLexicon.length 
@@ -122,11 +98,11 @@ const PhonoChangeApplier = () => {
 
   return (
     <div className="PhonoChangeApplier" data-testid="PhonoChangeApplier">
-      <ProtoLang lexicon={state.lexicon} dispatch={dispatch}/>
-      <Features phones={state.phones} features={state.features} dispatch={dispatch}/>
-      <Epochs epochs={state.epochs} dispatch={dispatch} />
-      <Options options={state.options} dispatch={dispatch}/>
-      <Output results={state.results} dispatch={dispatch}/>
+      <ProtoLang lexicon={lexicon} dispatch={dispatch}/>
+      <Features phones={phones} features={features} dispatch={dispatch}/>
+      <Epochs epochs={epochs} dispatch={dispatch} />
+      <Options options={options} dispatch={dispatch}/>
+      <Output results={results} dispatch={dispatch}/>
     </div>
   );
 }

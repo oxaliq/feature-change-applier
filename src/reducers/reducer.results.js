@@ -259,6 +259,7 @@ export const run = (state: stateType, action: resultsAction): stateType => {
 
   // TODO iterate through each epoch
   try {
+    console.log('running results')
     const passResults = state.epochs.reduce((results, epoch, _) => {
       const { phones, features, lexicon } = state;
       let lexiconBundle;
@@ -276,8 +277,10 @@ export const run = (state: stateType, action: resultsAction): stateType => {
     }, []);
     
     const results = passResults.map(stringifyResults);
+    console.log(results)
     return {...state, results }
   } catch (err) {
+    console.log(err)
     return {...state, errors: err };
   }
 }
