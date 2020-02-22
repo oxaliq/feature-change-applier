@@ -25,6 +25,8 @@ type ruleBundle = {
   newFeatures: string
 }
 
+const getProperty = property => object => object[property]
+
 const findFeaturesFromLexeme = (phones: {}, lexeme:string): [] => {
   let featureBundle = []
   let lastIndex = lexeme.length - 1;
@@ -185,19 +187,20 @@ const isPhonemeBoundByRule  = phonemeFeatures => (ruleFeature, index) => {
 
 const isEnvironmentBoundByRule = (phonemeFeatures, ruleFeatures) => {
   if (!ruleFeatures) return true;
-  return ruleFeatures.filter(isPhonemeBoundByRule(phonemeFeatures)).length === ruleFeatures.length 
-    ? true : false;
+  return ruleFeatures.filter(isPhonemeBoundByRule(phonemeFeatures)).length === ruleFeatures.length;
 }
+
+const getEntries = object => Object.entries(object);
+const isObjectWithPropertyInArray = (array, property) => candidate => array.map(getProperty(property)).includes(candidate[property]);
+const transformFeatureValues = features => ([newFeature, newValue]) => features[newFeature][newValue ? 'positive': 'negative'];
+const reduceFeatureValues = (newPhoneme, [newFeature, newValue]) => ({ ...newPhoneme, [newFeature]: newValue })
 
 const transformPhoneme = (phoneme, newFeatures, features) => {
   if (!newFeatures) return {}
-  const newPhonemeFeatures = Object.entries(newFeatures)
-    .reduce((newPhoneme, [newFeature, newValue]) => ({ ...newPhoneme, [newFeature]: newValue })
-    , {...phoneme.features});
-  const newPhonemeCandidates = Object.entries(newPhonemeFeatures)
-    .map(([newFeature, newValue]) => features[newFeature][newValue ? 'positive': 'negative']);
+  const newPhonemeFeatures = getEntries(newFeatures).reduce(reduceFeatureValues, {...phoneme.features});
+  const newPhonemeCandidates = getEntries(newPhonemeFeatures).map(transformFeatureValues(features));
   return newPhonemeCandidates
-    .reduce((candidates, value, index, array) => candidates.filter(candidate => value.map(val => val.grapheme).includes(candidate.grapheme))
+    .reduce((candidates, candidatesSubset, index, array) => candidates.filter(isObjectWithPropertyInArray(candidatesSubset, 'grapheme'))
     , newPhonemeCandidates[newPhonemeCandidates.length - 1])[0];
 }
 
@@ -249,33 +252,32 @@ const transformLexicon = lexiconBundle =>
     ))
 
 const getGraphemeFromEntry = ([_, phoneme]) => phoneme.grapheme
-const stringifyResults = passResults => {
-  const lexicon = passResults.lexicon.map(lexeme => lexeme.map(phoneme => phoneme.grapheme).join(''))
-  return {...passResults, lexicon }
-}
+const stringifyLexeme = (lexeme) => lexeme.map(getProperty('grapheme')).join('')
+const stringifyResults = ({lexicon, ...passResults}) => ({...passResults, lexicon: lexicon.map(stringifyLexeme)})
 
 export const run = (state: stateType, action: resultsAction): stateType => {
 
   // TODO iterate through each epoch
   try {
     const passResults = state.epochs.reduce((results, epoch, _) => {
-      
-      const { phones, features } = state;
-      const lexicon = epoch.parent ? results.find(result => result.pass === epoch.parent).lexicon : state.lexicon
-      const ruleBundle = decomposeRules(epoch, phones);
-      const lexiconBundle = epoch.parent ? lexicon : formBundleFromLexicon(lexicon)(phones); 
-      const passResults = transformLexicon(lexiconBundle)(ruleBundle)(features)
-      const pass = {
-        pass: epoch.name,
-        lexicon: passResults
+      const { phones, features, lexicon } = state;
+      let lexiconBundle;
+      if ( epoch.parent ) {
+        lexiconBundle = results.find(result => result.pass === epoch.parent).lexicon
       }
+      if (!epoch.parent) {
+        lexiconBundle = formBundleFromLexicon(lexicon)(phones); 
+      }
+      const ruleBundle = decomposeRules(epoch, phones);
+      const passResults = transformLexicon(lexiconBundle)(ruleBundle)(features)
+      const pass = { pass: epoch.name, lexicon: passResults }
       if ( epoch.parent ) pass.parent = epoch.parent;
       return [...results, pass];
     }, []);
+    
     const results = passResults.map(stringifyResults);
     return {...state, results }
   } catch (err) {
-    console.log(err)
-    return err;
+    return {...state, errors: err };
   }
 }
