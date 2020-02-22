@@ -102,7 +102,7 @@ const PhonoChangeApplier = () => {
       <Features phones={phones} features={features} dispatch={dispatch}/>
       <Epochs epochs={epochs} dispatch={dispatch} />
       <Options options={options} dispatch={dispatch}/>
-      <Output results={results} dispatch={dispatch}/>
+      <Output results={results} options={options} dispatch={dispatch}/>
     </div>
   );
 }
