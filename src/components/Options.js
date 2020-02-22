@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import './Options.scss';
 import ls from 'local-storage';
 
-const Options = props => {
+const Options = ({ options, dispatch }) => {
   const [ load, setLoad ] = useState('');
 
   const handleRadioChange = e => {
     const option = e.target.name;
     const setValue = e.target.id;
-    props.dispatch({
+    dispatch({
       type: 'SET_OPTIONS',
       value: {
         option,
@@ -20,7 +20,7 @@ const Options = props => {
   const handleCheckChange = e => {
     const option = e.target.name;
     const setValue = e.target.checked ? 'true' : 'false';
-    props.dispatch({
+    dispatch({
       type: 'SET_OPTIONS',
       value: {
         option,
@@ -31,7 +31,7 @@ const Options = props => {
 
   const handleFormSubmit = (e, options) => {
     e.preventDefault();
-    props.dispatch({
+    dispatch({
       type: 'RUN',
       value: options
     });
@@ -41,13 +41,13 @@ const Options = props => {
     <div className="Options" data-testid="Options">
       <h3>Modeling Options</h3>
 
-      <form onSubmit={e=>handleFormSubmit(e, props.options)} data-testid="Options-form">
+      <form onSubmit={e=>handleFormSubmit(e, options)} data-testid="Options-form">
         
         {/* <h5>Output</h5> */}
 
         <input 
           type="radio" name="output" id="default" 
-          checked={props.options ? props.options.output === 'default' : true}
+          checked={options ? options.output === 'default' : true}
           onChange={e=>handleRadioChange(e)}
           />
         <label htmlFor="default">Default 
@@ -56,7 +56,7 @@ const Options = props => {
         
         <input 
           type="radio" name="output" id="proto" 
-          checked={props.options ? props.options.output === 'proto' : false}
+          checked={options ? options.output === 'proto' : false}
           onChange={e=>handleRadioChange(e)}
           />
         <label htmlFor="proto">Proto 
@@ -65,7 +65,7 @@ const Options = props => {
         
         <input 
           type="radio" name="output" id="diachronic" 
-          checked={props.options ? props.options.output === 'diachronic' : false}
+          checked={options ? options.output === 'diachronic' : false}
           onChange={e=>handleRadioChange(e)}
         />
         <label htmlFor="diachronic">Diachronic 
@@ -74,7 +74,7 @@ const Options = props => {
         
         <input 
           type="checkbox" name="save"
-          checked={props.options ? props.options.save : false}
+          checked={options ? options.save : false}
           onChange={e=>handleCheckChange(e)}
         />
         <label htmlFor="save">Store session on Run</label>

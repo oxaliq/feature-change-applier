@@ -14,7 +14,7 @@ const Output = props => {
 
   const renderDefault = () => {
     return results.map((epoch, i) => {
-    const lexicon = epoch.lexicon.map(lexeme => <span>{lexeme}</span>);
+    const lexicon = epoch.lexicon.map((lexeme, i) => <span key={`${epoch.pass}-${i}`}>{lexeme}</span>);
       return (
       <div key={`epoch-${i}`} className="Output-epoch">
         <h5>{epoch.pass}</h5>
