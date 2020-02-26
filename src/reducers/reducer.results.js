@@ -235,7 +235,7 @@ export const transformLexeme = (lexemeBundle, rule, features) => {
     if (!isEnvironmentBoundByRule(lexemeBundle.slice(index, index + post.length), post)) return [...newLexeme, phoneme];
     const newPhoneme = transformPhoneme(phoneme, rule.newFeatures[0], features);
     // if deletion occurs
-    if (!newPhoneme.grapheme) return [ ...newLexeme] ;
+    if (!newPhoneme || !newPhoneme.grapheme) return [ ...newLexeme] ;
     return [...newLexeme, newPhoneme];
   }, [])
   return newLexeme;
@@ -278,6 +278,7 @@ export const run = (state: stateType, action: resultsAction): stateType => {
     const results = passResults.map(stringifyResults);
     return {...state, results }
   } catch (err) {
+    console.log(err)
     return {...state, errors: err };
   }
 }

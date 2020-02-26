@@ -5,24 +5,24 @@ import './Features.scss';
 import type { featureAction } from '../reducers/reducer.features';
 
 const parsePhonesFromFeatureObject = featureObject => {
+  const getProperty = property => object => object[property]
   
   const getFeatureMap = (featureObject) => {
     return Object.keys(featureObject).map(feature => {
-      const plusPhones = featureObject[feature].positive.map(phone => phone.grapheme).join('|');
-      const minusPhones = featureObject[feature].negative.map(phone => phone.grapheme).join('|');
+      const plusPhones = featureObject[feature].positive.map(getProperty('grapheme')).join(' / ');
+      const minusPhones = featureObject[feature].negative.map(getProperty('grapheme')).join(' / ');
       return {[feature]: {plus: plusPhones, minus: minusPhones}}
     })
   }
 
   const getFeatureMapJSX = (featureMap) => {
     return featureMap.map((feature, index) => {
-      const featureName = Object.keys(feature)
-      const plusPhones = feature[featureName].plus;
-      const minusPhones = feature[featureName].minus;
+      const featureName = Object.keys(feature);
+      const { plus, minus } = feature[featureName];
       return (
         <li key={`feature__${featureName}`}>
-          <span className="plus-phones">{`[+ ${featureName}] = ${plusPhones}`}</span>
-          <span className="minus-phones">{`[- ${featureName}] = ${minusPhones}`}</span>
+          <span className="plus-phones">{`[+ ${featureName}] = ${plus}`}</span>
+          <span className="minus-phones">{`[- ${featureName}] = ${minus}`}</span>
         </li>
       )
     })
@@ -33,51 +33,34 @@ const parsePhonesFromFeatureObject = featureObject => {
   return featureMapJSX;
 }
 
-const buildReducerAction = (e, newPositivePhones, newNegativePhones, feature): featureAction => {
-  e.preventDefault();
-  const positivePhones = []
-  newPositivePhones !== '' 
-    ? newPositivePhones.split('/').forEach(phone => positivePhones.push(phone.trim()))
-    : positivePhones.push('')
-    
-  const negativePhones = []
-  newNegativePhones !== '' 
-    ? newNegativePhones.split('/').forEach(phone => negativePhones.push(phone.trim()))
-    : negativePhones.push('')
+const parseNewPhones = somePhones => {
+  if (somePhones === '') return [''];
+  return somePhones.split('/').map(phone => phone.trim());
+}
 
-  return {
+const handleClickDispatch = e => dispatchFunction => actionBuilder => actionParameters => {
+  e.preventDefault();
+  return dispatchFunction(actionBuilder(actionParameters));
+}
+
+const buildAddFeatureAction = ([newPositivePhones, newNegativePhones, feature]): featureAction => (
+  {
     type: "ADD_FEATURE",
     value: {
-      positivePhones,
-      negativePhones,
+      positivePhones: parseNewPhones(newPositivePhones),
+      negativePhones: parseNewPhones(newNegativePhones),
       feature
     }
   }
-}
+)
 
-const getPhonemesFromFeatureSubmission = (props, newPhonemes, feature) => {
-  let newPhonemeObject = newPhonemes.split('/').reduce((phonemeObject, newPhoneme) => {
-    newPhoneme = newPhoneme.trim();
-    phonemeObject = phonemeObject[newPhoneme]
-      ? {...phonemeObject, [newPhoneme]: [...phonemeObject[newPhoneme], feature]}
-      : {...phonemeObject, [newPhoneme]: [feature]}
-    return phonemeObject;
-  }, {...props.phonemes})
-  return newPhonemeObject;
-}
-
-const Features = (props) => {
+const Features = ({ phones, features, dispatch }) => {
   const [feature, setFeature] = useState('aspirated')
   const [ newPositivePhones, setNewPositivePhones ] = useState('tʰ / pʰ / kʰ');
   const [ newNegativePhones, setNewNegativePhones ] = useState('t / p / k');
   
   const newFeaturesSubmit = e => {
     e.preventDefault();
-    
-    // let newPhonemeObject = getPhonemesFromFeatureSubmission(props, newPhonemes, feature);
-    // props.setPhonemes(newPhonemeObject);
-    // if (!props.features || !props.features.includes(feature)) props.setFeatures([...props.features, feature])
-    
     setFeature('');
     setNewPositivePhones('');
     setNewNegativePhones('');
@@ -89,7 +72,7 @@ const Features = (props) => {
       <h3>Phonetic Features</h3>
       
       <ul className="Features__list" data-testid="Features-list">
-        {props.phones ? <>{parsePhonesFromFeatureObject(props.features)}</> : <></>}
+        {phones ? <>{parsePhonesFromFeatureObject(features)}</> : <></>}
       </ul>
 
       <form className="Features__form" data-testid="Features-form">
@@ -116,7 +99,7 @@ const Features = (props) => {
 
         <input 
           type="submit" 
-          onClick={e => props.dispatch(buildReducerAction(e, newPositivePhones, newNegativePhones, feature))} 
+          onClick={e => handleClickDispatch(e)(dispatch)(buildAddFeatureAction)([newPositivePhones, newNegativePhones, feature])} 
           value="Add feature"
         ></input>
       </form>

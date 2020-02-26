@@ -6,13 +6,12 @@ const Options = ({ options, dispatch }) => {
   const [ load, setLoad ] = useState('');
 
   const handleRadioChange = e => {
-    const option = e.target.name;
-    const setValue = e.target.id;
+    const { name, id } = e.target.name;
     dispatch({
       type: 'SET_OPTIONS',
       value: {
-        option,
-        setValue
+        option: name,
+        setValue: id
       }
     });
   }

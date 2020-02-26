@@ -1,7 +1,16 @@
 import React from 'react';
 import './ProtoLang.scss';
 
-const ProtoLang = (props) => {
+const ProtoLang = ({ lexicon, dispatch }) => {
+  const getProperty = property => object => object[property];
+
+  const renderLexicon = () => {
+    if (!lexicon) return '';
+    // Code for optionally rendering epoch name with lexeme
+    // `\t#${lexeme.epoch.name}`
+    lexicon.map(getProperty('lexeme')).join('\n');
+  }
+
   return (
     <div className="ProtoLang" data-testid="ProtoLang">
       <h3>Proto Language Lexicon</h3>
@@ -10,14 +19,14 @@ const ProtoLang = (props) => {
         <textarea
           name="lexicon" 
           data-testid="ProtoLang-Lexicon__textarea"
-          value={props.lexicon ? props.lexicon.map(lexeme => `${lexeme.lexeme} \t#${lexeme.epoch.name}`).join('\n'): ''}
+          value={renderLexicon()}
           onChange={e=> {
             console.log(e.target.value.split(/\n/).map(line => {
               const lexeme = line.split('#')[0].trim();
               const epoch = line.split('#')[1] || '';
               return { lexeme, epoch }
               }))
-            props.dispatch({
+            dispatch({
               type: 'SET_LEXICON', 
               value: e.target.value.split(/\n/).map(line => {
                 const lexeme = line.split('#')[0].trim();

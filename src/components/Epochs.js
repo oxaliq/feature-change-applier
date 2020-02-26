@@ -2,15 +2,16 @@ import React from 'react';
 import './Epochs.scss';
 
 import SoundChangeSuite from './SoundChangeSuite';
+import { render } from 'react-dom';
 
 
 
-const Epochs = props => {
+const Epochs = ({epochs, dispatch}) => {
   
-  const addEpoch = (e, props) => {
+  const addEpoch = e => {
     e.preventDefault()
-    let index = props.epochs.length + 1;
-    props.dispatch({
+    let index = epochs.length + 1;
+    dispatch({
       type: 'ADD_EPOCH',
       value: {name: `Epoch ${index}`}
     })
@@ -18,7 +19,7 @@ const Epochs = props => {
 
   const removeEpoch = (e, epochName) => {
     e.preventDefault()
-    props.dispatch({
+    dispatch({
       type: 'REMOVE_EPOCH',
       value: {name: epochName}
     });
@@ -30,24 +31,25 @@ const Epochs = props => {
       index: epochIndex,
       changes: epoch.changes
     }
-    props.dispatch({
+    dispatch({
       type: "SET_EPOCH",
       value: dispatchValue
     })
   }
 
+  const renderEpochs = () => epochs.map((epoch, index) => (
+    <SoundChangeSuite 
+      key={`epochname-${index}`} epochIndex={index} epoch={epoch} 
+      updateEpoch={updateEpoch} removeEpoch={removeEpoch}
+      // error={errors[epoch.name]}
+    />
+  ))
+
   return (
     <div className="Epochs" data-testid="Epochs">
       <h3>Sound Change Epochs</h3>
-      {props.epochs 
-        ? props.epochs.map((epoch, idx) => {
-        return <SoundChangeSuite 
-          key={`epochname-${idx}`} epochIndex={idx} epoch={epoch} 
-          updateEpoch={updateEpoch} removeEpoch={removeEpoch}
-          // error={props.errors[epoch.name]}
-        />}) 
-        : <></>}
-      <form onSubmit={e=>addEpoch(e, props)}>
+      { epochs ? renderEpochs() : <></> }
+      <form onSubmit={e=>addEpoch(e)}>
         <input type="submit" name="add-epoch" value="Add Epoch" ></input>
       </form>
     </div>
