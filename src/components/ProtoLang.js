@@ -3,12 +3,11 @@ import './ProtoLang.scss';
 
 const ProtoLang = ({ lexicon, dispatch }) => {
   const getProperty = property => object => object[property];
-
   const renderLexicon = () => {
     if (!lexicon) return '';
     // Code for optionally rendering epoch name with lexeme
     // `\t#${lexeme.epoch.name}`
-    lexicon.map(getProperty('lexeme')).join('\n');
+    return lexicon.map(getProperty('lexeme')).join('\n');
   }
 
   return (
@@ -18,6 +17,8 @@ const ProtoLang = ({ lexicon, dispatch }) => {
       <form data-testid="ProtoLang-Lexicon">
         <textarea
           name="lexicon" 
+          cols="30"
+          rows="10"
           data-testid="ProtoLang-Lexicon__textarea"
           value={renderLexicon()}
           onChange={e=> {

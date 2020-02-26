@@ -2,11 +2,7 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Catamaran', Arial, Helvetica, sans-serif;
   background-color: map-get($colors, 'main--bg');
   color: map-get($colors, 'main');
   
@@ -14,7 +10,11 @@ body {
     background-color: map-get($colors, 'text-input--bg');
     color: map-get($colors, 'text-input');
     border: 1px solid map-get($colors, 'main');
-    font-family: monospace;
+    font-family: 'Fira Code', monospace;
+  }
+
+  code {
+    font-family: 'Fira Code', monospace;
   }
 
 }
