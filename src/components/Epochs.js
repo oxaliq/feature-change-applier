@@ -37,22 +37,23 @@ const Epochs = ({epochs, dispatch}) => {
     })
   }
 
-  const renderEpochs = () => epochs.map((epoch, index) => (
+  const renderEpochs = () => {
+    if (epochs) return epochs.map((epoch, index) => (
     <SoundChangeSuite 
-      key={`epochname-${index}`} epochIndex={index} epoch={epoch} 
+      key={`epoch-${index}`} epochIndex={index} epoch={epoch} 
       updateEpoch={updateEpoch} removeEpoch={removeEpoch}
       // error={errors[epoch.name]}
     />
-  ))
+  ));
+  }
 
   return (
-    <div className="Epochs" data-testid="Epochs">
-      <h3>Sound Change Epochs</h3>
-      { epochs ? renderEpochs() : <></> }
+    <>
+      { renderEpochs() }
       <form onSubmit={e=>addEpoch(e)}>
         <input type="submit" name="add-epoch" value="Add Epoch" ></input>
       </form>
-    </div>
+    </>
   );
 }
 
