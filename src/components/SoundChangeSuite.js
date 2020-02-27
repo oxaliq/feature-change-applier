@@ -14,7 +14,7 @@ const SoundChangeSuite = props => {
   }, [epoch])
 
   return (
-    <div className="SoundChangeSuite" data-testid={`${epoch.name}_SoundChangeSuite`}>
+    <>
       <h4>{epoch.name}</h4>
       <form className="SoundChangeSuite__form" data-testid={`${epoch.name}_SoundChangeSuite_changes`}>
         
@@ -46,7 +46,7 @@ const SoundChangeSuite = props => {
       <form onSubmit={e=>props.removeEpoch(e, epoch.name)}>
         <input type="submit" name="remove-epoch" value={`remove ${epoch.name}`}></input>
       </form>
-    </div>
+    </>
   );
 }
 

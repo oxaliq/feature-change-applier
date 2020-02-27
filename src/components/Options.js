@@ -6,7 +6,7 @@ const Options = ({ options, dispatch }) => {
   const [ load, setLoad ] = useState('');
 
   const handleRadioChange = e => {
-    const { name, id } = e.target.name;
+    const { name, id } = e.target;
     dispatch({
       type: 'SET_OPTIONS',
       value: {
@@ -16,18 +16,6 @@ const Options = ({ options, dispatch }) => {
     });
   }
   
-  const handleCheckChange = e => {
-    const option = e.target.name;
-    const setValue = e.target.checked ? 'true' : 'false';
-    dispatch({
-      type: 'SET_OPTIONS',
-      value: {
-        option,
-        setValue
-      }
-    });
-  }
-
   const handleFormSubmit = (e, options) => {
     e.preventDefault();
     dispatch({
@@ -48,7 +36,7 @@ const Options = ({ options, dispatch }) => {
           type="radio" name="output" id="default" 
           checked={options ? options.output === 'default' : true}
           onChange={e=>handleRadioChange(e)}
-          />
+        />
         <label htmlFor="default">Default 
           <span className="Options__output-example"> output</span>
         </label>
@@ -70,13 +58,6 @@ const Options = ({ options, dispatch }) => {
         <label htmlFor="diachronic">Diachronic 
           <span className="Options__output-example"> *proto > *epoch > output</span>
         </label>
-        
-        <input 
-          type="checkbox" name="save"
-          checked={options ? options.save : false}
-          onChange={e=>handleCheckChange(e)}
-        />
-        <label htmlFor="save">Store session on Run</label>
         
         <input type="submit" value="Run Changes"></input>
       </form>

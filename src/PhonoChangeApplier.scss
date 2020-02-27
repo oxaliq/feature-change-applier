@@ -21,7 +21,9 @@ div.App {
     grid-template-rows: repeat(auto-fill, minmax(300px, 1fr));
     
     div {
-      padding: 1em;
+      width: 100%;
+      max-height: 85vh;
+      margin: 1em;
       overflow-y: scroll;
     }
   }

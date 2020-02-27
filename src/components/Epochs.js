@@ -36,23 +36,36 @@ const Epochs = ({epochs, dispatch}) => {
       value: dispatchValue
     })
   }
+  
+  const renderAddEpochButton = index => {
+    if (index === epochs.length - 1 ) return (
+      <form onSubmit={e=>addEpoch(e)}>
+        <input type="submit" name="add-epoch" value="Add Epoch" ></input>
+      </form>
+    )
+    return <></>
+  }
 
   const renderEpochs = () => {
     if (epochs) return epochs.map((epoch, index) => (
-    <SoundChangeSuite 
-      key={`epoch-${index}`} epochIndex={index} epoch={epoch} 
-      updateEpoch={updateEpoch} removeEpoch={removeEpoch}
-      // error={errors[epoch.name]}
-    />
-  ));
+      <div 
+        className="SoundChangeSuite" 
+        data-testid={`${epoch.name}_SoundChangeSuite`}
+        key={`epoch-${index}`}
+      >
+        <SoundChangeSuite 
+          epochIndex={index} epoch={epoch} 
+          updateEpoch={updateEpoch} removeEpoch={removeEpoch}
+          // error={errors[epoch.name]}
+        />
+        {renderAddEpochButton(index)}
+      </div>
+    ));
   }
 
   return (
     <>
       { renderEpochs() }
-      <form onSubmit={e=>addEpoch(e)}>
-        <input type="submit" name="add-epoch" value="Add Epoch" ></input>
-      </form>
     </>
   );
 }

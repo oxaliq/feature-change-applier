@@ -1,0 +1,27 @@
+div.Features {
+  max-width: 85%;
+
+  ul.Features__list li {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    span.feature--names-and-phones {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+
+    span.feature-name {
+      font-weight: 600;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-flow: column;
+
+    input {
+      margin: 0.1em;
+      font-size: 1em;
+    }
+  }
+}

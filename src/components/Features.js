@@ -21,8 +21,22 @@ const parsePhonesFromFeatureObject = featureObject => {
       const { plus, minus } = feature[featureName];
       return (
         <li key={`feature__${featureName}`}>
-          <span className="plus-phones">{`[+ ${featureName}] = ${plus}`}</span>
-          <span className="minus-phones">{`[- ${featureName}] = ${minus}`}</span>
+          <span className="feature--names-and-phones">
+            <span className="feature--feature-name"> 
+              {`[+ ${featureName}]`}
+            </span>
+            <span className="feature--feature-phones">
+              {plus}
+            </span>
+          </span>
+          <span className="feature--names-and-phones">
+            <span className="feature--feature-name"> 
+              {`[- ${featureName}]`}
+            </span>
+            <span className="feature--feature-phones">
+              {minus}
+            </span>
+          </span>
         </li>
       )
     })
@@ -82,20 +96,22 @@ const Features = ({ phones, features, dispatch }) => {
           ></input>
 
         {/* ! Positive Phones */}
-        <label htmlFor="positive-phones">+</label>
-        <input 
-          id="positive-phones"
-          type="text" name="phonemes" 
-          value={newPositivePhones} onChange={e=> setNewPositivePhones(e.target.value)}
-        ></input>
+        <label htmlFor="positive-phones">+
+          <input 
+            id="positive-phones"
+            type="text" name="phonemes" 
+            value={newPositivePhones} onChange={e=> setNewPositivePhones(e.target.value)}
+          ></input>
+        </label>
         
         {/* ! Negative Phones */}
-        <label htmlFor="negative-phones">-</label>
-        <input 
-          id="negative-phones"
-          type="text" name="phonemes" 
-          value={newNegativePhones} onChange={e=> setNewNegativePhones(e.target.value)}
-        ></input>
+        <label htmlFor="negative-phones">-
+          <input 
+            id="negative-phones"
+            type="text" name="phonemes" 
+            value={newNegativePhones} onChange={e=> setNewNegativePhones(e.target.value)}
+          ></input>
+        </label>
 
         <input 
           type="submit" 
