@@ -1,5 +1,4 @@
 div.Features {
-  max-width: 85%;
 
   ul.Features__list li {
     display: grid;
@@ -7,7 +6,7 @@ div.Features {
 
     span.feature--names-and-phones {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
     }
 
     span.feature-name {
