@@ -1,6 +1,18 @@
-div.Output-epoch {
-  display: flex;
-  p.lexicon {
+div.Output {
+
+  div.Output__container {
     display: flex;
+    flex-flow: row wrap;
   }
+
+  div.Output-epoch {
+    display: flex;
+    flex-flow: column;
+
+    p.lexicon {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(5em, 1fr));
+    }
+  }
+
 }

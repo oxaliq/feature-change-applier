@@ -27,7 +27,7 @@ const Output = props => {
     <div className="Output" data-testid="Output">
       <h3>Results of Run</h3>
 
-      <div data-testid="Output-lexicon" className="Output_container">
+      <div data-testid="Output-lexicon" className="Output__container">
         {results && results.length ? renderResults() : <></>}
       </div>
     </div>
