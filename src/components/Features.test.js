@@ -19,19 +19,4 @@ describe('Features', () => {
     expect(getByTestId('Features')).toHaveTextContent('Phonetic Features');
   });
   
-  it('renders features from phonemes hook', () => {
-    const nPhone = {n:{ 
-      grapheme: 'n', 
-      features: { nasal: true, occlusive: true, vowel: false } }} 
-    const { getByTestId } = render(<Features phones={{nPhone}} 
-      features={{
-        nasal: {positive: [nPhone.n], negative: []}, 
-        occlusive:{ positive: [nPhone.n], negative:[]}, 
-        vowel:{positive: [], negative: [nPhone.n]} 
-      }}
-    />);
-    
-    expect(getByTestId('Features-list'))
-      .toContainHTML('<ul class="Features__list" data-testid="Features-list"><li><span class="plus-phones">[+ nasal] = n</span><span class="minus-phones">[- nasal] = </span></li><li><span class="plus-phones">[+ occlusive] = n</span><span class="minus-phones">[- occlusive] = </span></li><li><span class="plus-phones">[+ vowel] = </span><span class="minus-phones">[- vowel] = n</span></li></ul>');
-  });
 });

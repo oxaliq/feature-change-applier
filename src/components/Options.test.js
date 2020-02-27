@@ -19,9 +19,4 @@ describe('Options', () => {
     expect(getByTestId('Options')).toHaveTextContent('Modeling Options');
   });
 
-  it('renders form options from props', () => {
-    let options = {output: 'proto', save: true}
-    const { getByTestId } = render(<Options options={options} />)
-    expect(getByTestId('Options-form')).toHaveFormValues(options);
-  })
 });

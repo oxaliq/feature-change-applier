@@ -29,7 +29,8 @@ const Epochs = ({epochs, dispatch}) => {
     const dispatchValue = {
       name: epoch.name,
       index: epochIndex,
-      changes: epoch.changes
+      changes: epoch.changes,
+      parent: epoch.parent
     }
     dispatch({
       type: "SET_EPOCH",
@@ -47,7 +48,7 @@ const Epochs = ({epochs, dispatch}) => {
   }
 
   const renderEpochs = () => {
-    if (epochs) return epochs.map((epoch, index) => (
+    if (epochs.length) return epochs.map((epoch, index) => (
       <div 
         className="SoundChangeSuite" 
         data-testid={`${epoch.name}_SoundChangeSuite`}
@@ -56,11 +57,13 @@ const Epochs = ({epochs, dispatch}) => {
         <SoundChangeSuite 
           epochIndex={index} epoch={epoch} 
           updateEpoch={updateEpoch} removeEpoch={removeEpoch}
+          epochs={epochs}
           // error={errors[epoch.name]}
         />
         {renderAddEpochButton(index)}
       </div>
     ));
+    return renderAddEpochButton(-1)
   }
 
   return (

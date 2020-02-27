@@ -13,14 +13,6 @@ it('renders SoundChangeSuite without crashing', () => {
 });
 
 describe('SoundChangeSuite', () => {
-  it('renders the correct subtitle', () => {
-    const { getByTestId } = render(
-      <SoundChangeSuite epoch={{name:'Epoch Name', changes:['sound change rule']}}
-        updateEpoch={()=>{}} removeEpoch={()=>{}}
-      />
-    );
-    expect(getByTestId('Epoch Name_SoundChangeSuite')).toHaveTextContent('Epoch Name');
-  });
       
   it('renders a suite of soundchanges', () => {
     const { getByTestId } = render(

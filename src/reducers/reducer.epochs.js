@@ -6,7 +6,8 @@ export type epochAction = {
   value: {
     index?: number,
     name: string,
-    changes?: Array<string>
+    changes?: Array<string>,
+    parent: string
   }
 }
 
@@ -27,6 +28,10 @@ export const setEpoch = (state: stateType, action: epochAction): stateType => {
   mutatedEpochs[index].changes = action.value.changes 
     ? action.value.changes 
     : mutatedEpochs[index].changes;
+
+  mutatedEpochs[index].parent = action.value.parent && action.value.parent !== 'none'
+    ? action.value.parent
+    : null
   return {...state, epochs: [...mutatedEpochs]}
 }
 

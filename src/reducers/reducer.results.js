@@ -276,7 +276,6 @@ export const run = (state: stateType, action: resultsAction): stateType => {
     }, []);
     
     const results = passResults.map(stringifyResults);
-    console.log(results)
     return {...state, results }
   } catch (err) {
     console.log(err)

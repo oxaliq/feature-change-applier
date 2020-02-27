@@ -13,10 +13,6 @@ it('renders Epochs without crashing', () => {
 });
 
 describe('Epochs', () => {
-  it('renders the correct subtitle', () => {
-    const { getByTestId } = render(<Epochs />);
-    expect(getByTestId('Epochs')).toHaveTextContent('Sound Change Epochs');
-  });
 
   it('renders a suite of soundchanges', () => {
     const { getByTestId } = render(<Epochs />);

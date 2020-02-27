@@ -21,7 +21,7 @@ describe('ProtoLang', () => {
   
   it('renders lexicon from state', () => {
     const { getByTestId } = render(<ProtoLang lexicon={[{ lexeme:'one', epoch:{name: 'epoch-one', changes: []} }]}/>);
-    expect(getByTestId('ProtoLang-Lexicon')).toHaveFormValues({lexicon: 'one \t#epoch-one'});
+    expect(getByTestId('ProtoLang-Lexicon')).toHaveFormValues({lexicon: 'one'});
   });
   
 })
