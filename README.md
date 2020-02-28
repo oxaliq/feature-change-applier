@@ -1,6 +1,6 @@
 # Feature Change Applier
 
-[Try the app!]([https://](https://sorrelbri.github.io/feature-change-applier/))
+[Try the app!](https://sorrelbri.github.io/feature-change-applier/)
 
 [Inspired by the Zompist Sound Change Applier 2](https://www.zompist.com/sca2.html)
 
