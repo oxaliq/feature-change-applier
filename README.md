@@ -30,7 +30,7 @@ FCA does not currently support suprasegmentals by default, however features can 
 For example:
 - For tonemes, use IPA tone markers as in `ma˨˩˦` (马)
 - For phonetic length, use IPA length markers as in `ħaːsin` (حَاسِن‎)
-- For stress or syllabic breaks, however `ˈɡʊd.nɪs` may result in unpredictable behavior and is best avoided.
+- For stress or syllabic breaks, however `ˈɡʊd.nɪs` may result in unpredictable behavior and is best avoided.  
 See below for defining these features in the feature set.
 
 #### Future Changes to the Input Lexicon
