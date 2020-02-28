@@ -280,6 +280,6 @@ export const run = (state: stateType, action: resultsAction): stateType => {
     return {...state, results, errors: {} }
   } catch (err) {
     console.log(err)
-    return {...state, errors: err };
+    return {...state, errors: err, results:[] };
   }
 }

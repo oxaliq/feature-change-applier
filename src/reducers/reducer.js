@@ -11,6 +11,7 @@ import { run } from './reducer.results';
 import type { resultsAction } from './reducer.results'
 import { initState } from './reducer.init';
 import type { initAction } from './reducer.init';
+import { clearOutput } from './reducer.clear';
 
 export type stateType = {
   lexicon: Array<{lexeme: string, epoch: epochType}>,
@@ -56,6 +57,8 @@ export const stateReducer = (state: stateType, action: actionType): stateType =>
     case 'ADD_FEATURE': return addFeature(state, action);
 
     case 'SET_OPTIONS': return setOptions(state, action);
+
+    case 'CLEAR': return clearOutput(state, action);
 
     case 'RUN': return run(state, action);
 

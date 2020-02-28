@@ -1,8 +1,8 @@
 div.Options {
 
   form {
-    display: flex;
-    flex-flow: column nowrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
 }

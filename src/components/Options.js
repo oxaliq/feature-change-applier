@@ -24,14 +24,20 @@ const Options = ({ options, dispatch }) => {
     });
   }
 
+  const handleOutputClearSubmit = e => {
+    e.preventDefault();
+    console.log('clearing')
+    dispatch({
+      type: 'CLEAR',
+      value: {}
+    });
+  }
+
   return (
     <div className="Options" data-testid="Options">
       <h3>Modeling Options</h3>
 
       <form onSubmit={e=>handleFormSubmit(e, options)} data-testid="Options-form">
-        
-        {/* <h5>Output</h5> */}
-
         <input 
           type="radio" name="output" id="default" 
           checked={options ? options.output === 'default' : true}
@@ -41,7 +47,7 @@ const Options = ({ options, dispatch }) => {
           <span className="Options__output-example"> output</span>
         </label>
         
-        <input 
+        {/* <input 
           type="radio" name="output" id="proto" 
           checked={options ? options.output === 'proto' : false}
           onChange={e=>handleRadioChange(e)}
@@ -57,13 +63,14 @@ const Options = ({ options, dispatch }) => {
         />
         <label htmlFor="diachronic">Diachronic 
           <span className="Options__output-example"> *proto > *epoch > output</span>
-        </label>
+        </label> */}
         
         <input type="submit" value="Run Changes"></input>
+        <input type="button" value="Clear Output" onClick={e=>handleOutputClearSubmit(e)}/>
       </form>
 
 
-      <form onSubmit={()=>{}}>
+      {/* <form onSubmit={()=>{}}>
         <label>
           Load from a prior run:
           <select value={load} onChange={e=>setLoad(e.target.value)}>
@@ -75,7 +82,7 @@ const Options = ({ options, dispatch }) => {
           </select>
         </label>
         <input type="submit" value="Submit" />
-      </form>
+      </form> */}
     </div>
   );
 }
