@@ -1,16 +1,22 @@
 div.Features {
 
-  ul.Features__list li {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-
-    span.feature--names-and-phones {
+  ul.Features__list {
+    width: 100%;
+    
+    li {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-    }
-
-    span.feature-name {
-      font-weight: 600;
+      grid-template-columns: 10fr 10fr 1fr;
+      margin: 0.5em 0;
+      place-items: center center;
+      
+      span.feature--names-and-phones {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      }
+      
+      span.feature-name {
+        font-weight: 600;
+      }
     }
   }
 
@@ -22,5 +28,13 @@ div.Features {
       margin: 0.1em;
       font-size: 1em;
     }
+  }
+
+  button.delete-feature {
+    background-color: red;
+    border-color: transparent;
+    border-radius: 0.5em;
+    color: white;
+    max-height: 1.5em;
   }
 }

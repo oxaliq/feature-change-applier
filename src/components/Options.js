@@ -65,8 +65,8 @@ const Options = ({ options, dispatch }) => {
           <span className="Options__output-example"> *proto > *epoch > output</span>
         </label> */}
         
-        <input type="submit" value="Run Changes"></input>
-        <input type="button" value="Clear Output" onClick={e=>handleOutputClearSubmit(e)}/>
+        <input className="form form--add" type="submit" value="Run Changes"></input>
+        <input className="form form--remove" type="button" value="Clear Output" onClick={e=>handleOutputClearSubmit(e)}/>
       </form>
 
 

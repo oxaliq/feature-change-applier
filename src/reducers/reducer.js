@@ -3,7 +3,7 @@ import { addLexeme, setLexicon } from './reducer.lexicon';
 import type { lexiconAction } from './reducer.lexicon';
 import { addEpoch, setEpoch, removeEpoch } from './reducer.epochs';
 import type { epochAction } from './reducer.epochs';
-import { addFeature } from './reducer.features';
+import { addFeature, deleteFeature } from './reducer.features';
 import type { featureAction } from './reducer.features';
 import type { optionsAction } from './reducer.options';
 import { setOptions } from './reducer.options';
@@ -55,6 +55,8 @@ export const stateReducer = (state: stateType, action: actionType): stateType =>
     case 'REMOVE_EPOCH': return removeEpoch(state, action);
 
     case 'ADD_FEATURE': return addFeature(state, action);
+
+    case 'DELETE_FEATURE': return deleteFeature(state, action);
 
     case 'SET_OPTIONS': return setOptions(state, action);
 

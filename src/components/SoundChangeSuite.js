@@ -103,7 +103,7 @@ const SoundChangeSuite = props => {
         ></textarea>
       </form>
       <form onSubmit={e=>removeEpoch(e, epoch.name)}>
-        <input type="submit" name="remove-epoch" value={`remove ${epoch.name}`}></input>
+        <input className="form form--remove" type="submit" name="remove-epoch" value={`remove ${epoch.name}`}></input>
       </form>
     </>
   );

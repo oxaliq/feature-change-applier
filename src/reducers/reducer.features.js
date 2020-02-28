@@ -78,3 +78,11 @@ export const addFeature = (state: stateType, action: featureAction): stateType =
   let newFeature = {[action.value.feature]: {positive: positivePhones, negative: negativePhones}};
   return {...state, features:{...state.features, ...newFeature}, phones: newPhoneObject}
 }
+
+export const deleteFeature = (state, action) => {
+  console.log('deleting')
+  const deletedFeature = action.value;
+  delete state.features[deletedFeature];
+  console.log(state)
+  return {...state}
+}

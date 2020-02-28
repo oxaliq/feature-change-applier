@@ -24,7 +24,7 @@ div.App {
     display: grid;
     width: 100%;
     place-items: center center;
-    grid-template-columns: repeat(auto-fit, minmax(20em, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(25em, 1fr));
     grid-template-rows: repeat(auto-fill, minmax(300px, 1fr));
     
     div {
@@ -33,5 +33,23 @@ div.App {
       margin: 1em;
       overflow-y: scroll;
     }
+  }
+
+  button.form, input[type="submit"].form, input[type="button"].form {
+    height: 2em;
+    border-radius: 0.25em;
+    border-color: transparent;
+    margin: 0.2em auto;
+    width: 10em;
+  }
+
+  button.form--add, input[type="submit"].form--add, input[type="button"].form--add{
+    background-color: greenyellow;
+    color: black;
+  }
+  
+  button.form--remove, input[type="submit"].form--remove, input[type="button"].form--remove {
+    background-color: red;
+    color: white;
   }
 }
