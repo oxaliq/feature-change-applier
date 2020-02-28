@@ -29,7 +29,8 @@ const Epochs = ({epochs, errors, dispatch}) => {
     const dispatchValue = {
       name: epoch.name,
       index: epochIndex,
-      changes: epoch.changes
+      changes: epoch.changes,
+      parent: epoch.parent
     }
     dispatch({
       type: "SET_EPOCH",
