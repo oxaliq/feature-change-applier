@@ -170,7 +170,8 @@ export const decomposeRules = (epoch: epochType, phones: {[key: string]: phoneTy
       .map(decomposeRule)
       .map(mapRuleBundleToFeatureBundle(phones));
   } catch (err) {
-    return err;
+    const ruleError = {epoch: epoch.name, error: err}
+    throw ruleError;
   }
 }
 

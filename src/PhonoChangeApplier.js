@@ -16,13 +16,13 @@ const PhonoChangeApplier = () => {
     {},
     initState
   )
-  const { lexicon, phones, phonemes, epochs, options, features, results } = state;
+  const { lexicon, phones, phonemes, epochs, options, features, results, errors } = state;
 
   return (
     <div className="PhonoChangeApplier" data-testid="PhonoChangeApplier">
       <ProtoLang lexicon={lexicon} dispatch={dispatch}/>
       <Features phones={phones} features={features} dispatch={dispatch}/>
-      <Epochs epochs={epochs} dispatch={dispatch} />
+      <Epochs epochs={epochs} errors={errors} dispatch={dispatch} />
       <Options options={options} dispatch={dispatch}/>
       <Output results={results} options={options} dispatch={dispatch}/>
     </div>

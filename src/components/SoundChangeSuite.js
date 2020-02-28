@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './SoundChangeSuite.scss';
 
 const SoundChangeSuite = props => {
-  const { epochIndex, removeEpoch, epochs } = props;
+  const { epochIndex, error, removeEpoch, epochs } = props;
   const [ epoch, setEpoch ] = useState(props.epoch ? props.epoch : {name:'', changes:[''], parent:'none'});
   
   const changeHandler = (e,cb) => {
@@ -60,9 +60,17 @@ const SoundChangeSuite = props => {
     return <></>
   }
 
+  const renderError = () => {
+    if (error) return (
+      <p className="error">{error}</p>
+    )
+    return <></>
+  }
+
   return (
     <>
       <h4>{epoch.name}</h4>
+      {renderError()}
       <form className="SoundChangeSuite__form" data-testid={`${epoch.name}_SoundChangeSuite_changes`}>
         <label htmlFor={`${epoch.name}-name`}>
           Name: 

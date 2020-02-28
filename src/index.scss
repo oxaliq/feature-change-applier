@@ -17,4 +17,8 @@ body {
     font-family: 'Fira Code', monospace;
   }
 
+  p.error {
+    color: map-get($colors, 'error');
+  }
+
 }

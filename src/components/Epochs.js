@@ -6,7 +6,7 @@ import { render } from 'react-dom';
 
 
 
-const Epochs = ({epochs, dispatch}) => {
+const Epochs = ({epochs, errors, dispatch}) => {
   
   const addEpoch = e => {
     e.preventDefault()
@@ -29,8 +29,7 @@ const Epochs = ({epochs, dispatch}) => {
     const dispatchValue = {
       name: epoch.name,
       index: epochIndex,
-      changes: epoch.changes,
-      parent: epoch.parent
+      changes: epoch.changes
     }
     dispatch({
       type: "SET_EPOCH",
@@ -48,7 +47,9 @@ const Epochs = ({epochs, dispatch}) => {
   }
 
   const renderEpochs = () => {
-    if (epochs.length) return epochs.map((epoch, index) => (
+    if (epochs.length) return epochs.map((epoch, index) => {
+      const epochError = errors.epoch ? errors.error : null
+      return (
       <div 
         className="SoundChangeSuite" 
         data-testid={`${epoch.name}_SoundChangeSuite`}
@@ -58,11 +59,11 @@ const Epochs = ({epochs, dispatch}) => {
           epochIndex={index} epoch={epoch} 
           updateEpoch={updateEpoch} removeEpoch={removeEpoch}
           epochs={epochs}
-          // error={errors[epoch.name]}
+          error={epochError}
         />
         {renderAddEpochButton(index)}
       </div>
-    ));
+    )});
     return renderAddEpochButton(-1)
   }
 

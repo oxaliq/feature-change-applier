@@ -2,7 +2,7 @@ import React from 'react';
 import './Output.scss';
 
 const Output = props => {
-  const { results, options } = props;
+  const { results, options, errors } = props;
   const renderResults = () => {
     switch(options.output) {
       case 'default':
@@ -23,10 +23,10 @@ const Output = props => {
       )
     })
   }
+
   return (
     <div className="Output" data-testid="Output">
       <h3>Results of Run</h3>
-
       <div data-testid="Output-lexicon" className="Output__container">
         {results && results.length ? renderResults() : <></>}
       </div>

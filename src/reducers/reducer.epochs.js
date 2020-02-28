@@ -7,12 +7,12 @@ export type epochAction = {
     index?: number,
     name: string,
     changes?: Array<string>,
-    parent: string
+    parent?: string
   }
 }
 
 export const addEpoch = (state: stateType, action: epochAction): stateType => {
-  const newEpoch = { name: action.value.name, changes: action.value.changes || [''] };
+  const newEpoch = { name: action.value.name, changes: action.value.changes || [''], parent: null};
   return {...state, epochs: [...state.epochs, newEpoch]}
 }
 
