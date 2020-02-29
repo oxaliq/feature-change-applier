@@ -12,6 +12,7 @@ import type { resultsAction } from './reducer.results'
 import { initState } from './reducer.init';
 import type { initAction } from './reducer.init';
 import { clearOutput } from './reducer.clear';
+import { setLatl } from './reducer.latl';
 
 export type stateType = {
   lexicon: Array<{lexeme: string, epoch: epochType}>,
@@ -59,6 +60,8 @@ export const stateReducer = (state: stateType, action: actionType): stateType =>
     case 'DELETE_FEATURE': return deleteFeature(state, action);
 
     case 'SET_OPTIONS': return setOptions(state, action);
+
+    case 'SET_LATL': return setLatl(state, action);
 
     case 'CLEAR': return clearOutput(state, action);
 
