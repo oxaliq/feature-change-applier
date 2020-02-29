@@ -63,7 +63,8 @@ export const initState = (changesArgument: number): stateType => {
     results: [],
     errors: {},
     features: {},
-    lexicon: []
+    lexicon: [],
+    latl: ''
   };
   state.features = {
     sonorant: { positive:[ state.phones.a, state.phones.u, state.phones.ɯ, state.phones.ə, state.phones.n], negative: [] },
