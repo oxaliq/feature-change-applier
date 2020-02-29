@@ -41,6 +41,12 @@ div.App {
     }
   }
 
+  div.PhonoChangeApplier--latl {
+    display: flex;
+    flex-flow: row wrap;
+    
+  }
+
   button.form, input[type="submit"].form, input[type="button"].form {
     height: 2em;
     border-radius: 0.25em;

@@ -28,7 +28,7 @@ const PhonoChangeApplier = () => {
 
       <Route exact path="/latl">
         <Link to="/">Back to GUI</Link>
-        <div className="PhonoChangeApplier--gui">
+        <div className="PhonoChangeApplier PhonoChangeApplier--latl">
           <Latl latl={latl} dispatch={dispatch}/>
           <LatlOutput results={results} options={options} dispatch={dispatch}/>
         </div>
@@ -36,7 +36,7 @@ const PhonoChangeApplier = () => {
 
       <Route exact path="/">
         <Link to="/latl">LATL</Link>
-        <div className="PhonoChangeApplier--gui" data-testid="PhonoChangeApplier">
+        <div className="PhonoChangeApplier PhonoChangeApplier--gui" data-testid="PhonoChangeApplier">
           <ProtoLang lexicon={lexicon} dispatch={dispatch}/>
           <Features phones={phones} features={features} dispatch={dispatch}/>
           <Epochs epochs={epochs} errors={errors} dispatch={dispatch} />
