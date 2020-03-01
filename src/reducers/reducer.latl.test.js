@@ -6,7 +6,7 @@ describe('LATL', () => {
     const state = initState();
     const action = {
       type: 'SET_LATL',
-      value: {}
+      value: ''
     }
     const returnedState = stateReducer(state, action)
     expect(returnedState).toStrictEqual(state);

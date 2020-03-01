@@ -1,5 +1,6 @@
 
 
 export const setLatl = (state, action) => {
-  return {...state};
+  let latl = action.value;
+  return {...state, latl};
 }

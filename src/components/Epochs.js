@@ -7,25 +7,22 @@ import { render } from 'react-dom';
 
 
 const Epochs = ({epochs, errors, dispatch}) => {
-  const handleEvent = func => e => {
-    e.preventDefault();
-    return func;
-  }
-
-  const addEpoch = e => handleEvent(() => {
+  const addEpoch = e => {
+    e.preventDefault()
     let index = epochs.length + 1;
     dispatch({
       type: 'ADD_EPOCH',
       value: {name: `epoch ${index}`}
     })
-    })(e)
+  }
 
-  const removeEpoch = e => handleEvent(
+  const removeEpoch = (e, epochName) => {
+    e.preventDefault()
     dispatch({
       type: 'REMOVE_EPOCH',
       value: {name: epochName}
-    })
-  )(e);
+    });
+  }
 
   const updateEpoch = (epoch, epochIndex) => {
     const dispatchValue = {
