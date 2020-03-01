@@ -6,7 +6,8 @@ describe('Epochs', () => {
     state.epochs = [
       {
         name: 'epoch 1',
-        changes: ['']
+        changes: [''],
+        parent: null
       }
     ]
   })
@@ -17,7 +18,7 @@ describe('Epochs', () => {
   });
 
   it('epochs addition returns new epochs list', () => {
-    const action = {type: 'ADD_EPOCH', value: { name: 'epoch 2', changes: ['']}};
+    const action = {type: 'ADD_EPOCH', value: { name: 'epoch 2', changes: [''], parent: null}};
     expect(stateReducer(state, action)).toEqual({...state, epochs: [...state.epochs, action.value]})
   })
   
@@ -28,8 +29,8 @@ describe('Epochs', () => {
     expect(stateReducer(secondState, secondAction)).toEqual(
       {...state, 
         epochs: [
-          {name: 'proto-lang', changes: ['']},
-          {name: 'epoch 2', changes: ['']}
+          {name: 'proto-lang', changes: [''], parent: null},
+          {name: 'epoch 2', changes: [''], parent: null}
         ]
       }
     );
@@ -42,8 +43,8 @@ describe('Epochs', () => {
     expect(stateReducer(secondState, secondAction)).toEqual(
       {...state, 
         epochs: [
-          {name: 'epoch 1', changes: ['n>t/_#', '[+plosive]>[+nasal -plosive]/_n']},
-          {name: 'epoch 2', changes: ['']}
+          {name: 'epoch 1', changes: ['n>t/_#', '[+plosive]>[+nasal -plosive]/_n'], parent: null},
+          {name: 'epoch 2', changes: [''], parent: null}
         ]
       }
       );
@@ -55,7 +56,7 @@ describe('Epochs', () => {
       const secondAction = {type: 'REMOVE_EPOCH', value: {index: 0, name: 'epoch 1'}}
       expect(stateReducer(stateWithTwoEpochs, secondAction)).toEqual({
         ...state,
-        epochs: [{ name: 'epoch 2', changes: ['']}]
+        epochs: [{ name: 'epoch 2', changes: [''], parent: null}]
       });
   });
 

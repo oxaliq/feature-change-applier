@@ -22,43 +22,99 @@ describe('Results', () => {
   it('rule without ">" returns helpful error message', () => {
     const { phones } = initState();
     const epoch = { name: 'error epoch', changes: [ 't/n/_' ] }
-    expect(decomposeRules(epoch, phones)).toEqual("Error in line 1: Insert '>' operator between target and result");
+    const errorMessage = {epoch: 'error epoch', error: "Error in line 1: Insert '>' operator between target and result"};
+    let receivedError;
+    try {
+      decomposeRules(epoch, phones)
+    }
+    catch (err) {
+      receivedError=err;
+    }
+    expect(receivedError).toStrictEqual(errorMessage);
   })
-
+  
   it('rule with too many ">" returns helpful error message', () => {
     const { phones } = initState();
     const epoch = { name: 'error epoch', changes: [ 't>n>/_' ] }
-    expect(decomposeRules(epoch, phones)).toEqual("Error in line 1: Too many '>' operators");
+    const errorMessage = {epoch: 'error epoch', error: "Error in line 1: Too many '>' operators"};
+    let receivedError;
+    try {
+      decomposeRules(epoch, phones)
+    }
+    catch (err) {
+      receivedError=err;
+    }
+    expect(receivedError).toStrictEqual(errorMessage);
   })
-
+  
   it('rule without "/" returns helpful error message', () => {
     const { phones } = initState();
     const epoch = { name: 'error epoch', changes: [ 't>n_' ] }
-    expect(decomposeRules(epoch, phones)).toEqual("Error in line 1: Insert '/' operator between change and environment");
+    const errorMessage = {epoch: 'error epoch', error: "Error in line 1: Insert '/' operator between change and environment"};
+    let receivedError;
+    try {
+      decomposeRules(epoch, phones)
+    }
+    catch (err) {
+      receivedError=err;
+    }
+    expect(receivedError).toStrictEqual(errorMessage);
   })
-
+  
   it('rule with too many "/" returns helpful error message', () => {
     const { phones } = initState();
     const epoch = { name: 'error epoch', changes: [ 't>n/_/' ] }
-    expect(decomposeRules(epoch, phones)).toEqual("Error in line 1: Too many '/' operators");
+    const errorMessage = {epoch: 'error epoch', error: "Error in line 1: Too many '/' operators"};
+    let receivedError;
+    try {
+      decomposeRules(epoch, phones)
+    }
+    catch (err) {
+      receivedError=err;
+    }
+    expect(receivedError).toStrictEqual(errorMessage);
   })
-
+  
   it('rule without "_" returns helpful error message', () => {
     const { phones } = initState();
     const epoch = { name: 'error epoch', changes: [ 't>n/' ] }
-    expect(decomposeRules(epoch, phones)).toEqual("Error in line 1: Insert '_' operator in environment");
+    const errorMessage = {epoch: 'error epoch', error: "Error in line 1: Insert '_' operator in environment"};
+    let receivedError;
+    try {
+      decomposeRules(epoch, phones)
+    }
+    catch (err) {
+      receivedError=err;
+    }
+    expect(receivedError).toStrictEqual(errorMessage);
   })
-
+  
   it('rule with too many "_" returns helpful error message', () => {
     const { phones } = initState();
     const epoch = { name: 'error epoch', changes: [ 't>n/__' ] }
-    expect(decomposeRules(epoch, phones)).toEqual("Error in line 1: Too many '_' operators");
+    const errorMessage = {epoch: 'error epoch', error: "Error in line 1: Too many '_' operators"};
+    let receivedError;
+    try {
+      decomposeRules(epoch, phones)
+    }
+    catch (err) {
+      receivedError=err;
+    }
+    expect(receivedError).toStrictEqual(errorMessage);
   })
-
+  
   it('rule with incorrect feature syntax returns helpful error message', () => {
     const { phones } = initState();
     const epoch = { name: 'error epoch', changes: [ '[+ occlusive - nasal = obstruent]>n/_' ] }
-    expect(decomposeRules(epoch, phones)).toEqual("Error in line 1: Unknown token '='");
+    const errorMessage = {epoch: 'error epoch', error: "Error in line 1: Unknown token '='"};
+    let receivedError;
+    try {
+      decomposeRules(epoch, phones)
+    }
+    catch (err) {
+      receivedError=err;
+    }
+    expect(receivedError).toStrictEqual(errorMessage);
   })
 
   it('expect transform lexeme to apply rule to lexeme', () => {

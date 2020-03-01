@@ -39,7 +39,7 @@ const Epochs = ({epochs, errors, dispatch}) => {
   }
   
   const renderAddEpochButton = index => {
-    if (index === epochs.length - 1 ) return (
+    if (epochs && index === epochs.length - 1 ) return (
       <form onSubmit={e=>addEpoch(e)}>
         <input className="form form--add" type="submit" name="add-epoch" value="Add Epoch" ></input>
       </form>
@@ -48,7 +48,7 @@ const Epochs = ({epochs, errors, dispatch}) => {
   }
 
   const renderEpochs = () => {
-    if (epochs.length) return epochs.map((epoch, index) => {
+    if (epochs && epochs.length) return epochs.map((epoch, index) => {
       const epochError = errors.epoch ? errors.error : null
       return (
       <div 
