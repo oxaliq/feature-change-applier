@@ -7,23 +7,25 @@ import { render } from 'react-dom';
 
 
 const Epochs = ({epochs, errors, dispatch}) => {
-  
-  const addEpoch = e => {
-    e.preventDefault()
+  const handleEvent = func => e => {
+    e.preventDefault();
+    return func;
+  }
+
+  const addEpoch = e => handleEvent(() => {
     let index = epochs.length + 1;
     dispatch({
       type: 'ADD_EPOCH',
-      value: {name: `Epoch ${index}`}
+      value: {name: `epoch ${index}`}
     })
-  }
+    })(e)
 
-  const removeEpoch = (e, epochName) => {
-    e.preventDefault()
+  const removeEpoch = e => handleEvent(
     dispatch({
       type: 'REMOVE_EPOCH',
       value: {name: epochName}
-    });
-  }
+    })
+  )(e);
 
   const updateEpoch = (epoch, epochIndex) => {
     const dispatchValue = {
@@ -48,23 +50,25 @@ const Epochs = ({epochs, errors, dispatch}) => {
   }
 
   const renderEpochs = () => {
-    if (epochs && epochs.length) return epochs.map((epoch, index) => {
+    if (epochs && epochs.length) {
+      return epochs.map((epoch, index) => {
       const epochError = errors.epoch ? errors.error : null
       return (
-      <div 
-        className="SoundChangeSuite" 
-        data-testid={`${epoch.name}_SoundChangeSuite`}
-        key={`epoch-${index}`}
-      >
-        <SoundChangeSuite 
-          epochIndex={index} epoch={epoch} 
-          updateEpoch={updateEpoch} removeEpoch={removeEpoch}
-          epochs={epochs}
-          error={epochError}
-        />
-        {renderAddEpochButton(index)}
-      </div>
-    )});
+        <div 
+          className="SoundChangeSuite" 
+          data-testid={`${epoch.name}_SoundChangeSuite`}
+          key={`epoch-${index}`}
+        >
+          <SoundChangeSuite 
+            epochIndex={index} epoch={epoch} 
+            updateEpoch={updateEpoch} removeEpoch={removeEpoch}
+            epochs={epochs}
+            error={epochError}
+          />
+          {renderAddEpochButton(index)}
+        </div>
+      )});
+    }
     return renderAddEpochButton(-1)
   }
 
