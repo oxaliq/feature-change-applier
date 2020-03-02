@@ -15,7 +15,7 @@ const getOneToken = (latl, tokens) => {
     const newRegEx = new RegExp(`^(${regEx})`);
     const match = latl.match(newRegEx) || null;
     if (match) {
-      const newTokens = [...tokens, match[0]]
+      const newTokens = [...tokens, {type, value: match[0]}]
       const newLatl = latl.slice(match[0].length ,).trim();
       return [newLatl, newTokens]
     }
@@ -39,10 +39,8 @@ export const tokenize = latl => {
 }
 
 export const generateAST = latl => {
-  
   // tokenize
   const tokens = tokenize(latl);
-
 
   // build tree
 
