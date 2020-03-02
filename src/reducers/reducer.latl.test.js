@@ -1,6 +1,6 @@
 import { stateReducer } from './reducer';
 import { initState } from './reducer.init';
-import { tokenize } from './reducer.latl';
+import { tokenize, buildTree } from './reducer.latl';
 
 describe('LATL', () => {
   it('returns state unaltered with no action body', () => {
@@ -35,6 +35,11 @@ describe('LATL', () => {
     expect(tokens).toStrictEqual(tokenizedLatl);
   });
 
+  it('returns AST from well-formed epoch tokens', () => {
+    const tree = buildTree(tokenizedEpoch);
+    expect(tree).toStrictEqual(treeEpoch);
+  })
+
 })
 const epochDefinitionLatl = `
 *PROTO
@@ -55,6 +60,20 @@ const tokenizedEpoch = [
       { type: "loDash", value: "_" }, { type: "dot", value: "." },
   { type: "pipe", value: "|" }, { type: "variable", value: "CHILD" }
 ]
+
+const treeEpoch = {
+  epochs: [
+    {
+      parent: 'PROTO',
+      name: 'CHILD',
+      index: 0,
+      changes: [
+        '[+ FEATURE]>[- FEATURE]/._.',
+        'n>m/#_.'
+      ]
+    }
+  ]
+}
 
 const featureDefinitionLatl = `
 [+ PLOSIVE] = kp / p / b / d / t / g / k

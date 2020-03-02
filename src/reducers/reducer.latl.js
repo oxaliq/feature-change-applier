@@ -38,12 +38,23 @@ export const tokenize = latl => {
   }
 }
 
+const addToken = (tree, token, index, tokens) => {
+  console.log(tokens[index - 1], token)
+  return tree;
+}
+
+export const buildTree = tokens => {
+  return tokens.reduce(addToken, {})
+}
+
 export const generateAST = latl => {
   // tokenize
   const tokens = tokenize(latl);
 
   // build tree
+  const tree = buildTree(tokens);
 
+  return tree;
 }
 
 const tokenTypes = [
