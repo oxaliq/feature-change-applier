@@ -2,10 +2,11 @@ import React from 'react';
 import './LatlOutput.scss';
 
 const LatlOutput = ({results, options, dispatch}) => {
+
   return (
     <div className="LatlOutput">
       <h3>Output</h3>
-      <form action={() => {}}>
+      <form>
         <input 
           className="form form--remove"
           type="submit"
