@@ -263,10 +263,10 @@ export const run = (state: stateType, action: resultsAction): stateType => {
     const passResults = state.epochs.reduce((results, epoch, _) => {
       const { phones, features, lexicon } = state;
       let lexiconBundle;
-      if ( epoch.parent ) {
+      if ( epoch.parent && results[epoch.parent] ) {
         lexiconBundle = results.find(result => result.pass === epoch.parent).lexicon
       }
-      if (!epoch.parent) {
+      if (!epoch.parent || !results[epoch.parent]) {
         lexiconBundle = formBundleFromLexicon(lexicon)(phones); 
       }
       const ruleBundle = decomposeRules(epoch, phones);

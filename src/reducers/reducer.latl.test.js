@@ -1,6 +1,6 @@
 import { stateReducer } from './reducer';
 import { initState } from './reducer.init';
-import { tokenize, buildTree } from './reducer.latl';
+import { tokenize, buildTree, parseLatl } from './reducer.latl';
 
 describe('LATL', () => {
   it('returns state unaltered with no action body', () => {
@@ -31,7 +31,8 @@ describe('LATL', () => {
   it('returns tokens from well-formed latl epoch, feature, and lexicon definitions', () => {
     const latl = epochDefinitionLatl + '\n' + featureDefinitionLatl + '\n' + lexiconDefinitionLatl;
     const tokens = tokenize(latl);
-    const tokenizedLatl = [...tokenizedEpoch, ...tokenizedFeature, ...tokenizedLexicon];
+    const lineBreaks = [{ type: 'lineBreak', value: '' },{ type: 'lineBreak', value: '' },{ type: 'lineBreak', value: '' }]
+    const tokenizedLatl = [...tokenizedEpoch, ...lineBreaks, ...tokenizedFeature, ...lineBreaks, ...tokenizedLexicon];
     expect(tokens).toStrictEqual(tokenizedLatl);
   });
 
@@ -40,8 +41,23 @@ describe('LATL', () => {
     expect(tree).toStrictEqual(treeEpoch);
   })
 
+  it('returns run from well-formed epoch latl', () => {
+    const state = initState();
+    const setAction = {
+      type: 'SET_LATL',
+      value: epochDefinitionLatl
+    }
+    const latlState = stateReducer(state, setAction);
+    const parseState = parseLatl(latlState, {})
+    expect(parseState).toStrictEqual(epochState);
+    parseState.lexicon[0].epoch = 'PROTO'
+    const runState = stateReducer(parseState, {type: 'RUN', value:{}})
+    console.log(runState)
+  })
+
 })
 const epochDefinitionLatl = `
+; comment
 *PROTO
 [+ FEATURE]>[- FEATURE]/._.
 n>m/#_.
@@ -49,16 +65,17 @@ n>m/#_.
 `
 
 const tokenizedEpoch = [ 
-  { type: "star", value: "*" }, { type: "variable", value: "PROTO" },
-    { type: "openBracket", value: "[" }, { type: "plus", value: "+" }, { type: "variable", value: "FEATURE" }, { type: "closeBracket", value: "]" }, 
-      { type: "greaterThan", value: ">" }, { type: "openBracket", value: "[" }, { type: "minus", value: "-" }, { type: "variable", value: "FEATURE" }, { type: "closeBracket", value: "]" }, 
+  { type: "semicolon", value: "; comment" },
+  { type: "star", value: "*" }, { type: "referent", value: "PROTO" }, { type: 'lineBreak', value: '' },
+    { type: "openBracket", value: "[" }, { type: "plus", value: "+" }, { type: "referent", value: "FEATURE" }, { type: "closeBracket", value: "]" }, 
+      { type: "greaterThan", value: ">" }, { type: "openBracket", value: "[" }, { type: "minus", value: "-" }, { type: "referent", value: "FEATURE" }, { type: "closeBracket", value: "]" }, 
       { type: "slash", value: "/" }, { type: "dot", value: "." }, 
-      { type: "loDash", value: "_" }, { type: "dot", value: "." },
-    { type: "variable", value: "n" },
-      { type: "greaterThan", value: ">" }, { type: "variable", value: "m" },
+      { type: "underscore", value: "_" }, { type: "dot", value: "." }, { type: 'lineBreak', value: '' },
+    { type: "referent", value: "n" },
+      { type: "greaterThan", value: ">" }, { type: "referent", value: "m" },
       { type: "slash", value: "/" }, { type: "hash", value: "#" },
-      { type: "loDash", value: "_" }, { type: "dot", value: "." },
-  { type: "pipe", value: "|" }, { type: "variable", value: "CHILD" }
+      { type: "underscore", value: "_" }, { type: "dot", value: "." }, { type: 'lineBreak', value: '' },
+  { type: "pipe", value: "|" }, { type: "referent", value: "CHILD" }
 ]
 
 const treeEpoch = {
@@ -68,11 +85,17 @@ const treeEpoch = {
       name: 'CHILD',
       index: 0,
       changes: [
-        '[+ FEATURE]>[- FEATURE]/._.',
+        '[+FEATURE]>[-FEATURE]/._.',
         'n>m/#_.'
       ]
     }
   ]
+}
+
+const epochState = {
+  ...initState(),
+  epochs: treeEpoch.epochs,
+  latl: epochDefinitionLatl
 }
 
 const featureDefinitionLatl = `
@@ -85,14 +108,14 @@ const featureDefinitionLatl = `
 `
 
 const tokenizedFeature = [
-  { type: "openBracket", value: "[" }, { type: "plus", value: "+" }, { type: "variable", value: "PLOSIVE" }, { type: "closeBracket", value: "]" },
-    { type: "equal", value: "=" }, { type: "variable", value: "kp" }, { type: "slash", value: "/" }, { type: "variable", value: "p" }, { type: "slash", value: "/" }, { type: "variable", value: "b" }, { type: "slash", value: "/" }, { type: "variable", value: "d" }, { type: "slash", value: "/" }, { type: "variable", value: "t" }, { type: "slash", value: "/" }, { type: "variable", value: "g" }, { type: "slash", value: "/" }, { type: "variable", value: "k" },
-  { type: "openBracket", value: "[" }, { type: "minus", value: "-" }, { type: "variable", value: "PLOSIVE" }, { type: "closeBracket", value: "]" },
-    { type: "equal", value: "=" }, { type: "variable", value: "m" }, { type: "slash", value: "/" }, { type: "variable", value: "n" }, { type: "slash", value: "/" }, { type: "variable", value: "s" }, { type: "slash", value: "/" }, { type: "variable", value: "z" },
-  { type: "openBracket", value: "[" }, { type: "variable", value: "SONORANT" },
+  { type: "openBracket", value: "[" }, { type: "plus", value: "+" }, { type: "referent", value: "PLOSIVE" }, { type: "closeBracket", value: "]" },
+    { type: "equal", value: "=" }, { type: "referent", value: "kp" }, { type: "slash", value: "/" }, { type: "referent", value: "p" }, { type: "slash", value: "/" }, { type: "referent", value: "b" }, { type: "slash", value: "/" }, { type: "referent", value: "d" }, { type: "slash", value: "/" }, { type: "referent", value: "t" }, { type: "slash", value: "/" }, { type: "referent", value: "g" }, { type: "slash", value: "/" }, { type: "referent", value: "k" }, { type: 'lineBreak', value: '' },
+  { type: "openBracket", value: "[" }, { type: "minus", value: "-" }, { type: "referent", value: "PLOSIVE" }, { type: "closeBracket", value: "]" },
+    { type: "equal", value: "=" }, { type: "referent", value: "m" }, { type: "slash", value: "/" }, { type: "referent", value: "n" }, { type: "slash", value: "/" }, { type: "referent", value: "s" }, { type: "slash", value: "/" }, { type: "referent", value: "z" }, { type: 'lineBreak', value: '' },
+  { type: "openBracket", value: "[" }, { type: "referent", value: "SONORANT" }, { type: 'lineBreak', value: '' },
     { type: "positiveAssignment", value: "+=" },
-      { type: "variable", value: "m" }, { type: "slash", value: "/" }, { type: "variable", value: "n" },
-    { type: "negativeAssignment", value: "-=" }, { type: "variable", value: "s" }, { type: "slash", value: "/" }, { type: "variable", value: "z" }, { type: "slash", value: "/" }, { type: "variable", value: "kp" }, { type: "slash", value: "/" }, { type: "variable", value: "p" }, { type: "slash", value: "/" }, { type: "variable", value: "b" }, { type: "slash", value: "/" }, { type: "variable", value: "d" }, { type: "slash", value: "/" }, { type: "variable", value: "t" }, { type: "slash", value: "/" }, { type: "variable", value: "g" }, { type: "slash", value: "/" }, { type: "variable", value: "k" },
+      { type: "referent", value: "m" }, { type: "slash", value: "/" }, { type: "referent", value: "n" }, { type: 'lineBreak', value: '' },
+    { type: "negativeAssignment", value: "-=" }, { type: "referent", value: "s" }, { type: "slash", value: "/" }, { type: "referent", value: "z" }, { type: "slash", value: "/" }, { type: "referent", value: "kp" }, { type: "slash", value: "/" }, { type: "referent", value: "p" }, { type: "slash", value: "/" }, { type: "referent", value: "b" }, { type: "slash", value: "/" }, { type: "referent", value: "d" }, { type: "slash", value: "/" }, { type: "referent", value: "t" }, { type: "slash", value: "/" }, { type: "referent", value: "g" }, { type: "slash", value: "/" }, { type: "referent", value: "k" }, { type: 'lineBreak', value: '' },
     { type: "closeBracket", value: "]" },
 ]
 
@@ -104,8 +127,8 @@ const lexiconDefinitionLatl = `
 `
 
 const tokenizedLexicon = [
-  { type: "slash", value: "/" }, { type: "variable", value: "PROTO" },
-    { type: "variable", value: "kpn" },
-    { type: "variable", value: "sm" },
+  { type: "slash", value: "/" }, { type: "referent", value: "PROTO" }, { type: 'lineBreak', value: '' },
+    { type: "referent", value: "kpn" }, { type: 'lineBreak', value: '' },
+    { type: "referent", value: "sm" }, { type: 'lineBreak', value: '' },
   { type: "slash", value: "/" }
 ]
