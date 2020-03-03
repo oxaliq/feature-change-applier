@@ -1,3 +1,3 @@
 export const clearOutput = (state, action) => {
-  return { ...state, results: [], errors: {} };
+  return { ...state, results: [], errors: {}, parseResults: '' };
 }

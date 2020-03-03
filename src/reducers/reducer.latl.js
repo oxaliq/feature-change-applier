@@ -1,6 +1,6 @@
 export const setLatl = (state, action) => {
   let latl = action.value;
-  return {...state, latl};
+  return {...state, latl, parseResults: ''};
 }
 
 const getOneToken = (latl, tokens) => {
@@ -291,7 +291,6 @@ export const buildTree = tokens => {
   }
   const nodes = tokens.reduce(addToken, []);
   // return nodes
-  console.log(nodes)
   const tree = nodes.reduce(connectNodes, bareTree);
   return tree;
 }
@@ -309,12 +308,10 @@ export const parseLatl = (state, action) => {
     const latl = state.latl;
     const AST = generateAST(latl);
     Object.entries(AST).forEach(([key, value]) => state[key] = value);
-    console.log(state)
-    console.log(AST)
-    return { ...state, parseResults: 'success' }
+    return { ...state, parseResults: 'latl parsed successfully', results:[] }
   }
   catch (e) {
-    return { ...state, errors: e}
+    return { ...state, parseResults: e}
   }
 }
 

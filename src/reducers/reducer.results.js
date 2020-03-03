@@ -221,7 +221,7 @@ const transformLexemeCoda = (newLexeme, pre, post, position, phoneme, index, lex
   if (!isEnvironmentBoundByRule([phoneme], position)) return [...newLexeme, phoneme];
   const newPhoneme = transformPhoneme(phoneme, newFeatures[0], features);
   // if deletion occurs
-  if (!newPhoneme.grapheme) return [ ...newLexeme] ;
+  if (!newPhoneme || !newPhoneme.grapheme) return [ ...newLexeme] ;
   return [...newLexeme, newPhoneme];
 }
 
@@ -280,9 +280,9 @@ export const run = (state: stateType, action: resultsAction): stateType => {
     }, []);
     
     const results = passResults.map(stringifyResults);
-    return {...state, results, errors: {} }
+    return {...state, results, errors: {}, parseResults: '' }
   } catch (err) {
     console.log(err)
-    return {...state, errors: err, results:[] };
+    return {...state, errors: err, results:[], parseResults: '' };
   }
 }
