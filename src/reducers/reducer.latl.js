@@ -9,7 +9,7 @@ const getOneToken = (latl, tokens) => {
     const match = latl.match(newRegEx) || null;
     if (match) {
       const newTokens = [...tokens, {type, value: match[0].trim()}]
-      const newLatl = latl.slice(match[0].length ,).replace(/\ /,'');
+      const newLatl = latl.slice(match[0].length ,);
       return [newLatl, newTokens]
     }
   }
@@ -46,6 +46,18 @@ const parseLineBreak = (tree, token, index, tokens) => {
         tree[tree.length - 1] = newNode;
         return tree;
       }
+    }
+    default:
+      return tree;
+  }
+}
+
+const parseWhiteSpace = (tree, token, index, tokens) => {
+  const lastNode = tree[tree.length - 1];
+  switch (lastNode.type) {
+    case 'rule': {
+      tree[tree.length - 1] = {...lastNode, value: lastNode.value + ' ' }
+      return tree;
     }
     default:
       return tree;
@@ -105,6 +117,18 @@ const parseReferent = (tree, token, index, tokens) => {
     }
   }
   
+const parsePhone = (tree, token, index, tokens) => {
+  const lastNode = tree[tree.length - 1];
+  switch(lastNode.type) {
+    case 'rule': {
+      tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value }
+      return tree;
+    }
+    default:
+      return [...tree, `unexpected phone ${token.value}`]
+  }
+}
+  
 const parseOpenBracket = (tree, token, index, tokens) => {
   const lastNode = tree[tree.length - 1];
   switch (lastNode.type) {
@@ -113,6 +137,8 @@ const parseOpenBracket = (tree, token, index, tokens) => {
     case 'rule':
       tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value }
       return tree;
+    case 'ruleSet':
+      return [...tree, {type: 'rule', value: token.value}]
     default:
       return [...tree, 'unexpected open bracket']
   }
@@ -213,6 +239,8 @@ const generateNode = (tree, token, index, tokens) => {
       return [...tree]
     case 'lineBreak':
       return parseLineBreak(tree, token, index, tokens);
+    case 'whiteSpace':
+      return parseWhiteSpace(tree, token, index, tokens);
     // if *PROTO consume token:* and add epochs: [ { parent: 'PROTO' } ]
     case 'star': 
       return parseStar(tree, token, index, tokens);
@@ -220,6 +248,8 @@ const generateNode = (tree, token, index, tokens) => {
       return parsePipe(tree, token, index, tokens);
     case 'referent':
       return parseReferent(tree, token, index, tokens);
+    case 'phone':
+      return parsePhone(tree, token, index, tokens);
     case 'openBracket':
       return parseOpenBracket(tree, token, index, tokens);
     case 'closeBracket':
@@ -261,6 +291,7 @@ export const buildTree = tokens => {
   }
   const nodes = tokens.reduce(addToken, []);
   // return nodes
+  console.log(nodes)
   const tree = nodes.reduce(connectNodes, bareTree);
   return tree;
 }
@@ -274,10 +305,17 @@ export const generateAST = latl => {
 }
 
 export const parseLatl = (state, action) => {
-  const latl = state.latl;
-  const AST = generateAST(latl);
-  Object.entries(AST).forEach(([key, value]) => state[key] = value);
-  return { ...state }
+  try {
+    const latl = state.latl;
+    const AST = generateAST(latl);
+    Object.entries(AST).forEach(([key, value]) => state[key] = value);
+    console.log(state)
+    console.log(AST)
+    return { ...state, parseResults: 'success' }
+  }
+  catch (e) {
+    return { ...state, errors: e}
+  }
 }
 
 const tokenTypes = [
@@ -296,7 +334,8 @@ const tokenTypes = [
   ['dot', `\\.`],
   ['underscore', `\\_`],
   [`referent`, `[A-Za-z]+[\\w\\-\\_]*`],
+  [`phone`, `[\u0100-\u02AF\u0300-\u03FFA-Za-z0]+`],
   ['equal', `=`],
-  [`lineBreak`, `\\n`]
-  // [`whiteSpace`, `\\s+`]
+  [`lineBreak`, `\\n`],
+  [`whiteSpace`, `\\s+`]
 ]

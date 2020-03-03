@@ -1,7 +1,8 @@
 import React from 'react';
 import './LatlOutput.scss';
+import Output from './Output';
 
-const LatlOutput = ({results, options, dispatch}) => {
+const LatlOutput = ({results, options, dispatch, errors}) => {
   const handleClick = e => dispatchFunc => {
     e.preventDefault()
     return dispatchFunc();
@@ -60,6 +61,7 @@ const LatlOutput = ({results, options, dispatch}) => {
           value="Run"
         />
       </form>
+      <Output results={results} errors={errors} options={options}/>
     </div>
   );
 }

@@ -30,7 +30,7 @@ const PhonoChangeApplier = () => {
         <Link to="/">Back to GUI</Link>
         <div className="PhonoChangeApplier PhonoChangeApplier--latl">
           <Latl latl={latl} dispatch={dispatch}/>
-          <LatlOutput results={results} options={options} dispatch={dispatch}/>
+          <LatlOutput results={results} options={options} errors={errors} dispatch={dispatch}/>
         </div>
       </Route>
 
