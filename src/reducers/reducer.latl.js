@@ -434,6 +434,7 @@ export const generateAST = latl => {
   // tokenize
   const tokens = tokenize(latl.trim());
   // build tree
+  console.log(tokens)
   const tree = buildTree(tokens);
   return tree;
 }
@@ -456,6 +457,7 @@ export const parseLatl = (state, action) => {
     return { ...state, parseResults: 'latl parsed successfully', results:[] }
   }
   catch (e) {
+    console.log(e)
     return { ...state, parseResults: e}
   }
 }
@@ -476,7 +478,7 @@ const tokenTypes = [
   ['dot', `\\.`],
   ['underscore', `\\_`],
   [`referent`, `[A-Za-z]+[\\w\\-\\_]*`],
-  [`phone`, `[\u0100-\u02AF\u0300-\u03FFA-Za-z0]+`],
+  [`phone`, `[\u0100-\u03FFA-Za-z0]+`],
   ['equal', `=`],
   [`lineBreak`, `\\n`],
   [`whiteSpace`, `\\s+`]
