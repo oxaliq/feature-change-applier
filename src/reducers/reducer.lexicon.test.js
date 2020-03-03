@@ -3,8 +3,8 @@ import {stateReducer} from './reducer';
 describe('Lexicon', () => {
   const state = {
     epochs: [
-      { name: 'epoch 1', changes:[''] }, 
-      { name: 'epoch 2', changes:[''] }
+      { name: 'epoch-1', changes:[''] }, 
+      { name: 'epoch-2', changes:[''] }
     ]
   }
   state.lexicon = [
@@ -28,16 +28,16 @@ describe('Lexicon', () => {
   });
   
   it('lexicon addition with epoch returns updated lexicon with correct epoch', () => {
-    const action = {type: 'ADD_LEXEME', value: {lexeme:'ntʰa', epoch: 'epoch 2'}}
+    const action = {type: 'ADD_LEXEME', value: {lexeme:'ntʰa', epoch: 'epoch-2'}}
     expect(stateReducer(state, action)).toEqual({...state, lexicon:[...state.lexicon, {lexeme:'ntʰa', epoch:state.epochs[1]}]});  
   });
 
   it('lexicon set returns updated lexicon with correct epoch', () => {
     const newLexicon = [
-      {lexeme:'anta', epoch:'epoch 1'},
-      {lexeme:'anat', epoch:'epoch 1'},
-      {lexeme:'anət', epoch:'epoch 1'},
-      {lexeme:'anna', epoch:'epoch 1'}
+      {lexeme:'anta', epoch:'epoch-1'},
+      {lexeme:'anat', epoch:'epoch-1'},
+      {lexeme:'anət', epoch:'epoch-1'},
+      {lexeme:'anna', epoch:'epoch-1'}
     ]
     const action = {type: 'SET_LEXICON', value: newLexicon}
     expect(stateReducer(state, action)).toEqual({...state, lexicon:[
@@ -58,7 +58,7 @@ describe('Lexicon', () => {
     const inputLexicon = [
       {lexeme:'anta'},
       {lexeme:'anat'},
-      {lexeme:'anət', epoch:'epoch 2'},
+      {lexeme:'anət', epoch:'epoch-2'},
       {lexeme:'anna'}
     ]
     const action = {type: 'SET_LEXICON', value: inputLexicon}

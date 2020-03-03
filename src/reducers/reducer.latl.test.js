@@ -45,24 +45,39 @@ describe('LATL', () => {
     const state = initState();
     const setAction = {
       type: 'SET_LATL',
-      value: epochDefinitionLatl
+      value: runEpochLatl
     }
     const latlState = stateReducer(state, setAction);
     const parseState = parseLatl(latlState, {})
-    expect(parseState).toStrictEqual(epochState);
+    // expect(parseState).toStrictEqual(epochState);
     parseState.lexicon[0].epoch = 'PROTO'
     const runState = stateReducer(parseState, {type: 'RUN', value:{}})
-    console.log(runState)
+    expect(runState).toStrictEqual({...runState, results: runEpochResults})
   })
 
 })
 const epochDefinitionLatl = `
 ; comment
 *PROTO
-[+ FEATURE]>[- FEATURE]/._.
-n>m/#_.
+  [+ FEATURE]>[- FEATURE]/._.
+  n>m/#_.
 |CHILD
 `
+
+const runEpochLatl = `
+; comment
+*PROTO
+  a>u/._.
+|epoch-1
+`
+
+const runEpochResults = [
+  {
+    pass: 'epoch-1',
+    parent: 'PROTO',
+    lexicon: [ 'untu', 'unut', 'unət', 'unnu', 'tun', 'əntu' ]
+  }
+]
 
 const tokenizedEpoch = [ 
   { type: "semicolon", value: "; comment" },

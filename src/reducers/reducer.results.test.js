@@ -130,7 +130,7 @@ describe('Results', () => {
     state = initState(1)
     expect(stateReducer(state, action).results).toEqual([
       {
-        pass: 'epoch 1',
+        pass: 'epoch-1',
         lexicon: [
           'anna', 'anat', 'anət', 'anna', 'tan', 'ənna'
         ]
@@ -143,7 +143,7 @@ describe('Results', () => {
     state = initState(2)
     expect(stateReducer(state, action).results).toEqual([
       {
-        pass: 'epoch 1',
+        pass: 'epoch-1',
         lexicon: [
           'annɯ', 'anat', 'anət', 'annɯ', 'tan', 'ənnɯ'
         ]
@@ -156,7 +156,7 @@ describe('Results', () => {
     state = initState(3)
     expect(stateReducer(state, action).results).toEqual([
       {
-        pass: 'epoch 1',
+        pass: 'epoch-1',
         lexicon: [
           'annɯ', 'anat', 'ant', 'annɯ', 'tan', 'nnɯ'
         ]
@@ -169,7 +169,7 @@ describe('Results', () => {
     state = initState(4)
     expect(stateReducer(state, action).results).toEqual([
       {
-        pass: 'epoch 1',
+        pass: 'epoch-1',
         lexicon: [
           'annɯ', 'anat', 'ant', 'annɯ', 'tʰan', 'nnɯ'
         ]
@@ -182,7 +182,7 @@ describe('Results', () => {
     state = initState(5)
     expect(stateReducer(state, action).results).toEqual([
       {
-        pass: 'epoch 1',
+        pass: 'epoch-1',
         lexicon: [
           'annu', 'anat', 'ant', 'annu', 'tʰan', 'nnu'
         ]
@@ -195,7 +195,7 @@ describe('Results', () => {
   //   state = initState(6)
   //   expect(stateReducer(state, action).results).toEqual([
   //     {
-  //       pass: 'epoch 1',
+  //       pass: 'epoch-1',
   //       lexicon: [
   //         'annu', 'anta', 'ant', 'annu', 'tʰan', 'nnu'
   //       ]
@@ -207,7 +207,7 @@ describe('Results', () => {
     const action = {type: 'RUN'};
     state = initState(5);
     const newEpoch = {
-      name: 'epoch 2',
+      name: 'epoch-2',
       changes: [
         '[+ sonorant ]>0/#_.',
         'n>0/#_n'
@@ -216,13 +216,13 @@ describe('Results', () => {
     state.epochs = [ ...state.epochs, newEpoch ]
     expect(stateReducer(state, action).results).toEqual([
       {
-        pass: 'epoch 1',
+        pass: 'epoch-1',
         lexicon: [
           'annu', 'anat', 'ant', 'annu', 'tʰan', 'nnu'
         ]
       },
       {
-        pass: 'epoch 2',
+        pass: 'epoch-2',
         lexicon: [
           'nta', 'nat', 'nət', 'na', 'tan', 'nta'
         ]
@@ -234,8 +234,8 @@ describe('Results', () => {
     const action = {type: 'RUN'};
     state = initState(5);
     const newEpoch = {
-      name: 'epoch 2',
-      parent: 'epoch 1',
+      name: 'epoch-2',
+      parent: 'epoch-1',
       changes: [
         '[+ sonorant ]>0/#_.'
       ]
@@ -243,14 +243,14 @@ describe('Results', () => {
     state.epochs = [ ...state.epochs, newEpoch ]
     expect(stateReducer(state, action).results).toEqual([
       {
-        pass: 'epoch 1',
+        pass: 'epoch-1',
         lexicon: [
           'annu', 'anat', 'ant', 'annu', 'tʰan', 'nnu'
         ]
       },
       {
-        pass: 'epoch 2',
-        parent: 'epoch 1',
+        pass: 'epoch-2',
+        parent: 'epoch-1',
         lexicon: [
           'nnu', 'nat', 'nt', 'nnu', 'tʰan', 'nu'
         ]

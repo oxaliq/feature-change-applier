@@ -9,7 +9,7 @@ export const initState = (changesArgument: number): stateType => {
   const state = {
     epochs: [
       {
-        name: 'epoch 1',
+        name: 'epoch-1',
         changes: [
           '[+ occlusive - nasal]>[+ occlusive + nasal]/n_.',
           'a>ɯ/._#',

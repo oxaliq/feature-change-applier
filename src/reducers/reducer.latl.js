@@ -90,6 +90,9 @@ const parseReferent = (tree, token, index, tokens) => {
       tree[tree.length - 1] = {...lastNode, name: token.value, type: 'epoch' }
       return tree;
     }
+    case 'epoch': {
+      return [...tree, { type: 'rule', value: token.value } ]
+    }
     case 'rule': {
       tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value }
       return tree;
@@ -264,17 +267,14 @@ export const buildTree = tokens => {
 
 export const generateAST = latl => {
   // tokenize
-  const tokens = tokenize(latl);
-  
+  const tokens = tokenize(latl.trim());
   // build tree
   const tree = buildTree(tokens);
-  
   return tree;
 }
 
 export const parseLatl = (state, action) => {
   const latl = state.latl;
-  console.log(latl)
   const AST = generateAST(latl);
   Object.entries(AST).forEach(([key, value]) => state[key] = value);
   return { ...state }
@@ -295,7 +295,7 @@ const tokenTypes = [
   ['slash', `\/`],
   ['dot', `\\.`],
   ['underscore', `\\_`],
-  [`referent`, `[A-Za-z]+`],
+  [`referent`, `[A-Za-z]+[\\w\\-\\_]*`],
   ['equal', `=`],
   [`lineBreak`, `\\n`]
   // [`whiteSpace`, `\\s+`]
