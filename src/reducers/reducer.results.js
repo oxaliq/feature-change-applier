@@ -211,7 +211,7 @@ const transformLexemeInitial = (newLexeme, pre, post, position, phoneme, index, 
   if (!isEnvironmentBoundByRule(lexemeBundle.slice(index + position.length, index + post.length + position.length), post)) return [...newLexeme, phoneme];
   const newPhoneme = transformPhoneme(phoneme, newFeatures[0], features);
   // if deletion occurs
-  if (!newPhoneme.grapheme) return [ ...newLexeme] ;
+  if (!newPhoneme || !newPhoneme.grapheme) return [ ...newLexeme] ;
   return [...newLexeme, newPhoneme];
 }
 

@@ -31,4 +31,17 @@ describe('Features', () => {
     );
   });
 
+  it('feature deletion returns new feature list', () => {
+    const action = {type: 'DELETE_FEATURE', value: 'occlusive'}
+    expect(stateReducer(state, action)).toEqual(
+      {...state,
+        features: {},
+        phones: {
+          a: {features: {}, grapheme: 'a'},
+          n: {features: {}, grapheme: 'n'}
+        }
+      }
+    )
+  })
+
 });

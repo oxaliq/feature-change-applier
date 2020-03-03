@@ -80,9 +80,9 @@ export const addFeature = (state: stateType, action: featureAction): stateType =
 }
 
 export const deleteFeature = (state, action) => {
-  console.log('deleting')
-  const deletedFeature = action.value;
-  delete state.features[deletedFeature];
-  console.log(state)
-  return {...state}
+  const deletedFeature = state.features[action.value];
+  deletedFeature.positive.forEach(phone => delete phone.features[action.value])
+  deletedFeature.negative.forEach(phone => delete phone.features[action.value])
+  delete state.features[action.value];
+  return state
 }

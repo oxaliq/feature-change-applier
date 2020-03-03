@@ -1,3 +1,5 @@
+import { stateReducer } from './reducer';
+
 export const setLatl = (state, action) => {
   let latl = action.value;
   return {...state, latl, parseResults: ''};
@@ -46,6 +48,14 @@ const parseLineBreak = (tree, token, index, tokens) => {
         tree[tree.length - 1] = newNode;
         return tree;
       }
+    }
+    case 'feature--plus': {
+      // tree[tree.length - 1].type === 'feature';
+      return tree;
+    }
+    case 'feature--minus': {
+      // tree[tree.length - 1].type === 'feature';
+      return tree;
     }
     default:
       return tree;
@@ -112,6 +122,32 @@ const parseReferent = (tree, token, index, tokens) => {
     case 'ruleSet': {
       return [...tree, { type: 'rule', value: token.value }]
     }
+    case 'feature': {
+      if (!lastNode.value) {
+        tree[tree.length - 1].value = token.value;
+        return tree;
+      }
+    }
+    case 'feature--plus': {
+      if (lastNode.value) {
+        lastNode.positivePhones = [...lastNode.positivePhones, token.value ]
+      }
+      else {
+        lastNode.value = token.value;
+      }
+      tree[tree.length - 1] = lastNode;
+      return [...tree]
+    }
+    case 'feature--minus': {
+      if (lastNode.value) {
+        lastNode.negativePhones = [...lastNode.negativePhones, token.value ]
+      }
+      else {
+        lastNode.value = token.value;
+      }
+      tree[tree.length - 1] = lastNode;
+      return [...tree]
+    }
     default:
       return [...tree, `unexpected referent ${token.value}`]
     }
@@ -131,17 +167,26 @@ const parsePhone = (tree, token, index, tokens) => {
   
 const parseOpenBracket = (tree, token, index, tokens) => {
   const lastNode = tree[tree.length - 1];
-  switch (lastNode.type) {
-    case 'epoch':
-      return [...tree, {type: 'rule', value: token.value}]
-    case 'rule':
-      tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value }
-      return tree;
-    case 'ruleSet':
-      return [...tree, {type: 'rule', value: token.value}]
-    default:
-      return [...tree, 'unexpected open bracket']
+  if (lastNode) {
+    switch (lastNode.type) {
+      case 'epoch':
+        return [...tree, {type: 'rule', value: token.value}]
+      case 'rule':
+        tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value }
+        return tree;
+      case 'ruleSet':
+        return [...tree, {type: 'rule', value: token.value}];
+      // case 'feature':
+      //   return [{type: 'feature', positivePhones: [], negativePhones: []}];
+      case 'feature--plus':
+        return [...tree, {type: 'feature', positivePhones: [], negativePhones: []}];
+      case 'feature--minus':
+        return [...tree, {type: 'feature', positivePhones: [], negativePhones: []}];
+      default:
+        return [...tree, 'unexpected open bracket']
+    }
   }
+  return [{type: 'feature', positivePhones: [], negativePhones: []}]
 }
       
 const parseCloseBracket = (tree, token, index, tokens) => {
@@ -150,8 +195,37 @@ const parseCloseBracket = (tree, token, index, tokens) => {
     case 'rule':
       tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value }
       return tree;
+    case 'feature--plus':
+      return tree;
+    case 'feature--minus':
+      return tree;
     default:
       return [...tree, 'unexpected close bracket']
+  }
+}
+
+const parsePositiveAssignment = (tree, token, index, tokens) => {
+  const lastNode = tree[tree.length - 1];
+  switch (lastNode.type) {
+    case 'feature':
+      tree[tree.length - 1].type = 'feature--plus'
+      return tree;
+    default:
+      return [...tree, 'unexpected positive assignment']
+  }
+}
+
+const parseNegativeAssignment = (tree, token, index, tokens) => {
+  const lastNode = tree[tree.length - 1];
+  switch (lastNode.type) {
+    case 'feature':
+      tree[tree.length - 1].type = 'feature--minus'
+      return tree;
+    case 'feature--plus':
+      tree[tree.length - 1].type = 'feature--minus';
+      return tree;
+    default:
+      return [...tree, 'unexpected negative assignment']
   }
 }
 
@@ -161,19 +235,40 @@ const parsePlus = (tree, token, index, tokens) => {
     case 'rule':
       tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value}
       return tree;
+    case 'feature':
+      tree[tree.length - 1] = {...lastNode, type: 'feature--plus'}
+      return tree;
+    case 'feature--minus':
+      tree[tree.length - 1] = {...lastNode, type: 'feature--minus'}
+      return tree;
     default:
       return [...tree, 'unexpected plus']
   }
 }
-
+    
 const parseMinus = (tree, token, index, tokens) => {
   const lastNode = tree[tree.length - 1];
   switch (lastNode.type) {
     case 'rule':
       tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value}
       return tree;
+    case 'feature':
+      tree[tree.length - 1] = {...lastNode, type: 'feature--minus'}
+      return tree;
     default:
       return [...tree, 'unexpected minus']
+  }
+}
+
+const parseEqual = (tree, token, index, tokens) => {
+  const lastNode = tree[tree.length - 1];
+  switch (lastNode.type) {
+    case 'feature--plus':
+      return tree;
+    case 'feature--minus':
+      return tree;
+    default:
+      return [...tree, 'unexpected equal'];
   }
 }
 
@@ -193,6 +288,10 @@ const parseSlash = (tree, token, index, tokens) => {
   switch (lastNode.type) {
     case 'rule':
       tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value}
+      return tree;
+    case 'feature--plus':
+      return tree;
+    case 'feature--minus':
       return tree;
     default:
       return [...tree, 'unexpected slash']
@@ -254,10 +353,16 @@ const generateNode = (tree, token, index, tokens) => {
       return parseOpenBracket(tree, token, index, tokens);
     case 'closeBracket':
       return parseCloseBracket(tree, token, index, tokens);
+    case 'positiveAssignment':
+      return parsePositiveAssignment(tree, token, index, tokens);
+    case 'negativeAssignment':
+      return parseNegativeAssignment(tree, token, index, tokens);
     case 'plus':
       return parsePlus(tree, token, index, tokens);
     case 'minus':
       return parseMinus(tree, token, index, tokens);
+    case 'equal':
+      return parseEqual(tree, token, index, tokens);
     case 'greaterThan':
       return parseGreaterThan(tree, token, index, tokens);
     case 'slash':
@@ -279,7 +384,30 @@ const connectNodes = (tree, node, index, nodes) => {
   switch (node.type) {
     case 'epoch':
       delete node.type;
-      return {...tree, epochs: [...tree.epochs, {...node, index: tree.epochs.length} ]}
+      return {...tree, epochs: [...tree.epochs, {...node, index: tree.epochs.length } ] }
+    case 'feature':
+      node.feature = node.value;
+      delete node.value;    
+      delete node.type;
+      return {...tree, features: [...tree.features, {...node } ] }
+    case 'feature--minus':
+      node.feature = node.value;
+      delete node.value;    
+      delete node.type;
+      if (tree.features.length && tree.features[tree.features.length - 1].feature === node.feature) {
+        tree.features[tree.features.length - 1].negativePhones = node.negativePhones
+        return tree;
+      }
+      return {...tree, features: [...tree.features, {...node} ] }
+    case 'feature--plus':
+      delete node.type;
+      node.feature = node.value;
+      delete node.value;
+      if (tree.features.length && tree.features[tree.features.length - 1].feature === node.feature) {
+        tree.features[tree.features.length - 1].positivePhones = node.positivePhones
+        return tree;
+      }
+      return {...tree, features: [...tree.features, {...node} ] }
     default:
       return tree;
   }
@@ -288,11 +416,18 @@ const connectNodes = (tree, node, index, nodes) => {
 export const buildTree = tokens => {
   const bareTree = {
     epochs: [],
+    features: [],
+    phones: []
   }
   const nodes = tokens.reduce(addToken, []);
   // return nodes
   const tree = nodes.reduce(connectNodes, bareTree);
-  return tree;
+  const filterProps = Object.entries(tree).filter(([key, value]) => !value.length)
+    .map(([key, value]) => key)
+  return filterProps.reduce((tree, badProp) => {
+    delete tree[badProp];
+    return tree;
+  }, tree);
 }
 
 export const generateAST = latl => {
@@ -307,6 +442,16 @@ export const parseLatl = (state, action) => {
   try {
     const latl = state.latl;
     const AST = generateAST(latl);
+    const features = AST.features;
+    if (features) {
+      if (state.features) {
+        state = Object.keys(state.features).reduce((state, feature) => {
+          return stateReducer(state, {type: 'DELETE_FEATURE', value: feature})
+        }, state)
+      }
+      state = features.reduce((state, feature) => stateReducer(state, {type:'ADD_FEATURE', value: feature}), state);
+    }
+    delete AST.features;
     Object.entries(AST).forEach(([key, value]) => state[key] = value);
     return { ...state, parseResults: 'latl parsed successfully', results:[] }
   }

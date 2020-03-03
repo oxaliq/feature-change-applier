@@ -18,10 +18,10 @@ describe('LATL', () => {
     expect(tokens).toStrictEqual(tokenizedEpoch)
   });
   
-  // it('returns tokens from well-formed latl feature definition', () => {
-  //   const tokens = tokenize(featureDefinitionLatl);
-  //   expect(tokens).toStrictEqual(tokenizedFeature);
-  // });
+  it('returns tokens from well-formed latl feature definition', () => {
+    const tokens = tokenize(featureDefinitionLatl);
+    expect(tokens).toStrictEqual(tokenizedFeature);
+  });
 
   // it('returns tokens from well-formed latl lexicon definition', () => {
   //   const tokens = tokenize(lexiconDefinitionLatl);
@@ -39,6 +39,22 @@ describe('LATL', () => {
   it('returns AST from well-formed epoch tokens', () => {
     const tree = buildTree(tokenizedEpoch);
     expect(tree).toStrictEqual(treeEpoch);
+  })
+
+  it('returns AST from well-formed feature tokens', () => {
+    const tree = buildTree(tokenizedFeature);
+    expect(tree).toStrictEqual(treeFeature);
+  })
+
+  it('parse returns state from well-formed feature latl', () => {
+    const state = initState();
+    const setAction = {
+      type: 'SET_LATL',
+      value: featureDefinitionLatl
+    }
+    const latlState = stateReducer(state, setAction);
+    const parseState = parseLatl(latlState, {});
+    expect(parseState).toStrictEqual(featureState)
   })
 
   it('returns run from well-formed epoch latl', () => {
@@ -116,24 +132,326 @@ const epochState = {
 const featureDefinitionLatl = `
 [+ PLOSIVE] = kp/p/b/d/t/g/k
 [- PLOSIVE] = m/n/s/z
-[SONORANT 
+[SONORANT
   += m/n
   -= s/z/kp/p/b/d/t/g/k
 ]
 `
 
 const tokenizedFeature = [
-  { type: "openBracket", value: "[" }, { type: "plus", value: "+" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "PLOSIVE" }, { type: "closeBracket", value: "]" }, { type: "whiteSpace", value: "" },
-    { type: "equal", value: "=" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "kp" }, { type: "slash", value: "/" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "p" }, { type: "slash", value: "/" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "b" }, { type: "slash", value: "/" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "d" }, { type: "slash", value: "/" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "t" }, { type: "slash", value: "/" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "g" }, { type: "slash", value: "/" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "k" }, { type: "whiteSpace", value: "" }, { type: 'lineBreak', value: '' },
-  { type: "openBracket", value: "[" }, { type: "minus", value: "-" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "PLOSIVE" }, { type: "closeBracket", value: "]" }, { type: "whiteSpace", value: "" },
+  {type: "openBracket", value: "[" }, { type: "plus", value: "+" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "PLOSIVE" }, { type: "closeBracket", value: "]" }, { type: "whiteSpace", value: "" },
+    { type: "equal", value: "=" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "kp" }, { type: "slash", value: "/" }, { type: "referent", value: "p" }, { type: "slash", value: "/" }, { type: "referent", value: "b" }, { type: "slash", value: "/" }, { type: "referent", value: "d" }, { type: "slash", value: "/" }, { type: "referent", value: "t" }, { type: "slash", value: "/" }, { type: "referent", value: "g" }, { type: "slash", value: "/" }, { type: "referent", value: "k" }, { type: 'lineBreak', value: '' },
+  {type: "openBracket", value: "[" }, { type: "minus", value: "-" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "PLOSIVE" }, { type: "closeBracket", value: "]" }, { type: "whiteSpace", value: "" },
     { type: "equal", value: "=" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "m" }, { type: "slash", value: "/" }, { type: "referent", value: "n" }, { type: "slash", value: "/" }, { type: "referent", value: "s" }, { type: "slash", value: "/" }, { type: "referent", value: "z" }, { type: 'lineBreak', value: '' },
-  { type: "openBracket", value: "[" }, { type: "referent", value: "SONORANT" }, { type: 'lineBreak', value: '' },
-    { type: "whiteSpace", value: "" },{ type: "whiteSpace", value: "" },{ type: "positiveAssignment", value: "+=" }, { type: "whiteSpace", value: "" },
-      { type: "referent", value: "m" }, { type: "slash", value: "/" }, { type: "whiteSpace", value: "" }, { type: "referent", value: "n" }, { type: 'lineBreak', value: '' },
-    { type: "whiteSpace", value: "" }, { type: "whiteSpace", value: "" },{ type: "negativeAssignment", value: "-=" }, { type: "whiteSpace", value: "" },
-      { type: "referent", value: "s" }, { type: "slash", value: "/" }, { type: "referent", value: "z" }, { type: "slash", value: "/" }, { type: "referent", value: "kp" }, { type: "slash", value: "/" }, { type: "referent", value: "p" }, { type: "slash", value: "/" }, { type: "referent", value: "b" }, { type: "slash", value: "/" }, { type: "referent", value: "d" }, { type: "slash", value: "/" }, { type: "referent", value: "t" }, { type: "slash", value: "/" }, { type: "referent", value: "g" }, { type: "slash", value: "/" }, { type: "referent", value: "k" }, { type: "whiteSpace", value: "" },{ type: 'lineBreak', value: '' },
+  {type: "openBracket", value: "[" }, { type: "referent", value: "SONORANT" }, { type: 'lineBreak', value: '' },
+    { type: "whiteSpace", value: "" }, { type: "positiveAssignment", value: "+=" }, { type: "whiteSpace", value: "" },
+      { type: "referent", value: "m" }, { type: "slash", value: "/" }, { type: "referent", value: "n" }, { type: 'lineBreak', value: '' },
+    { type: "whiteSpace", value: "" }, { type: "negativeAssignment", value: "-=" }, { type: "whiteSpace", value: "" },
+      { type: "referent", value: "s" }, { type: "slash", value: "/" }, { type: "referent", value: "z" }, { type: "slash", value: "/" }, { type: "referent", value: "kp" }, { type: "slash", value: "/" }, { type: "referent", value: "p" }, { type: "slash", value: "/" }, { type: "referent", value: "b" }, { type: "slash", value: "/" }, { type: "referent", value: "d" }, { type: "slash", value: "/" }, { type: "referent", value: "t" }, { type: "slash", value: "/" }, { type: "referent", value: "g" }, { type: "slash", value: "/" }, { type: "referent", value: "k" }, { type: 'lineBreak', value: '' },
     { type: "closeBracket", value: "]" },
 ]
+
+const treeFeature = { features: [
+  {
+    feature: 'PLOSIVE',
+    positivePhones: ['kp', 'p', 'b', 'd', 't', 'g', 'k'],
+    negativePhones: ['m', 'n', 's', 'z']
+  },
+  {
+    feature: 'SONORANT',
+    positivePhones: ['m', 'n'],
+    negativePhones: ['s' ,'z' ,'kp' ,'p' ,'b' ,'d' ,'t' ,'g' ,'k']
+  }
+]}
+
+const featureState = {
+  ...initState(),
+  features: {
+    PLOSIVE: {
+      negative:  [
+        {
+          features: {
+            PLOSIVE: false,
+            SONORANT: true,
+      },
+        grapheme: "m",
+    },
+     {
+          features: {
+            PLOSIVE: false,
+          SONORANT: true,
+      },
+        grapheme: "n",
+    },
+     {
+          features: {
+            PLOSIVE: false,
+          SONORANT: false,
+      },
+        grapheme: "s",
+    },
+     {
+          features: {
+            PLOSIVE: false,
+          SONORANT: false,
+      },
+        grapheme: "z",
+    },
+  ],
+    positive:  [
+       {
+          features: {
+            PLOSIVE: true,
+      },
+        grapheme: "kp",
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "p",
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "b",
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "d",
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "t",
+        ʰ: {
+            features: {},
+          grapheme: "tʰ",
+      },
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "g",
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "k",
+        p: {
+            features: {
+              SONORANT: false,
+        },
+          grapheme: "kp",
+      },
+    },
+  ],
+},
+  SONORANT: {
+      negative:  [
+       {
+          features: {
+            PLOSIVE: false,
+          SONORANT: false,
+      },
+        grapheme: "s",
+    },
+     {
+          features: {
+            PLOSIVE: false,
+          SONORANT: false,
+      },
+        grapheme: "z",
+    },
+     {
+          features: {
+            SONORANT: false,
+      },
+        grapheme: "kp",
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "p",
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "b",
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "d",
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "t",
+        ʰ: {
+            features: {},
+          grapheme: "tʰ",
+      },
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "g",
+    },
+     {
+          features: {
+            PLOSIVE: true,
+          SONORANT: false,
+      },
+        grapheme: "k",
+        p: {
+            features: {
+              SONORANT: false,
+        },
+          grapheme: "kp",
+      },
+    },
+  ],
+    positive:  [
+       {
+          features: {
+            PLOSIVE: false,
+          SONORANT: true,
+      },
+        grapheme: "m",
+    },
+     {
+          features: {
+            PLOSIVE: false,
+          SONORANT: true,
+      },
+        grapheme: "n",
+    },
+  ],
+},  },
+  parseResults: 'latl parsed successfully',
+  latl: featureDefinitionLatl,
+  phones: {
+    a: {
+        features: {},
+      grapheme: "a",
+  },
+    b: {
+        features: {
+          PLOSIVE: true,
+        SONORANT: false,
+    },
+      grapheme: "b",
+  },
+    d: {
+        features: {
+          PLOSIVE: true,
+        SONORANT: false,
+    },
+      grapheme: "d",
+  },
+    g: {
+        features: {
+          PLOSIVE: true,
+        SONORANT: false,
+    },
+      grapheme: "g",
+  },
+    k: {
+        features: {
+          PLOSIVE: true,
+        SONORANT: false,
+    },
+      grapheme: "k",
+      p: {
+          features: {
+            SONORANT: false,
+      },
+        grapheme: "kp",
+    },
+  },
+    m: {
+        features: {
+          PLOSIVE: false,
+        SONORANT: true,
+    },
+      grapheme: "m",
+  },
+    n: {
+        features: {
+          PLOSIVE: false,
+        SONORANT: true,
+    },
+      grapheme: "n",
+  },
+    p: {
+        features: {
+          PLOSIVE: true,
+        SONORANT: false,
+    },
+      grapheme: "p",
+  },
+    s: {
+        features: {
+          PLOSIVE: false,
+        SONORANT: false,
+    },
+      grapheme: "s",
+  },
+    t: {
+        features: {
+          PLOSIVE: true,
+        SONORANT: false,
+    },
+      grapheme: "t",
+      ʰ: {
+          features: {},
+        grapheme: "tʰ",
+    },
+  },
+    u: {
+        features: {},
+      grapheme: "u",
+  },
+    z: {
+        features: {
+          PLOSIVE: false,
+        SONORANT: false,
+    },
+      grapheme: "z",
+  },
+    ə: {
+        features: {},
+      grapheme: "ə",
+  },
+    ɯ: {
+        features: {},
+      grapheme: "ɯ",
+  },
+  }
+}
 
 const lexiconDefinitionLatl = `
 /PROTO
