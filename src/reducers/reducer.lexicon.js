@@ -20,8 +20,10 @@ const makeLexeme = (lexeme: string, epochName: ?string, state: stateType) => {
   const newLexeme = {lexeme: lexeme, epoch: state.epochs[0]};
   if (epochName) {
     const epochIndex = state.epochs.findIndex(epoch => epoch.name === epochName);
-    if (epochIndex > 0) {
+    if (epochIndex > -1) {
       newLexeme.epoch = state.epochs[epochIndex];
+    } else {
+      newLexeme.epoch = epochName;
     };
   }
   return newLexeme;

@@ -110,7 +110,7 @@ const parseReferent = (tree, token, index, tokens) => {
     }
     case 'epoch-name': {
       tree[tree.length - 1] = {...lastNode, name: token.value, type: 'epoch' }
-      return tree;
+      return [...tree, { type: 'main'}];
     }
     case 'epoch': {
       return [...tree, { type: 'rule', value: token.value } ]
@@ -148,6 +148,15 @@ const parseReferent = (tree, token, index, tokens) => {
       tree[tree.length - 1] = lastNode;
       return [...tree]
     }
+    case 'lexicon': {
+      if (!lastNode.epoch) {
+        tree[tree.length - 1].epoch = token.value;
+      }
+      else {
+        tree[tree.length - 1].value.push(token.value)
+      }
+      return tree;
+    }
     default:
       return [...tree, `unexpected referent ${token.value}`]
     }
@@ -160,6 +169,14 @@ const parsePhone = (tree, token, index, tokens) => {
       tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value }
       return tree;
     }
+    case 'feature--plus':
+      lastNode.positivePhones = [...lastNode.positivePhones, token.value ];
+      tree[tree.length - 1] = lastNode;
+      return tree;
+    case 'feature--minus':
+      lastNode.negativePhones = [...lastNode.negativePhones, token.value ];
+      tree[tree.length - 1] = lastNode;
+      return tree;
     default:
       return [...tree, `unexpected phone ${token.value}`]
   }
@@ -181,6 +198,8 @@ const parseOpenBracket = (tree, token, index, tokens) => {
       case 'feature--plus':
         return [...tree, {type: 'feature', positivePhones: [], negativePhones: []}];
       case 'feature--minus':
+        return [...tree, {type: 'feature', positivePhones: [], negativePhones: []}];
+      case 'main':
         return [...tree, {type: 'feature', positivePhones: [], negativePhones: []}];
       default:
         return [...tree, 'unexpected open bracket']
@@ -285,17 +304,22 @@ const parseGreaterThan = (tree, token, index, tokens) => {
 
 const parseSlash = (tree, token, index, tokens) => {
   const lastNode = tree[tree.length - 1];
-  switch (lastNode.type) {
-    case 'rule':
-      tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value}
-      return tree;
-    case 'feature--plus':
-      return tree;
-    case 'feature--minus':
-      return tree;
-    default:
-      return [...tree, 'unexpected slash']
+  if (lastNode) {
+    switch (lastNode.type) {
+      case 'rule':
+        tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value}
+        return tree;
+      case 'feature--plus':
+        return tree;
+      case 'feature--minus':
+        return tree;
+      case 'lexicon':
+        return [...tree, { }]
+      default:
+        return [...tree, 'unexpected slash']
+    }
   }
+  return [...tree, { type: 'lexicon', value: []}]
 }
     
 const parseHash = (tree, token, index, tokens) => {
@@ -381,6 +405,7 @@ const generateNode = (tree, token, index, tokens) => {
 const addToken = (tree, token, index, tokens) => generateNode(tree, token, index, tokens);
 
 const connectNodes = (tree, node, index, nodes) => {
+  console.log(tree, node)
   switch (node.type) {
     case 'epoch':
       delete node.type;
@@ -408,6 +433,9 @@ const connectNodes = (tree, node, index, nodes) => {
         return tree;
       }
       return {...tree, features: [...tree.features, {...node} ] }
+    case 'lexicon':
+      delete node.type;
+      return {...tree, lexicon: [...tree.lexicon, node]}
     default:
       return tree;
   }
@@ -417,7 +445,7 @@ export const buildTree = tokens => {
   const bareTree = {
     epochs: [],
     features: [],
-    phones: []
+    lexicon: []
   }
   const nodes = tokens.reduce(addToken, []);
   // return nodes
@@ -434,8 +462,8 @@ export const generateAST = latl => {
   // tokenize
   const tokens = tokenize(latl.trim());
   // build tree
-  console.log(tokens)
   const tree = buildTree(tokens);
+  console.log(tree)
   return tree;
 }
 
@@ -444,6 +472,7 @@ export const parseLatl = (state, action) => {
     const latl = state.latl;
     const AST = generateAST(latl);
     const features = AST.features;
+    console.log(AST)
     if (features) {
       if (state.features) {
         state = Object.keys(state.features).reduce((state, feature) => {
@@ -453,12 +482,23 @@ export const parseLatl = (state, action) => {
       state = features.reduce((state, feature) => stateReducer(state, {type:'ADD_FEATURE', value: feature}), state);
     }
     delete AST.features;
+    const lexicon = AST.lexicon;
+    if (lexicon) {
+      if (state.lexicon) {
+        state.lexicon = [];
+      }
+      state = lexicon.reduce((state, epoch) => {
+        return epoch.value.reduce((reducedState, lexeme) => {
+          return stateReducer(reducedState, {type: 'ADD_LEXEME', value: { lexeme, epoch: epoch.epoch }})
+        }, state)
+      }, state)
+    }
+    delete AST.lexicon;
     Object.entries(AST).forEach(([key, value]) => state[key] = value);
     return { ...state, parseResults: 'latl parsed successfully', results:[] }
   }
   catch (e) {
-    console.log(e)
-    return { ...state, parseResults: e}
+    return { ...state, parseResults: 'error parsing', errors: e}
   }
 }
 

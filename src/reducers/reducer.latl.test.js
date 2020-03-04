@@ -23,18 +23,18 @@ describe('LATL', () => {
     expect(tokens).toStrictEqual(tokenizedFeature);
   });
 
-  // it('returns tokens from well-formed latl lexicon definition', () => {
-  //   const tokens = tokenize(lexiconDefinitionLatl);
-  //   expect(tokens).toStrictEqual(tokenizedLexicon);
-  // });
+  it('returns tokens from well-formed latl lexicon definition', () => {
+    const tokens = tokenize(lexiconDefinitionLatl);
+    expect(tokens).toStrictEqual(tokenizedLexicon);
+  });
   
-  // it('returns tokens from well-formed latl epoch, feature, and lexicon definitions', () => {
-  //   const latl = epochDefinitionLatl + '\n' + featureDefinitionLatl + '\n' + lexiconDefinitionLatl;
-  //   const tokens = tokenize(latl);
-  //   const lineBreaks = [{ type: 'lineBreak', value: '' },{ type: 'lineBreak', value: '' },{ type: 'lineBreak', value: '' }]
-  //   const tokenizedLatl = [...tokenizedEpoch, ...lineBreaks, ...tokenizedFeature, ...lineBreaks, ...tokenizedLexicon];
-  //   expect(tokens).toStrictEqual(tokenizedLatl);
-  // });
+  it('returns tokens from well-formed latl epoch, feature, and lexicon definitions', () => {
+    const latl = epochDefinitionLatl + '\n' + featureDefinitionLatl + '\n' + lexiconDefinitionLatl;
+    const tokens = tokenize(latl);
+    const lineBreaks = [{ type: 'lineBreak', value: '' },{ type: 'lineBreak', value: '' },{ type: 'lineBreak', value: '' }]
+    const tokenizedLatl = [...tokenizedEpoch, ...lineBreaks, ...tokenizedFeature, ...lineBreaks, ...tokenizedLexicon];
+    expect(tokens).toStrictEqual(tokenizedLatl);
+  });
 
   it('returns AST from well-formed epoch tokens', () => {
     const tree = buildTree(tokenizedEpoch);
@@ -44,6 +44,11 @@ describe('LATL', () => {
   it('returns AST from well-formed feature tokens', () => {
     const tree = buildTree(tokenizedFeature);
     expect(tree).toStrictEqual(treeFeature);
+  })
+
+  it('returns AST from well-formed lexicon tokens', () => {
+    const tree = buildTree(tokenizedLexicon);
+    expect(tree).toStrictEqual(treeLexicon);
   })
 
   it('parse returns state from well-formed feature latl', () => {
@@ -69,6 +74,18 @@ describe('LATL', () => {
     parseState.lexicon[0].epoch = 'PROTO'
     const runState = stateReducer(parseState, {type: 'RUN', value:{}})
     expect(runState).toStrictEqual({...runState, results: runEpochResults})
+  })
+
+  it('returns state from well-formed lexicon latl', () => {
+    const state = initState();
+    const setAction = {
+      type: 'SET_LATL',
+      value: lexiconDefinitionLatl
+    }
+    const latlState = stateReducer(state, setAction);
+    const parseState = parseLatl(latlState, {});
+    expect(parseState).toStrictEqual(lexiconState)
+
   })
 
 })
@@ -462,7 +479,19 @@ const lexiconDefinitionLatl = `
 
 const tokenizedLexicon = [
   { type: "slash", value: "/" }, { type: "referent", value: "PROTO" }, { type: 'lineBreak', value: '' },
-    { type: "referent", value: "kpn" }, { type: 'lineBreak', value: '' },
-    { type: "referent", value: "sm" }, { type: 'lineBreak', value: '' },
+    { type: "whiteSpace", value:"" }, { type: "referent", value: "kpn" }, { type: 'lineBreak', value: '' },
+    { type: "whiteSpace", value:"" }, { type: "referent", value: "sm" }, { type: 'lineBreak', value: '' },
   { type: "slash", value: "/" }
 ]
+
+const treeLexicon = {lexicon: [{epoch: "PROTO", value: ["kpn", "sm"]}]};
+
+const lexiconState = {
+  ...initState(),
+  latl: lexiconDefinitionLatl,
+  lexicon: [
+    { lexeme: 'kpn', epoch: 'PROTO'},
+    { lexeme: 'sm', epoch: 'PROTO'}
+  ],
+  parseResults: 'latl parsed successfully'
+}
