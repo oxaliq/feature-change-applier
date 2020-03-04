@@ -35,15 +35,22 @@ const findPhone = (phones: {}, phone: string): {} => {
 const addFeatureToPhone = (
   phones: {}, phone: string, featureKey: string, featureValue: boolean
 ): {} => {
-  let node = {}
-  phone.split('').forEach((graph, index) => {
-    node = index === 0 ? phones[graph] : node[graph];
-    
-    if (index === phone.split('').length - 1) {
-      node.features = {...node.features, [featureKey]: featureValue}
-    }
-  });
-  return phones;
+  try {
+    let node = {}
+    phone.split('').forEach((graph, index) => {
+      node = index === 0 ? phones[graph] : node[graph];
+      
+      if (index === phone.split('').length - 1) {
+        node.features = node && node.features 
+        ? {...node.features, [featureKey]: featureValue } 
+        : {[featureKey]: featureValue};
+      }
+    });
+    return phones;
+  }
+  catch (e) {
+    throw { phones, phone, featureKey, featureValue }
+  }
 }
 
 export const addFeature = (state: stateType, action: featureAction): stateType => {

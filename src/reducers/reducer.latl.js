@@ -29,12 +29,13 @@ export const tokenize = latl => {
     return tokens;
   } 
   catch (err) {
-    return {errors: 'tokenization error', message: err}
+    return {errors: 'tokenization error', message: err, newLatl}
   }
 }
 
 const parseLineBreak = (tree, token, index, tokens) => {
   const lastNode = tree[tree.length - 1];
+  if (!lastNode) return tree;
   switch (lastNode.type) {
     case 'rule': {
       if (tree[tree.length - 2].type === 'ruleSet') {
@@ -448,6 +449,7 @@ export const buildTree = tokens => {
     features: [],
     lexicon: []
   }
+  console.log(tokens)
   const nodes = tokens.reduce(addToken, []);
   // return nodes
   const tree = nodes.reduce(connectNodes, bareTree);
@@ -497,6 +499,7 @@ export const parseLatl = (state, action) => {
     return { ...state, parseResults: 'latl parsed successfully', results:[] }
   }
   catch (e) {
+    console.log(e)
     return { ...state, parseResults: 'error parsing', errors: e}
   }
 }
@@ -516,8 +519,8 @@ const tokenTypes = [
   ['slash', `\/`],
   ['dot', `\\.`],
   ['underscore', `\\_`],
-  [`referent`, `[A-Za-z]+[\u0100-\u03FFA-Za-z0-9\\-\\_]*`],
-  [`phone`, `[\u0100-\u03FFA-Za-z0]+`],
+  [`referent`, `[A-Za-z]+[\u00c0-\u03FFA-Za-z0-9\\-\\_]*`],
+  [`phone`, `[\u00c0-\u03FFA-Za-z0]+`],
   ['equal', `=`],
   [`lineBreak`, `\\n`],
   [`whiteSpace`, `\\s+`]
