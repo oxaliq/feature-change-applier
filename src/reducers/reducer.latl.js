@@ -314,7 +314,9 @@ const parseSlash = (tree, token, index, tokens) => {
       case 'feature--minus':
         return tree;
       case 'lexicon':
-        return [...tree, { }]
+        return [...tree, { }];
+      case 'main':
+        return [...tree, { type: 'lexicon', value: []}]
       default:
         return [...tree, 'unexpected slash']
     }
@@ -405,7 +407,6 @@ const generateNode = (tree, token, index, tokens) => {
 const addToken = (tree, token, index, tokens) => generateNode(tree, token, index, tokens);
 
 const connectNodes = (tree, node, index, nodes) => {
-  console.log(tree, node)
   switch (node.type) {
     case 'epoch':
       delete node.type;
@@ -463,7 +464,6 @@ export const generateAST = latl => {
   const tokens = tokenize(latl.trim());
   // build tree
   const tree = buildTree(tokens);
-  console.log(tree)
   return tree;
 }
 
@@ -472,7 +472,6 @@ export const parseLatl = (state, action) => {
     const latl = state.latl;
     const AST = generateAST(latl);
     const features = AST.features;
-    console.log(AST)
     if (features) {
       if (state.features) {
         state = Object.keys(state.features).reduce((state, feature) => {
@@ -517,7 +516,7 @@ const tokenTypes = [
   ['slash', `\/`],
   ['dot', `\\.`],
   ['underscore', `\\_`],
-  [`referent`, `[A-Za-z]+[\\w\\-\\_]*`],
+  [`referent`, `[A-Za-z]+[\u0100-\u03FFA-Za-z0-9\\-\\_]*`],
   [`phone`, `[\u0100-\u03FFA-Za-z0]+`],
   ['equal', `=`],
   [`lineBreak`, `\\n`],

@@ -88,6 +88,17 @@ describe('LATL', () => {
 
   })
 
+  it('returns state from well formed latl', () => {
+    const state = initState();
+    const setAction = {
+      type: 'SET_LATL',
+      value: totalLatl
+    }
+    const latlState = stateReducer(state, setAction);
+    const parseState = parseLatl(latlState, {});
+    expect(parseState).toStrictEqual(totalLatlState)
+  })
+
 })
 const epochDefinitionLatl = `
 ; comment
@@ -493,5 +504,17 @@ const lexiconState = {
     { lexeme: 'kpn', epoch: 'PROTO'},
     { lexeme: 'sm', epoch: 'PROTO'}
   ],
+  parseResults: 'latl parsed successfully'
+}
+
+const totalLatl = `${epochDefinitionLatl}\n\n${featureDefinitionLatl}\n\n${lexiconDefinitionLatl}`
+
+const totalLatlState = {
+  ...initState(),
+  latl: totalLatl,
+  phonemes: {},
+  features: featureState.features,
+  epochs: treeEpoch.epochs,
+  lexicon: lexiconState.lexicon,
   parseResults: 'latl parsed successfully'
 }

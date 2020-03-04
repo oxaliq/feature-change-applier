@@ -10,6 +10,17 @@ const ProtoLang = ({ lexicon, dispatch }) => {
     return lexicon.map(getProperty('lexeme')).join('\n');
   }
 
+  const handleChange = e => {
+    const value = e.target.value.split(/\n/).map(line => {
+      const lexeme = line.split('#')[0].trim();
+      const epoch = line.split('#')[1] || '';
+      return { lexeme, epoch }
+    })
+    dispatch({
+      type: 'SET_LEXICON', 
+      value
+    })
+  }
   return (
     <div className="ProtoLang" data-testid="ProtoLang">
       <h3>Proto Language Lexicon</h3>
@@ -21,22 +32,8 @@ const ProtoLang = ({ lexicon, dispatch }) => {
           rows="10"
           data-testid="ProtoLang-Lexicon__textarea"
           value={renderLexicon()}
-          onChange={e=> {
-            console.log(e.target.value.split(/\n/).map(line => {
-              const lexeme = line.split('#')[0].trim();
-              const epoch = line.split('#')[1] || '';
-              return { lexeme, epoch }
-              }))
-            dispatch({
-              type: 'SET_LEXICON', 
-              value: e.target.value.split(/\n/).map(line => {
-                const lexeme = line.split('#')[0].trim();
-                const epoch = line.split('#')[1] || '';
-                return { lexeme, epoch }
-              })
-            })
-          }
-          }>
+          onChange={e => handleChange(e)}
+          >
         </textarea>
       </form>
     </div>

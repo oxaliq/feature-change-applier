@@ -5,6 +5,20 @@ export type initAction = {
   type: "INIT"
 }
 
+export const clearState = () => {
+  return {
+    epochs: [],
+    phones: {},
+    options: { output: 'default', save: false },
+    results: [],
+    errors: {},
+    features: {},
+    lexicon: [],
+    latl: '',
+    parseResults: ''
+  }
+}
+
 export const initState = (changesArgument: number): stateType => {
   const state = {
     epochs: [
