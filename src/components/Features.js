@@ -45,7 +45,7 @@ const Features = ({ phones, features, dispatch }) => {
           <li key={`feature__${featureName}`}>
             <span className="feature--names-and-phones">
               <span className="feature--feature-name"> 
-                {`[+ ${featureName}]`}
+                {`[+ ${featureName} ]`}
               </span>
               <span className="feature--feature-phones">
                 {plus}
@@ -53,7 +53,7 @@ const Features = ({ phones, features, dispatch }) => {
             </span>
             <span className="feature--names-and-phones">
               <span className="feature--feature-name"> 
-                {`[- ${featureName}]`}
+                {`[- ${featureName} ]`}
               </span>
               <span className="feature--feature-phones">
                 {minus}

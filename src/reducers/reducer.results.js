@@ -32,7 +32,8 @@ const findFeaturesFromLexeme = (phones: {}, lexeme:string): [] => {
   let lastIndex = lexeme.length - 1;
   let node = {};
   [...lexeme].forEach((graph, index) => {
-    if (!index) return node = phones[graph]
+    try {
+    if (!index ) return node = phones[graph]
     if (index === lastIndex) return node[graph] 
       ? featureBundle.push(node[graph])
       : featureBundle.push(node, phones[graph])
@@ -40,8 +41,12 @@ const findFeaturesFromLexeme = (phones: {}, lexeme:string): [] => {
       featureBundle.push(node)
       return node = phones[graph]
     }
-    if (!node[graph])
+    if (!node) return node = phones[graph]
     return node = node[graph]
+    }
+    catch (e) {
+      throw {e, 'phones[graph]':phones[graph], index, lexeme }
+    }
   })
   return featureBundle;
 }

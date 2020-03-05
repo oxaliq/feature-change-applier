@@ -170,6 +170,9 @@ const parsePhone = (tree, token, index, tokens) => {
       tree[tree.length - 1] = {...lastNode, value: lastNode.value + token.value }
       return tree;
     }
+    case 'ruleSet': {
+      return [...tree, { type: 'rule', value: token.value }]
+    }
     case 'feature--plus':
       lastNode.positivePhones = [...lastNode.positivePhones, token.value ];
       tree[tree.length - 1] = lastNode;
@@ -449,7 +452,6 @@ export const buildTree = tokens => {
     features: [],
     lexicon: []
   }
-  console.log(tokens)
   const nodes = tokens.reduce(addToken, []);
   // return nodes
   const tree = nodes.reduce(connectNodes, bareTree);

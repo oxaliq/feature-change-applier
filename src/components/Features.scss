@@ -5,6 +5,7 @@ div.Features {
     
     li {
       display: grid;
+      gap: 0.5em;
       grid-template-columns: 10fr 10fr 1fr;
       margin: 0.5em 0;
       place-items: center center;
@@ -12,6 +13,7 @@ div.Features {
       span.feature--names-and-phones {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        place-items: center center;
       }
       
       span.feature-name {

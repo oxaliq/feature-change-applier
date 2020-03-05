@@ -13,13 +13,13 @@ import Latl from './components/Latl';
 import LatlOutput from './components/LatlOutput';
 
 import { stateReducer } from './reducers/reducer';
-import { clearState } from './reducers/reducer.init';
+import { clearState, waffleState } from './reducers/reducer.init';
 
 const PhonoChangeApplier = () => {
   const [ state, dispatch ] = useReducer(
     stateReducer,
     {},
-    clearState
+    waffleState
   )
   const { lexicon, phones, phonemes, epochs, options, features, results, errors, latl, parseResults } = state;
 

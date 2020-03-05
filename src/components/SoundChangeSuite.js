@@ -48,10 +48,8 @@ const SoundChangeSuite = props => {
           list={`${epoch.name}-parents-list`}
           value={epoch.parent || 'none'}
           onChange={e=>changeHandler(
-            e, ()=>{
-              console.log(e.target.value)
-              setEpoch({...epoch, parent:e.target.value})
-            })
+            e, ()=>setEpoch({...epoch, parent:e.target.value})
+          )
           }
           >
           {parentsOptions()}

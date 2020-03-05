@@ -14,9 +14,9 @@
 ; -- -TENSE = æ / ə / ɪ̞ / ɛ / ʌ / ʊ̞ / ɔ
 ; ---- DIPTHONGS = eə / eɪ̯ / ju̟ / äɪ̞ / ɔɪ̞ / oʊ̞ / aʊ̞ / ɑɹ / iɹ / ɛɹ / ɔɹ / ʊɹ 
 
-; ---- CONSONANTS = p (pʰ) / b (b̥) / t (tʰ)(ɾ)(ʔ) / d (d̥)(ɾ) / tʃ (tʃʰ) / dʒ (d̥ʒ̊) / k (kʰ) / g (g̊) / f / v (v̥) / θ / ð (ð̥) / s / z (z̥) / ʃ / ʒ (ʒ̊) / h (ɦ)(ç) / m (ɱ)(m̩) / n(n̩) / ŋ / l (l̩)/ ɹ (ɹʲ ~ ɹˤ)(ɹ̩) / w (w̥) / j / x / ʔ
-; -- PLOSIVES = p / pʰ / t / tʰ ɾ / k / kʰ
-; -- AFFRICATES = tʃ tʃʰ / dʒ
+; ---- CONSONANTS = p (pʰ) / b (b̥) / t (tʰ)(ɾ)(ʔ) / d (d̥)(ɾ) / tʃ / dʒ (d̥ʒ̊) / k (kʰ) / g (g̊) / f / v (v̥) / θ / ð (ð̥) / s / z (z̥) / ʃ / ʒ (ʒ̊) / h (ɦ)(ç) / m (ɱ)(m̩) / n(n̩) / ŋ / l (l̩)/ ɹ (ɹʲ ~ ɹˤ)(ɹ̩) / w (w̥) / j / x / ʔ
+; -- PLOSIVES = p / p' / pʰ / t / t' / tʰ ɾ / k / k' / kʰ
+; -- AFFRICATES = tʃ / dʒ
 ; -- FRICATIVES = f / v / θ / ð / s / z / ʃ / ʒ / ç / x
 ; -- NASAL OBSTRUENTS =  m ɱ / n / ŋ
 ; -- LIQUIDS = l
@@ -32,9 +32,9 @@
 [consonantal
   += 
     ; PLOSIVES
-    p / pʰ / t / tʰ ɾ / k / kʰ /
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
     ; AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; FRICATIVES
     f / v / θ / ð / s / z / ʃ / ʒ / ç / x /
     ; NASALS
@@ -66,9 +66,9 @@
     m̩ / n̩ / l̩ / ɹ̩
   -= 
     ; PLOSIVES
-    p / pʰ / t / tʰ ɾ / k / kʰ /
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
     ; AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; FRICATIVES
     f / v / θ / ð / s / z / ʃ / ʒ / ç / x /
     ; LARYNGEALS
@@ -86,9 +86,9 @@
     l̩ / ɹ̩
   -=
     ; PLOSIVES
-    p / pʰ / t / tʰ ɾ / k / kʰ /
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
     ; AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; FRICATIVES
     f / v / θ / ð / s / z / ʃ / ʒ / ç / x /
     ; NASALS
@@ -122,28 +122,28 @@
     ɦ
   -= voiceless obstruents
     ; PLOSIVES
-    p / pʰ / t / tʰ ɾ / k / kʰ /
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
     ; VOICELESS AFFRICATES
-    tʃ / tʃʰ /
+    tʃ / /
     ; VOICELESS FRICATIVES
     f / θ / s / ʃ / ç / x /
     ; VOICELESS LARYNGEALS
     h / ʔ
 ]
 
-[spread-glottis
+[spreadGlottis
   += 
     ; ASPIRATED PLOSIVES
     pʰ / tʰ / kʰ /
     ; ASPIRATED AFFRICATES
-    tʃʰ /
+   /
     ; SPREAD LARYNGEALS
     h ɦ  
   -= 
     ; VOWELS
     æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ /
     ; UNASPIRATED PLOSIVES
-    p / t ɾ / k /
+    p / pʼ / t / tʼ / ɾ / k / kʼ /
     ; UNASPIRATED AFFRICATES 
     tʃ / dʒ /
     ; FRICATIVES 
@@ -159,19 +159,21 @@
     ; CONSTRICTED LARYNGEALS
     ʔ
 ]
-[constricted-glottis
+[constrictedGlottis
   += 
     ; LARYNGEALIZED RHOTIC
     ɹˤ /
     ; CONSTRICTED LARYNGEAL
     ʔ / 
+    ; EJECTIVE PLOSIVES
+    pʼ / tʼ / kʼ
   -=
     ; VOWELS 
     æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ /
     ; PLOSIVES 
     p / pʰ / t / tʰ ɾ / k / kʰ /
     ; AFFRICATES 
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; FRICATIVES 
     f / v / θ / ð / s / z / ʃ / ʒ / ç / x /
     ; NASAL OBSTRUENTS 
@@ -207,9 +209,9 @@
     ɾ
   -= 
     ; NON-TAP PLOSIVES
-    p / pʰ / t / tʰ / k / kʰ /
+    p / pʼ / pʰ / t / tʼ / tʰ / k / kʼ / kʰ /
     ; AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; NASALS
     m ɱ / n / ŋ /
     ; SYLLABIC NASALS
@@ -234,9 +236,9 @@
     ; SYLLABIC LIQUIDS
     l̩ / ɹ̩ /
     ; PLOSIVES
-    p / pʰ / t / tʰ ɾ / k / kʰ /
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
     ; AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
 ]
 
 [strident
@@ -244,12 +246,12 @@
     ; STRIDENT FRICATIVES
     f / v / s / z / ʃ / ʒ /
     ; STRIDENT AFFRICATES
-    tʃ tʃʰ / dʒ
+    tʃ / dʒ
   -=
     ; VOWELS 
     æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ /
     ; PLOSIVES 
-    p / pʰ / t / tʰ ɾ / k / kʰ /
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
     ; NON-STRIDENT FRICATIVES
     θ / ð / ç / x /
     ; NASAL OBSTRUENTS
@@ -272,9 +274,9 @@
     ; VOWELS
     æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ /
     ; PLOSIVES 
-    p / pʰ / t / tʰ ɾ / k / kʰ
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ
     ; AFFRICATES
-    tʃ tʃʰ / dʒ
+    tʃ / dʒ
     ; FRICATIVES 
     f / v / θ / ð / s / z / ʃ / ʒ / ç / x
     ; NASAL OBSTRUENTS 
@@ -296,7 +298,7 @@
     ; ROUNDED VOWELS 
     u̟ / ʊ̞ / ɔ /
     ; LABIAL PLOSIVES
-    p / pʰ /
+    p / pʼ / pʰ /
     ; LABIAL FRICATIVES
     f / v /
     ; LABIAL NASALS
@@ -309,9 +311,9 @@
     ; UNROUNDED VOWELS
     æ / e / ə / ɑ / ɪ̞ / ɛ / ʌ / i /
     ; NON-LABIAL PLOSIVES 
-    t / tʰ ɾ / k / kʰ /
+    t / tʼ / tʰ ɾ / k / kʼ / kʰ /
     ; NON-LABIAL AFFRICATES 
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; NON-LABIAL FRICATIVES 
     θ / ð / s / z / ʃ / ʒ / ç / x /
     ; NON-LABIAL NASAL OBSTRUENTS 
@@ -331,9 +333,9 @@
 [coronal
   +=
     ; CORONAL PLOSIVES
-    t / tʰ ɾ /
+    t / tʼ / tʰ ɾ /
     ; CORONAL AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; CORONAL FRICATIVES
     θ / ð / s / z / ʃ / ʒ /
     ; CORONAL NASALS
@@ -348,7 +350,7 @@
     ; VOWELS
     æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ /
     ; NON-CORONAL PLOSIVES
-    p / pʰ / k / kʰ
+    p / pʼ / pʰ / k / kʼ / kʰ
     ; NON-CORONAL FRICATIVES
     f / v / ç / x
     ; NON-CORONAL NASAL OBSTRUENTS
@@ -364,9 +366,9 @@
 [anterior
   +=
     ; ALVEOLAR PLOSIVES
-    t / tʰ ɾ /
+    t / tʼ / tʰ ɾ /
     ; ALVEOLAR AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; DENTAL FRICATIVES
     θ / ð /
     ; ALVEOLAR FRICATIVES
@@ -388,7 +390,7 @@
     ; VOWELS
     æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ /
     ; NON-CORONAL PLOSIVES
-    p / pʰ / k / kʰ
+    p / pʼ / pʰ / k / kʼ / kʰ
     ; NON-CORONAL FRICATIVES
     f / v / ç / x
     ; NON-CORONAL NASAL OBSTRUENTS
@@ -414,7 +416,7 @@
   -= 
     ; apical / retroflex
     ; ALVEOLAR PLOSIVES
-    t / tʰ ɾ /
+    t / tʼ / tʰ ɾ /
     ; ALVEOLAR FRICATIVES
     s / z /
     ; ALVEOLAR NASALS
@@ -427,7 +429,7 @@
     ; VOWELS
     æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ /
     ; NON-CORONAL PLOSIVES
-    p / pʰ / k / kʰ
+    p / pʼ / pʰ / k / kʼ / kʰ
     ; NON-CORONAL FRICATIVES
     f / v / ç / x
     ; NON-CORONAL NASAL OBSTRUENTS
@@ -447,7 +449,7 @@
     ; VOWELS
     æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ /
     ; DORSAL PLOSIVES 
-    k / kʰ /
+    k / kʼ / kʰ /
     ; DORSAL FRICATIVES 
     ç / x /
     ; DORSAL NASAL OBSTRUENTS
@@ -458,9 +460,9 @@
     j
   -=
     ; NON-DORSAL PLOSIVES
-    p / pʰ / t / tʰ ɾ /
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ /
     ; NON-DORSAL AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; NON-DORSAL FRICATIVES
     f / v / θ / ð / s / z / ʃ / ʒ /
     ; NON-DORSAL NASALS
@@ -480,7 +482,7 @@
     ; HIGH VOWELS
     i / u̟ / ʊ̞ / ɪ̞
     ; HIGH DORSAL PLOSIVES 
-    k / kʰ /
+    k / kʼ / kʰ /
     ; HIGH DORSAL FRICATIVES 
     ç / x /
     ; HIGH DORSAL NASAL OBSTRUENTS
@@ -496,9 +498,9 @@
     ɹˤ
     ; -- NON-DORSALS
     ; NON-DORSAL PLOSIVES
-    p / pʰ / t / tʰ ɾ /
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ /
     ; NON-DORSAL AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; NON-DORSAL FRICATIVES
     f / v / θ / ð / s / z / ʃ / ʒ /
     ; NON-DORSAL NASALS
@@ -523,7 +525,7 @@
     ; NON-LOW VOWELS
     i / u̟ / ʊ̞ / ɪ̞ / e / ə / ʌ
     ; NON-LOW DORSAL PLOSIVES 
-    k / kʰ /
+    k / kʼ / kʰ /
     ; NON-LOW DORSAL FRICATIVES 
     ç / x /
     ; NON-LOW DORSAL NASAL OBSTRUENTS
@@ -534,9 +536,9 @@
     j
     ; -- NON-DORSALS
     ; NON-DORSAL PLOSIVES
-    p / pʰ / t / tʰ ɾ /
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ /
     ; NON-DORSAL AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; NON-DORSAL FRICATIVES
     f / v / θ / ð / s / z / ʃ / ʒ /
     ; NON-DORSAL NASALS
@@ -552,11 +554,11 @@
 ]
 [back
   += 
-; k / ɣ / χ / u / ə / o / ʌ / ɑ
+; k / kʼ / ɣ / χ / u / ə / o / ʌ / ɑ
     ; BACK VOWELS
     ɑ / ɔ / ʌ / ʊ̞ / u̟ /
     ; BACK DORSAL PLOSIVES 
-    k / kʰ /
+    k / kʼ / kʰ /
     ; BACK DORSAL FRICATIVES
     x /
     ; BACK DORSAL NASAL OBSTRUENTS
@@ -574,9 +576,9 @@
     æ / e / ə / ɪ̞ / ɛ / i
     ; -- NON-DORSALS
     ; NON-DORSAL PLOSIVES
-    p / pʰ / t / tʰ ɾ /
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ /
     ; NON-DORSAL AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; NON-DORSAL FRICATIVES
     f / v / θ / ð / s / z / ʃ / ʒ /
     ; NON-DORSAL NASALS
@@ -598,7 +600,7 @@
     ; NON-TENSE VOWELS 
     æ / ə / ɪ̞ / ɛ / ʌ / ʊ̞ / ɔ /
     ; DORSAL PLOSIVES 
-    k / kʰ /
+    k / kʼ / kʰ /
     ; DORSAL FRICATIVES 
     ç / x /
     ; DORSAL NASAL OBSTRUENTS
@@ -609,9 +611,9 @@
     j
     ; -- NON-DORSALS
     ; NON-DORSAL PLOSIVES
-    p / pʰ / t / tʰ ɾ /
+    p / pʼ / pʰ / t / tʼ / tʰ ɾ /
     ; NON-DORSAL AFFRICATES
-    tʃ tʃʰ / dʒ /
+    tʃ / dʒ /
     ; NON-DORSAL FRICATIVES
     f / v / θ / ð / s / z / ʃ / ʒ /
     ; NON-DORSAL NASALS
@@ -626,19 +628,21 @@
     w
 ]
 
-; Devoicing, all our d's become t's
-  [+ voice]>[- voice]/._.
-
-; Ejectivization, all our pits become pit's
-  [+ plosive]>[+ constricted-glottis]/._[+ constricted-glottis]
-  [+ plosive]>[+ constricted-glottis]/[+ constricted-glottis]_.
-  [+ constricted-glottis]>0/[+ constricted-glottis - continuant]_.
-  [+ constricted-glottis]>0/._[+ constricted-glottis - continuant]
-
 *PROTO
-
+  ; -- Devoicing, all our z's become s's
+  [+ voice - continuant]>[- voice]/._.
+  ; -- Reduction of schwa
+  ə>0/._.
 |Gif Lang
 
 *PROTO
-
+  ; -- Ejectivization, all our pits become pit's
+  [+ spreadGlottis - continuant]>[+ constrictedGlottis - spreadGlottis]/._[+ constrictedGlottis]
+  [+ spreadGlottis - continuant]>[+ constrictedGlottis - spreadGlottis]/[+ constrictedGlottis]_.
+  [+ constrictedGlottis]>0/[+ constrictedGlottis - continuant]_.
+  [+ constrictedGlottis]>0/._[+ constrictedGlottis - continuant]
 |Jif Lang
+
+/PROTO
+
+/
