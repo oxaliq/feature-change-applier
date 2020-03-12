@@ -8,6 +8,7 @@
     "gh-pages": "^2.2.0",
     "local-storage": "^2.0.0",
     "moo": "^0.5.1",
+    "nearley": "^2.19.1",
     "node-sass": "^4.13.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -16,6 +17,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "compile-grammar": "nearleyc src/utils/grammar.ne -o src/utils/grammar.js",
     "flow": "flow",
     "build": "react-scripts build",
     "test": "react-scripts test",
