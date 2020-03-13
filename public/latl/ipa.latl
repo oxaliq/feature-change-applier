@@ -1,0 +1,77 @@
+set NASAL_PULMONIC_CONSONANTS               = [ m̥, m, ɱ, n̼, n̥, n, ɳ̊, ɳ, ɲ̊, ɲ, ŋ, ̊ŋ, ɴ ]
+    STOP_PULMONIC_CONSONANTS                = [ p, b, p̪, b̪, t̼, d̼, t, d, ʈ, ɖ, c, ɟ, k, ɡ, q, ɢ, ʡ, ʔ ]
+    S_FRICATIVE_PULMONIC_CONSONANTS         = [ s, z, ʃ, ʒ, ʂ, ʐ, ɕ, ʑ ]
+    FRICATIVE_PULMONIC_CONSONANTS           = [ ɸ, β, f, v, θ̼, ð̼, θ, ð, θ̠, ð̠, ɹ̠̊˔, ɹ̠˔, ɻ˔, ç, ʝ, x, ɣ, χ, ʁ, ħ, ʕ, h, ɦ ]
+    APPROXIMANT_PULMONIC_CONSONANTS         = [ ʋ̥, ʋ, ɹ̥, ɹ, ɻ̊, ɻ, j̊, j, ɰ̊, ɰ, ʔ̞ ]
+    TAP_PULMONIC_CONSONANTS                 = [ ⱱ̟, ⱱ, ɾ̼, ɾ̥, ɾ, ɽ̊, ɽ, ɢ̆, ʡ̆ ]
+    TRILL_PULMONIC_CONSONANTS               = [ ʙ̥, ʙ, r̥, r, ɽ̊r̥, ɽr, ʀ̥, ʀ, ʜ, ʢ ]
+    L_FRICATIVE_PULMONIC_CONSONANTS         = [ ɬ, ɮ, ɭ̊˔, ɭ˔, ʎ̝̊, ʎ̝, ʟ̝̊, ʟ̝ ]
+    L_APPROXIMANT_PULMONIC_CONSONANTS       = [ l̥, l, ɭ̊, ɭ, ʎ̥, ʎ, ʟ̥, ʟ, ʟ̠ ]
+    L_TAP_PULMONIC_CONSONANTS               = [ ɺ, ɭ̆, ʎ̆, ʟ̆ ]
+    AFFRICATE_PULMONIC_CONSONANTS           = [ pɸ, bβ, p̪f, b̪v, t̪θ, d̪ð, tɹ̝̊, dɹ̝, t̠ɹ̠̊˔, d̠ɹ̠˔, cç, ɟʝ, kx, ɡɣ, qχ, ʡʢ, ʔh ]
+    S_AFFRICATE_PULMONIC_CONSONANTS         = [ ts, dz, t̠ʃ, d̠ʒ, ʈʂ, ɖʐ, tɕ, dʑ ]
+    L_AFFRICATE_PULMONIC_CONSONANTS         = [ tɬ, dɮ, ʈɭ̊˔, cʎ̝̊, kʟ̝̊, ɡʟ̝ ]
+    DOUBLE_STOP_PULMONIC_CONSONANTS         = [ t͡p, d͡b, k͡p, ɡ͡b, q͡ʡ ]
+    DOUBLE_NASAL_PULMONIC_CONSONANTS        = [ n͡m, ŋ͡m ]
+    DOUBLE_FRICATIVE_PULMONIC_CONSONANTS    = [ ɧ ]
+    DOUBLE_APPROXIMANT_PULMONIC_CONSONANTS  = [ ʍ, w, ɥ̊, ɥ, ɫ ]
+
+set PULMONIC_CONSONANTS, C            = { NASAL_PULMONIC_CONSONANTS or STOP_PULMONIC_CONSONANTS 
+                                          or S_FRICATIVE_PULMONIC_CONSONANTS or FRICATIVE_PULMONIC_CONSONANTS 
+                                          or APPROXIMANT_PULMONIC_CONSONANTS or TAP_PULMONIC_CONSONANTS 
+                                          or TRILL_PULMONIC_CONSONANTS or L_FRICATIVE_PULMONIC_CONSONANTS 
+                                          or L_APPROXIMANT_PULMONIC_CONSONANTS or L_TAP_PULMONIC_CONSONANTS 
+                                          or AFFRICATE_PULMONIC_CONSONANTS or S_AFFRICATE_PULMONIC_CONSONANTS
+                                          or L_AFFRICATE_PULMONIC_CONSONANTS or DOUBLE_STOP_PULMONIC_CONSONANTS
+                                          or DOUBLE_NASAL_PULMONIC_CONSONANTS or DOUBLE_FRICATIVE_PULMONIC_CONSONANTS
+                                          or DOUBLE_APPROXIMANT_PULMONIC_CONSONANTS
+                                        }
+
+
+set STOP_EJECTIVE_CONSONANTS          = [ pʼ, tʼ, ʈʼ, cʼ, kʼ, qʼ, ʡʼ ]
+    FRICATIVE_EJECTIVE_CONSONANTS     = [ ɸʼ, fʼ, θʼ, sʼ, ʃʼ, ʂʼ, ɕʼ, xʼ, χʼ ]
+    L_FRICATIVE_EJECTIVE_CONSONANTS   = [ ɬʼ ]
+    AFFRICATE_EJECTIVE_CONSONANTS     = [ tsʼ, t̠ʃʼ, ʈʂʼ, kxʼ, qχʼ ]
+    L_AFFRICATE_EJECTIVE_CONSONANTS   = [ tɬʼ, cʎ̝̊ʼ, kʟ̝̊ʼ ]
+  
+set EJECTIVE_CONSONANTS               = { STOP_EJECTIVE_CONSONANTS or FRICATIVE_EJECTIVE_CONSONANTS 
+                                          or L_FRICATIVE_EJECTIVE_CONSONANTS or AFFRICATE_EJECTIVE_CONSONANTS
+                                          or L_AFFRICATE_EJECTIVE_CONSONANTS 
+                                        }
+
+set TENUIS_CLICK_CONSONANTS           = [ ʘ, ǀ, ǃ, ǂ ]
+    VOICED_CLICK_CONSONANTS           = [ ʘ̬, ǀ̬, ǃ̬, ǂ̬ ]
+    NASAL_CLICK_CONSONANTS            = [ ʘ̃, ǀ̃, ǃ̃, ǂ̃ ]
+    L_CLICK_CONSONANTS                = [ ǁ, ǁ̬ ]
+
+set CLICK_CONSONANTS                  = { TENUIS_CLICK_CONSONANTS or VOICED_CLICK_CONSONANTS
+                                          or NASAL_CLICK_CONSONANTS or L_CLICK_CONSONANTS 
+                                        }
+
+set IMPLOSIVE_CONSONANTS              = [ ɓ, ɗ, ᶑ, ʄ, ɠ, ʛ, ɓ̥, ɗ̥, ᶑ̊, ʄ̊, ɠ̊, ʛ̥ ]
+
+set NON_PULMONIC_CONSONANTS           = { EJECTIVE_CONSONANTS or CLICK_CONSONANTS or IMPLOSIVE_CONSONANTS }
+
+set IMPLOSIVE_CONSONANTS              = { PULMONIC_CONSONANTS or NON_PULMONIC_CONSONANTS }
+
+set MODAL_VOWELS                      = [ i, y, ɨ, ʉ, ɯ, u, ɪ, ʏ, ʊ, e, ø ɘ, ɵ ɤ, o, ø̞ ə, o̞, ɛ, œ ɜ, ɞ ʌ, ɔ, æ, ɐ, a, ɶ, ä, ɑ, ɒ ]
+    BREATHY_VOWELS                    = { [ V ] in MODAL_VOWELS yield [ V̤ ] }
+    VOICELESS_VOWELS                  = { [ V ] in MODAL_VOWELS yield [ V̥ ] }
+    CREAKY_VOWELS                     = { [ V ] in MODAL_VOWELS yield [ V̰ ] }
+
+set SHORT_ORAL_VOWELS                 = { MODAL_VOWELS or BREATHY_VOWELS or CREAKY_VOWELS or VOICELESS_VOWELS }
+    LONG_ORAL_VOWELS                  = { [ V ] in SHORT_ORAL_VOWELS [ Vː ] }
+    ORAL_VOWELS                       = { SHORT_ORAL_VOWELS or LONG_ORAL_VOWELS }
+
+set NASAL_VOWELS                      = { [ V ] in ORAL_VOWELS yield [ Ṽ ] }
+    SHORT_NASAL_VOWELS                = { [ Vː ] in NASAL_VOWELS yield [ V ]ː }
+    LONG_NASAL_VOWELS                 = { [ Vː ] in NASAL_VOWELS }
+
+set VOWELS                            = { ORAL_VOWELS or NASAL_VOWELS }
+
+print { GLOBAL }
+
+
+*proto-lang
+
+|child-lang

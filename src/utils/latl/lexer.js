@@ -3,17 +3,18 @@ const moo = require('moo');
 export const lexer = moo.states({
   main: {
     comment:              /;.*/,
-    star:                 { match: /\*/, push: 'epoch' },
+    epochParent:          { match: /\*/, push: 'epoch' },
     slash:                { match: /\//, push: 'lexicon' },
+    // change so that identifiers are always upper, keywords are always lower, phones are always lower
     identifier:           { match: /[A-Za-z]+[\u00c0-\u03FFA-Za-z0-9\\-\\_]*/, type: moo.keywords({
-      'kw-set': 'set'
+      'kw-set': { match: 'set', push: 'setDefinition' }
     })},
     openBracket:          { match: /\[/, push: 'feature' },
     space:                { match: /\s+/, lineBreaks: true }
   },
-
+  
   epoch: {
-    identifier:           /[A-Za-z]+[\u00c0-\u03FFA-Za-z0-9\\-\\_]*/,
+    identifier:           { match: /[A-Za-z]+[\u00c0-\u03FFA-Za-z0-9\\-\\_]*/, push: 'rule' },
     pipe:                 { match: /\|/, pop: true },
     greaterThan:          /\>/,
     arrow:                /\-\>/,
@@ -21,6 +22,16 @@ export const lexer = moo.states({
     slash:                /\//,
     dot:                  /\./,
     underscore:           /\_/,
+  },
+
+  rule: {
+    openSquareBracket:    { match: /\[/, push: 'ruleFeature' },
+
+  },
+
+  ruleFeature: {
+    ruleFeature:          { match: /[A-Za-z]+[\u00c0-\u03FFA-Za-z0-9\\-\\_]*/ },
+    closeBracket:         { match: /\]/, pop: true }
   },
 
   lexicon: {
@@ -31,6 +42,13 @@ export const lexer = moo.states({
     closeBracket:         { match: /\]/, pop: true },
     positiveAssignment:   /\+=/,
     negativeAssignment:   /\-=/,
+  },
+
+  setDefinition: {
+    openCurlyBracket:     /\{/,
+    closeCurlyBracket:    /\}/,
+    openSquareBracket:    /\[/,
+    closeSquareBracket:   /\]/
   }
 });
 

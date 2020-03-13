@@ -13,7 +13,7 @@
 ; -- -BACK  = æ / e / ə / ɪ̞ / ɛ / i
 ; -- +TENSE = e / i / u̟ / ɑ 
 ; -- -TENSE = æ / ə / ɪ̞ / ɛ / ʌ / ʊ̞ / ɔ
-; ---- DIPTHONGS = eə / eɪ̯ / ju̟ / äɪ̞ / ɔɪ̞ / oʊ̞ / aʊ̞ / ɑɹ / iɹ / ɛɹ / ɔɹ / ʊɹ 
+; ---- DIPHTHONGS = eə / eɪ̯ / ju̟ / äɪ̞ / ɔɪ̞ / oʊ̞ / aʊ̞ / ɑɹ / iɹ / ɛɹ / ɔɹ / ʊɹ 
 
 ; ---- CONSONANTS = p (pʰ) / b (b̥) / t (tʰ)(ɾ)(ʔ) / d (d̥)(ɾ) / tʃ / dʒ (d̥ʒ̊) / k (kʰ) / g (g̊) / f / v (v̥) / θ / ð (ð̥) / s / z (z̥) / ʃ / ʒ (ʒ̊) / h (ɦ)(ç) / m (ɱ)(m̩) / n(n̩) / ŋ / l (l̩)/ ɹ (ɹʲ ~ ɹˤ)(ɹ̩) / w (w̥) / j / x / ʔ
 ; -- PLOSIVES = p / p' / pʰ / t / t' / tʰ ɾ / k / k' / kʰ
@@ -28,84 +28,73 @@
 
 ; -------- distinctive groups
 
-set PLOSIVES :=    | p / pʰ / t / tʼ / tʰ / ɾ / kʼ / k / kʰ |
-    AFFRICATES :=  | tʃʰ / dʒ |
-    FRICATIVES :=  | f / v / θ / ð / s / z / ʃ / ʒ / ç / x |
-    NASALS :=      | m / ɱ / n / ŋ |
-    LIQUIDS :=     | l / ɹ |
-    SYLLABICS :=   | m̩ / n̩ / l̩ / ɹ̩ |
-    VOWELS :=      | æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ |
-    GLIDES :=      | j / w |
-    LARYNGEALS :=  | h / ɦ / ʔ |
+set PLOSIVES      [ p, pʰ, t, tʼ, tʰ, ɾ, kʼ, k, kʰ ]
+    AFFRICATES    [ tʃʰ, dʒ ]
+    FRICATIVES    [ f, v, θ, ð, s, z, ʃ, ʒ, ç, x ]
+    NASALS        [ m, ɱ, n, ŋ ]
+    LIQUIDS       [ l, ɹ, ɹʲ, ɹˤ ]
+    SYLLABICS     [ m̩, n̩, l̩, ɹ̩ ]
+    VOWELS        [ æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟ ]
+    GLIDES        [ j, w ]
+    LARYNGEALS    [ h, ɦ, ʔ ]
+    VOWELS        [ æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟ ]
+
+; ---- implicit
+; GLOBAL          { all sets }
+
+; ---- set join operations non-mutable! 
+; { SET_A not SET_B }   left anti join
+; { SET_A and SET_B }   inner join
+; { SET_A or SET_B }    full outer join
+; { SET_A nor SET_B }   = { GLOBAL not { SET_A and SET_B } }
+
+; ---- set character operations - non-mutable!
+; { [ Xy ] in SET_A }     FILTER:       where X is any character and y is a filtering character
+; { SET_A yield [ Xy ] }  CONCATENATE:  performs transformation with (prepended or) appended character
+; { SET_A yield [ X concat y ] }
+; { SET_A yield [ y concat X ] }
+; { SET_A yield y[ X ] }  DISSOCIATE:   performs transformation removing prepended (or appended) character
+; { SET_A yield y dissoc [ X ] }
+; { SET_A yield [ X ] dissoc y }
+; { [ Xy ] in SET_A yield [ X ]y }  combined FILTER and DISSOCIATE
+
+; ---- TENTATIVE!
+; ---- set feature operations - non-mutable!
+; { [ X + feature1 - feature2 ] in SET_A }    FILTER:       where X is any character and feature1 and feature2 are filtering features
+; { SET_A yield [ X + feature1 ] }            TRANSFORMATION:  performs transformation with (prepended or) appended character
+; { SET_A yield [ X - feature1 ] }
+; { SET_A yield [ X - feature1 + feature2 ] }
+; { [ X + feature1 - feature2 ] in SET_A yield [ - feature1 + feature2 ] }  combined FILTER and TRANSFROMATION
+
+; ---- example with join, character, and feature operations
+; set SET_C = { [ PHONE +feature1 ] in { SET_A or SET_B } yield [ PHONE concat y ] }
+
 
 ; -------- main class features
 
 [consonantal
   += 
-    ; PLOSIVES
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
-    ; AFFRICATES
-    tʃ / dʒ /
-    ; FRICATIVES
-    f / v / θ / ð / s / z / ʃ / ʒ / ç / x /
-    ; NASALS
-    m ɱ / n / ŋ /
-    ; LIQUIDS + RHOTICS
-    l / ɹ ɹʲ ɹˤ /
-    ; SYLLABIC CONSONANTS 
-    m̩ / n̩ / l̩ / ɹ̩
+    PLOSIVES, AFFRICATES, FRICATIVES, NASALS, LIQUIDS, SYLLABICS
   -= 
-    ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
-    ; GLIDES
-    j / w / 
-    ; LARYNGEALS
-    h ɦ / ʔ
+    VOWELS, GLIDES, LARYNGEALS
 ]
 
 [sonorant
   += 
-    ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
-    ; GLIDES
-    j / w w̥ /
-    ; LIQUIDS + RHOTICS
-    l / ɹ ɹʲ ɹˤ /
-    ; NASALS
-    m ɱ / n / ŋ /
-    ; SYLLABIC CONSONANTS  
-    m̩ / n̩ / l̩ / ɹ̩
+    VOWELS, GLIDES, LIQUIDS, NASALS, SYLLABICS
   -= 
-    ; PLOSIVES
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
-    ; AFFRICATES
-    tʃ / dʒ /
-    ; FRICATIVES
-    f / v / θ / ð / s / z / ʃ / ʒ / ç / x /
-    ; LARYNGEALS
-    h ɦ / ʔ
+    PLOSIVES, AFFRICATES, FRICATIVES, LARYNGEALS
 ]
+
 [approximant
   += 
-    ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
-    ; LIQUIDS + RHOTICS
-    l / ɹ ɹʲ ɹˤ /
-    ; GLIDES
-    j / w /
+    VOWELS, LIQUIDS, GLIDES,
     ; SYLLABIC LIQUIDS
-    l̩ / ɹ̩
+    l̩, ɹ̩
   -=
-    ; PLOSIVES
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
-    ; AFFRICATES
-    tʃ / dʒ /
-    ; FRICATIVES
-    f / v / θ / ð / s / z / ʃ / ʒ / ç / x /
-    ; NASALS
-    m ɱ / n / ŋ /
+    PLOSIVES, AFFRICATES, FRICATIVES, NASALS,
     ; SYLLABIC NASALS 
-    m̩ / n̩
+    m̩, n̩
 ]
 
 
@@ -114,91 +103,57 @@ set PLOSIVES :=    | p / pʰ / t / tʼ / tʰ / ɾ / kʼ / k / kʰ |
 
 [voice
   +=
-    ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
-    ; GLIDES
-    j / w /
-    ; LIQUIDS + RHOTICS
-    l / ɹ ɹʲ ɹˤ /
-    ; NASALS
-    m ɱ / n / ŋ /
-    ; SYLLABIC CONSONANTS  
-    m̩ / n̩ / l̩ / ɹ̩ /
+    VOWELS, GLIDES, LIQUIDS, NASALS, SYLLABICS,
     ; VOICED FRICATIVES
-    v / ð / z / ʒ /
+    v, ð, z, ʒ,
     ; VOICED AFFRICATES
-    dʒ /
+    dʒ,
     ; VOICED LARYNGEALS
-    ; LARYNGEALS
     ɦ
-  -= voiceless obstruents
-    ; PLOSIVES
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
+  -= 
+    PLOSIVES,
     ; VOICELESS AFFRICATES
-    tʃ / /
+    tʃ,
     ; VOICELESS FRICATIVES
-    f / θ / s / ʃ / ç / x /
+    f, θ, s, ʃ, ç, x,
     ; VOICELESS LARYNGEALS
-    h / ʔ
+    h, ʔ
 ]
 
 [spreadGlottis
   += 
     ; ASPIRATED PLOSIVES
-    pʰ / tʰ / kʰ /
+    pʰ, tʰ, kʰ,
     ; ASPIRATED AFFRICATES
-   /
+  ,
     ; SPREAD LARYNGEALS
     h ɦ  
   -= 
-    ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
+    VOWELS, FRICATIVES, NASALS, LIQUIDS, SYLLABICS, GLIDES,
     ; UNASPIRATED PLOSIVES
-    p / pʼ / t / tʼ / ɾ / k / kʼ /
+    p, pʼ, t, tʼ, ɾ, k, kʼ,
     ; UNASPIRATED AFFRICATES 
-    tʃ / dʒ /
-    ; FRICATIVES 
-    f / v / θ / ð / s / z / ʃ / ʒ / ç / x /
-    ; NASAL OBSTRUENTS 
-     m ɱ / n / ŋ /
-    ; LIQUIDS + RHOTICS
-    l / ɹ ɹʲ ɹˤ /
-    ; SYLLABIC CONSONANTS 
-    m̩ / n̩ / l̩ / ɹ̩ /
-    ; GLIDES 
-    j / w
+    tʃ, dʒ, 
     ; CONSTRICTED LARYNGEALS
     ʔ
 ]
+
 [constrictedGlottis
   += 
     ; LARYNGEALIZED RHOTIC
-    ɹˤ /
+    ɹˤ,
     ; CONSTRICTED LARYNGEAL
-    ʔ / 
+    ʔ, 
     ; EJECTIVE PLOSIVES
-    pʼ / tʼ / kʼ
+    pʼ, tʼ, kʼ
   -=
-    ; VOWELS 
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
-    ; PLOSIVES 
-    p / pʰ / t / tʰ ɾ / k / kʰ /
-    ; AFFRICATES 
-    tʃ / dʒ /
-    ; FRICATIVES 
-    f / v / θ / ð / s / z / ʃ / ʒ / ç / x /
-    ; NASAL OBSTRUENTS 
-    m ɱ / n / ŋ /
-    ; LIQUIDS 
-    l /
-    ; NON-PHARYNGEALIZED RHOTICS 
-    ɹ ɹʲ /
-    ; SYLLABIC CONSONANTS 
-    m̩ / n̩ / l̩ / ɹ̩
-    ; GLIDES
-    j / w
+    VOWELS, AFFRICATES, FRICATIVES, NASALS, SYLLABICS, GLIDES,
+    ; UNCONSTRICTED PLOSIVES 
+    { PLOSIVES not [ p', t', k' ] },
+    ; NON-CONSTRICTED LIQUIDS 
+    l, ɹ ɹʲ,
     ; SPREAD LARYNGEALS 
-    h ɦ /
+    h ɦ,
 ]
 
 
@@ -207,97 +162,97 @@ set PLOSIVES :=    | p / pʰ / t / tʼ / tʰ / ɾ / kʼ / k / kʰ |
 [continuant
   +=
     ; FRICATIVES
-    f / v / θ / ð / s / z / ʃ / ʒ / ç / x /
+    f, v, θ, ð, s, z, ʃ, ʒ, ç, x,
     ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
+    æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟, æ̃, ẽ, ə̃, ɑ̃, ɔ̃, ɪ̃, ɛ̃, ʌ̃, ʊ̃, ĩ, ũ 
     ; LIQUIDS + RHOTICS
-    l / ɹ ɹʲ ɹˤ /
+    l, ɹ ɹʲ ɹˤ,
     ; GLIDES
-    j / w /
+    j, w,
     ; SYLLABIC LIQUIDS
-    l̩ / ɹ̩ /
+    l̩, ɹ̩,
     ; TAPS
     ɾ
   -= 
     ; NON-TAP PLOSIVES
-    p / pʼ / pʰ / t / tʼ / tʰ / k / kʼ / kʰ /
+    p, pʼ, pʰ, t, tʼ, tʰ, k, kʼ, kʰ,
     ; AFFRICATES
-    tʃ / dʒ /
+    tʃ, dʒ,
     ; NASALS
-    m ɱ / n / ŋ /
+    m ɱ, n, ŋ,
     ; SYLLABIC NASALS
-    m̩ / n̩ 
+    m̩, n̩ 
 ]
 
 [nasal
   +=
     ; NASALS
-    m ɱ / n / ŋ /
+    m ɱ, n, ŋ,
     ; SYLLABIC NASALS
-    m̩ / n̩ 
+    m̩, n̩ 
   -=
     ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
+    æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟, æ̃, ẽ, ə̃, ɑ̃, ɔ̃, ɪ̃, ɛ̃, ʌ̃, ʊ̃, ĩ, ũ 
     ; FRICATIVES
-    f / v / θ / ð / s / z / ʃ / ʒ / ç / x /
+    f, v, θ, ð, s, z, ʃ, ʒ, ç, x,
     ; LIQUIDS + RHOTICS
-    l / ɹ ɹʲ ɹˤ /
+    l, ɹ ɹʲ ɹˤ,
     ; GLIDES
-    j / w /
+    j, w,
     ; SYLLABIC LIQUIDS
-    l̩ / ɹ̩ /
+    l̩, ɹ̩,
     ; PLOSIVES
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
+    p, pʼ, pʰ, t, tʼ, tʰ ɾ, k, kʼ, kʰ,
     ; AFFRICATES
-    tʃ / dʒ /
+    tʃ, dʒ,
 ]
 
 [strident
   += 
     ; STRIDENT FRICATIVES
-    f / v / s / z / ʃ / ʒ /
+    f, v, s, z, ʃ, ʒ,
     ; STRIDENT AFFRICATES
-    tʃ / dʒ
+    tʃ, dʒ
   -=
     ; VOWELS 
-    æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
+    æ̃, ẽ, ə̃, ɑ̃, ɔ̃, ɪ̃, ɛ̃, ʌ̃, ʊ̃, ĩ, ũ 
     ; PLOSIVES 
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ /
+    p, pʼ, pʰ, t, tʼ, tʰ ɾ, k, kʼ, kʰ,
     ; NON-STRIDENT FRICATIVES
-    θ / ð / ç / x /
+    θ, ð, ç, x,
     ; NASAL OBSTRUENTS
-    m ɱ / n / ŋ /
+    m ɱ, n, ŋ,
     ; RHOTICS + LIQUIDS
-    l / ɹ ɹʲ ɹˤ /
+    l, ɹ ɹʲ ɹˤ,
     ; SYLLABIC CONSONANTS 
-    m̩ / n̩ / l̩ / ɹ̩ /
+    m̩, n̩, l̩, ɹ̩,
     ; GLIDES 
-    j / w
+    j, w
 ]
 
 [lateral
   += 
     ; LATERAL LIQUIDS
-    l /
-    ; SYLLABIC LATERALS /
+    l,
+    ; SYLLABIC LATERALS,
     l̩
   -=
     ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
+    æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟, æ̃, ẽ, ə̃, ɑ̃, ɔ̃, ɪ̃, ɛ̃, ʌ̃, ʊ̃, ĩ, ũ 
     ; PLOSIVES 
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ / k / kʼ / kʰ
+    p, pʼ, pʰ, t, tʼ, tʰ ɾ, k, kʼ, kʰ
     ; AFFRICATES
-    tʃ / dʒ
+    tʃ, dʒ
     ; FRICATIVES 
-    f / v / θ / ð / s / z / ʃ / ʒ / ç / x
+    f, v, θ, ð, s, z, ʃ, ʒ, ç, x
     ; NASAL OBSTRUENTS 
-    m ɱ / n / ŋ
+    m ɱ, n, ŋ
     ; RHOTIC LIQUIDS 
     ɹ ɹʲ ɹˤ
     ; NON-LIQUID SYLLABIC CONSONANTS 
-    m̩ / n̩ / ɹ̩
+    m̩, n̩, ɹ̩
     ; GLIDES 
-    j / w
+    j, w
 ]
 
 
@@ -307,34 +262,34 @@ set PLOSIVES :=    | p / pʰ / t / tʼ / tʰ / ɾ / kʼ / k / kʰ |
 [labial
   +=
     ; ROUNDED VOWELS 
-    u̟ / ʊ̞ / ɔ / ʊ̃ / ũ / ɔ̃
+    u̟, ʊ̞, ɔ, ʊ̃, ũ, ɔ̃
     ; LABIAL PLOSIVES
-    p / pʼ / pʰ /
+    p, pʼ, pʰ,
     ; LABIAL FRICATIVES
-    f / v /
+    f, v,
     ; LABIAL NASALS
-    m ɱ /
+    m ɱ,
     ; LABIAL SYLLABIC CONSONANTS
-    m̩ /
+    m̩,
     ; LABIAL GLIDES
     w
   -=
     ; UNROUNDED VOWELS
-    æ / e / ə / ɑ / ɪ̞ / ɛ / ʌ / i / æ̃ / ẽ / ə̃ / ɑ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ĩ /
+    æ, e, ə, ɑ, ɪ̞, ɛ, ʌ, i, æ̃, ẽ, ə̃, ɑ̃, ɪ̃, ɛ̃, ʌ̃, ĩ,
     ; NON-LABIAL PLOSIVES 
-    t / tʼ / tʰ ɾ / k / kʼ / kʰ /
+    t, tʼ, tʰ ɾ, k, kʼ, kʰ,
     ; NON-LABIAL AFFRICATES 
-    tʃ / dʒ /
+    tʃ, dʒ,
     ; NON-LABIAL FRICATIVES 
-    θ / ð / s / z / ʃ / ʒ / ç / x /
+    θ, ð, s, z, ʃ, ʒ, ç, x,
     ; NON-LABIAL NASAL OBSTRUENTS 
-    n / ŋ /
+    n, ŋ,
     ; LIQUIDS 
-    l /
+    l,
     ; RHOTIC LIQUIDS 
-    ɹ ɹʲ ɹˤ /
+    ɹ ɹʲ ɹˤ,
     ; NON-LABIAL SYLLABIC CONSONANTS 
-    n̩ / l̩ / ɹ̩ /
+    n̩, l̩, ɹ̩,
     ; NON-LABIAL GLIDES 
     j 
 ]
@@ -344,113 +299,113 @@ set PLOSIVES :=    | p / pʰ / t / tʼ / tʰ / ɾ / kʼ / k / kʰ |
 [coronal
   +=
     ; CORONAL PLOSIVES
-    t / tʼ / tʰ ɾ /
+    t, tʼ, tʰ ɾ,
     ; CORONAL AFFRICATES
-    tʃ / dʒ /
+    tʃ, dʒ,
     ; CORONAL FRICATIVES
-    θ / ð / s / z / ʃ / ʒ /
+    θ, ð, s, z, ʃ, ʒ,
     ; CORONAL NASALS
-    n /
+    n,
     ; CORONAL LIQUIDS
     l
     ; CORONAL RHOTIC LIQUIDS
     ɹ 
     ; CORONAL SYLLABIC CONSONANTS
-    n̩ / l̩ / ɹ̩
+    n̩, l̩, ɹ̩
   -=
     ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
+    æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟, æ̃, ẽ, ə̃, ɑ̃, ɔ̃, ɪ̃, ɛ̃, ʌ̃, ʊ̃, ĩ, ũ 
     ; NON-CORONAL PLOSIVES
-    p / pʼ / pʰ / k / kʼ / kʰ
+    p, pʼ, pʰ, k, kʼ, kʰ
     ; NON-CORONAL FRICATIVES
-    f / v / ç / x
+    f, v, ç, x
     ; NON-CORONAL NASAL OBSTRUENTS
-    m ɱ / ŋ
+    m ɱ, ŋ
     ; NON-CORONAL RHOTIC LIQUIDS
     ɹʲ ɹˤ
     ; NON-CORONAL SYLLABIC CONSONANTS
-    m̩ / 
+    m̩, 
     ; NON-CORONAL GLIDES
-    j / w
+    j, w
 ]
 
 [anterior
   +=
     ; ALVEOLAR PLOSIVES
-    t / tʼ / tʰ ɾ /
+    t, tʼ, tʰ ɾ,
     ; ALVEOLAR AFFRICATES
-    tʃ / dʒ /
+    tʃ, dʒ,
     ; DENTAL FRICATIVES
-    θ / ð /
+    θ, ð,
     ; ALVEOLAR FRICATIVES
-    s / z /
+    s, z,
     ; ALVEOLAR NASALS
-    n /
+    n,
     ; ALVEOLAR LIQUIDS
     l
     ; ALVEOLAR SYLLABIC CONSONANTS
-    n̩ / l̩ /
+    n̩, l̩,
   -=
     ; POSTALVEOLAR FRICATIVES
-    ʃ / ʒ /
+    ʃ, ʒ,
     ; POSTALVEOLAR RHOTIC LIQUIDS
-    ɹ /
+    ɹ,
     ; POSTALVEOLAR SYLLABIC CONSONANTS
-    ɹ̩ /
+    ɹ̩,
     ; -- NON-CORONALs
     ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
+    æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟, æ̃, ẽ, ə̃, ɑ̃, ɔ̃, ɪ̃, ɛ̃, ʌ̃, ʊ̃, ĩ, ũ 
     ; NON-CORONAL PLOSIVES
-    p / pʼ / pʰ / k / kʼ / kʰ
+    p, pʼ, pʰ, k, kʼ, kʰ
     ; NON-CORONAL FRICATIVES
-    f / v / ç / x
+    f, v, ç, x
     ; NON-CORONAL NASAL OBSTRUENTS
-    m ɱ / ŋ
+    m ɱ, ŋ
     ; NON-CORONAL RHOTIC LIQUIDS
     ɹʲ ɹˤ
     ; NON-CORONAL SYLLABIC CONSONANTS
-    m̩ / 
+    m̩, 
     ; NON-CORONAL GLIDES
-    j / w
+    j, w
 ]
 
 [distributed
   +=
     ; DENTAL FRICATIVES
-    θ / ð /
+    θ, ð,
     ; POSTALVEOLAR FRICATIVES
-    ʃ / ʒ /
+    ʃ, ʒ,
     ; POSTALVEOLAR RHOTIC LIQUIDS
-    ɹ /
+    ɹ,
     ; POSTALVEOLAR SYLLABIC CONSONANTS
-    ɹ̩ /
+    ɹ̩,
   -= 
-    ; apical / retroflex
+    ; apical, retroflex
     ; ALVEOLAR PLOSIVES
-    t / tʼ / tʰ ɾ /
+    t, tʼ, tʰ ɾ,
     ; ALVEOLAR FRICATIVES
-    s / z /
+    s, z,
     ; ALVEOLAR NASALS
-    n /
+    n,
     ; ALVEOLAR LIQUIDS
     l
     ; ALVEOLAR SYLLABIC CONSONANTS
-    n̩ / l̩ /
+    n̩, l̩,
     ; -- NON-CORONALS
     ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
+    æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟, æ̃, ẽ, ə̃, ɑ̃, ɔ̃, ɪ̃, ɛ̃, ʌ̃, ʊ̃, ĩ, ũ 
     ; NON-CORONAL PLOSIVES
-    p / pʼ / pʰ / k / kʼ / kʰ
+    p, pʼ, pʰ, k, kʼ, kʰ
     ; NON-CORONAL FRICATIVES
-    f / v / ç / x
+    f, v, ç, x
     ; NON-CORONAL NASAL OBSTRUENTS
-    m ɱ / ŋ
+    m ɱ, ŋ
     ; NON-CORONAL RHOTIC LIQUIDS
     ɹʲ ɹˤ
     ; NON-CORONAL SYLLABIC CONSONANTS
-    m̩ / 
+    m̩, 
     ; NON-CORONAL GLIDES
-    j / w
+    j, w
 ]
 
 ; -------- dorsal features
@@ -458,32 +413,32 @@ set PLOSIVES :=    | p / pʰ / t / tʼ / tʰ / ɾ / kʼ / k / kʰ |
 [dorsal
   +=
     ; VOWELS
-    æ / e / ə / ɑ / ɔ / ɪ̞ / ɛ / ʌ / ʊ̞ / i / u̟ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
+    æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟, æ̃, ẽ, ə̃, ɑ̃, ɔ̃, ɪ̃, ɛ̃, ʌ̃, ʊ̃, ĩ, ũ 
     ; DORSAL PLOSIVES 
-    k / kʼ / kʰ /
+    k, kʼ, kʰ,
     ; DORSAL FRICATIVES 
-    ç / x /
+    ç, x,
     ; DORSAL NASAL OBSTRUENTS
-    ŋ /
+    ŋ,
     ; DORSAL RHOTIC LIQUIDS
     ɹʲ  ɹˤ
     ; DORSAL GLIDES
     j
   -=
     ; NON-DORSAL PLOSIVES
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ /
+    p, pʼ, pʰ, t, tʼ, tʰ ɾ,
     ; NON-DORSAL AFFRICATES
-    tʃ / dʒ /
+    tʃ, dʒ,
     ; NON-DORSAL FRICATIVES
-    f / v / θ / ð / s / z / ʃ / ʒ /
+    f, v, θ, ð, s, z, ʃ, ʒ,
     ; NON-DORSAL NASALS
-    m ɱ / n /
+    m ɱ, n,
     ; NON-DORSAL LIQUIDS
     l
     ; NON-DORSAL RHOTIC LIQUIDS
     ɹ 
     ; NON-DORSAL SYLLABIC CONSONANTS
-    m̩ / n̩ / l̩ / ɹ̩
+    m̩, n̩, l̩, ɹ̩
     ; NON-DORSAL GLIDES
     w
 ]
@@ -491,37 +446,37 @@ set PLOSIVES :=    | p / pʰ / t / tʼ / tʰ / ɾ / kʼ / k / kʰ |
 [high
   += 
     ; HIGH VOWELS
-    i / u̟ / ʊ̞ / ɪ̞ / ĩ / ũ / ʊ̃ / ɪ̃
+    i, u̟, ʊ̞, ɪ̞, ĩ, ũ, ʊ̃, ɪ̃
     ; HIGH DORSAL PLOSIVES 
-    k / kʼ / kʰ /
+    k, kʼ, kʰ,
     ; HIGH DORSAL FRICATIVES 
-    ç / x /
+    ç, x,
     ; HIGH DORSAL NASAL OBSTRUENTS
-    ŋ /
+    ŋ,
     ; HIGH RHOTIC LIQUIDS
     ɹʲ  
     ; HIGH DORSAL GLIDES
-    j / w
-  -= χ / e / o / a
+    j, w
+  -= χ, e, o, a
     ; NON-HIGH VOWELS 
-    ɑ / æ / e / ə / ɛ / ʌ / æ̃ / ẽ / ə̃ / ɑ̃ / ɔ̃ / ɛ̃ / ʌ̃ /
+    ɑ, æ, e, ə, ɛ, ʌ, æ̃, ẽ, ə̃, ɑ̃, ɔ̃, ɛ̃, ʌ̃,
     ; NON-HIGH RHOTIC LIQUIDS
     ɹˤ
     ; -- NON-DORSALS
     ; NON-DORSAL PLOSIVES
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ /
+    p, pʼ, pʰ, t, tʼ, tʰ ɾ,
     ; NON-DORSAL AFFRICATES
-    tʃ / dʒ /
+    tʃ, dʒ,
     ; NON-DORSAL FRICATIVES
-    f / v / θ / ð / s / z / ʃ / ʒ /
+    f, v, θ, ð, s, z, ʃ, ʒ,
     ; NON-DORSAL NASALS
-    m ɱ / n /
+    m ɱ, n,
     ; NON-DORSAL LIQUIDS
     l
     ; NON-DORSAL RHOTIC LIQUIDS
     ɹ 
     ; NON-DORSAL SYLLABIC CONSONANTS
-    m̩ / n̩ / l̩ / ɹ̩
+    m̩, n̩, l̩, ɹ̩
     ; NON-DORSAL GLIDES
     w
 ]
@@ -529,112 +484,112 @@ set PLOSIVES :=    | p / pʰ / t / tʼ / tʰ / ɾ / kʼ / k / kʰ |
 [low
   +=
     ; LOW VOWELS
-    ɑ / æ / ɛ / æ̃ / ɑ̃ / ɛ̃ /
+    ɑ, æ, ɛ, æ̃, ɑ̃, ɛ̃,
     ; LOW DORSAL RHOTIC LIQUIDS
     ɹˤ
-  -= a / ɛ / ɔ
+  -= a, ɛ, ɔ
     ; NON-LOW VOWELS
-    i / u̟ / ʊ̞ / ɪ̞ / e / ə / ʌ / ẽ / ə̃ / ɔ̃ / ɪ̃ / ʌ̃ / ʊ̃ / ĩ / ũ 
+    i, u̟, ʊ̞, ɪ̞, e, ə, ʌ, ẽ, ə̃, ɔ̃, ɪ̃, ʌ̃, ʊ̃, ĩ, ũ 
     ; NON-LOW DORSAL PLOSIVES 
-    k / kʼ / kʰ /
+    k, kʼ, kʰ,
     ; NON-LOW DORSAL FRICATIVES 
-    ç / x /
+    ç, x,
     ; NON-LOW DORSAL NASAL OBSTRUENTS
-    ŋ /
+    ŋ,
     ; NON-LOW DORSAL RHOTIC LIQUIDS
     ɹʲ
     ; DORSAL GLIDES
     j
     ; -- NON-DORSALS
     ; NON-DORSAL PLOSIVES
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ /
+    p, pʼ, pʰ, t, tʼ, tʰ ɾ,
     ; NON-DORSAL AFFRICATES
-    tʃ / dʒ /
+    tʃ, dʒ,
     ; NON-DORSAL FRICATIVES
-    f / v / θ / ð / s / z / ʃ / ʒ /
+    f, v, θ, ð, s, z, ʃ, ʒ,
     ; NON-DORSAL NASALS
-    m ɱ / n /
+    m ɱ, n,
     ; NON-DORSAL LIQUIDS
     l
     ; NON-DORSAL RHOTIC LIQUIDS
     ɹ 
     ; NON-DORSAL SYLLABIC CONSONANTS
-    m̩ / n̩ / l̩ / ɹ̩
+    m̩, n̩, l̩, ɹ̩
     ; NON-DORSAL GLIDES
     w
 ]
 [back
   += 
-; k / kʼ / ɣ / χ / u / ə / o / ʌ / ɑ
+; k, kʼ, ɣ, χ, u, ə, o, ʌ, ɑ
     ; BACK VOWELS
-    ɑ / ɔ / ʌ / ʊ̞ / u̟ / ɑ̃ / ɔ̃ / ʌ̃ / ʊ̃ / ũ /
+    ɑ, ɔ, ʌ, ʊ̞, u̟, ɑ̃, ɔ̃, ʌ̃, ʊ̃, ũ,
     ; BACK DORSAL PLOSIVES 
-    k / kʼ / kʰ /
+    k, kʼ, kʰ,
     ; BACK DORSAL FRICATIVES
-    x /
+    x,
     ; BACK DORSAL NASAL OBSTRUENTS
-    ŋ /
+    ŋ,
     ; BACK DORSAL RHOTIC LIQUIDS
     ɹˤ
-  -= ç / k̟ / i / y / ø / ɛ
+  -= ç, k̟, i, y, ø, ɛ
     ; NON-BACK DORSAL FRICATIVES 
-    ç /
+    ç,
     ; NON-BACK DORSAL RHOTIC LIQUIDS
     ɹʲ  
     ; NON-BACK DORSAL GLIDES
     j
     ; NON-BACK VOWELS
-    æ / e / ə / ɪ̞ / ɛ / i / æ̃ / ẽ / ə̃ / ɪ̃ / ɛ̃ / ĩ
+    æ, e, ə, ɪ̞, ɛ, i, æ̃, ẽ, ə̃, ɪ̃, ɛ̃, ĩ
     ; -- NON-DORSALS
     ; NON-DORSAL PLOSIVES
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ /
+    p, pʼ, pʰ, t, tʼ, tʰ ɾ,
     ; NON-DORSAL AFFRICATES
-    tʃ / dʒ /
+    tʃ, dʒ,
     ; NON-DORSAL FRICATIVES
-    f / v / θ / ð / s / z / ʃ / ʒ /
+    f, v, θ, ð, s, z, ʃ, ʒ,
     ; NON-DORSAL NASALS
-    m ɱ / n /
+    m ɱ, n,
     ; NON-DORSAL LIQUIDS
     l
     ; NON-DORSAL RHOTIC LIQUIDS
     ɹ 
     ; NON-DORSAL SYLLABIC CONSONANTS
-    m̩ / n̩ / l̩ / ɹ̩
+    m̩, n̩, l̩, ɹ̩
     ; NON-DORSAL GLIDES
     w
 ]
 [tense ; compare to ATR or RTR
   += 
     ; TENSE VOWELS 
-    e / i / u̟ / ɑ / ĩ / ũ / ẽ / ɑ̃ /
+    e, i, u̟, ɑ, ĩ, ũ, ẽ, ɑ̃,
   -=
     ; NON-TENSE VOWELS 
-    æ / ə / ɪ̞ / ɛ / ʌ / ʊ̞ / ɔ / æ̃ / ə̃ / ɔ̃ / ɪ̃ / ɛ̃ / ʌ̃ / ʊ̃ /
+    æ, ə, ɪ̞, ɛ, ʌ, ʊ̞, ɔ, æ̃, ə̃, ɔ̃, ɪ̃, ɛ̃, ʌ̃, ʊ̃,
     ; DORSAL PLOSIVES 
-    k / kʼ / kʰ /
+    k, kʼ, kʰ,
     ; DORSAL FRICATIVES 
-    ç / x /
+    ç, x,
     ; DORSAL NASAL OBSTRUENTS
-    ŋ /
+    ŋ,
     ; DORSAL RHOTIC LIQUIDS
-    ɹʲ  ɹˤ /
+    ɹʲ  ɹˤ,
     ; DORSAL GLIDES
     j
     ; -- NON-DORSALS
     ; NON-DORSAL PLOSIVES
-    p / pʼ / pʰ / t / tʼ / tʰ ɾ /
+    p, pʼ, pʰ, t, tʼ, tʰ ɾ,
     ; NON-DORSAL AFFRICATES
-    tʃ / dʒ /
+    tʃ, dʒ,
     ; NON-DORSAL FRICATIVES
-    f / v / θ / ð / s / z / ʃ / ʒ /
+    f, v, θ, ð, s, z, ʃ, ʒ,
     ; NON-DORSAL NASALS
-    m ɱ / n /
+    m ɱ, n,
     ; NON-DORSAL LIQUIDS
     l
     ; NON-DORSAL RHOTIC LIQUIDS
     ɹ 
     ; NON-DORSAL SYLLABIC CONSONANTS
-    m̩ / n̩ / l̩ / ɹ̩
+    m̩, n̩, l̩, ɹ̩
     ; NON-DORSAL GLIDES
     w
 ]
