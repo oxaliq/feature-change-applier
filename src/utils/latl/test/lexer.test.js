@@ -49,5 +49,11 @@ describe('lexer', () => {
     const { latl, tokens } = assertionData.setDefinitionJoin;
     const stream = getStream(latl);
     expect(stream).toStrictEqual(tokens);
+  });
+
+  it('lexes set definition with yield operation', () => {
+    const { latl, tokens } = assertionData.setDefinitionYield;
+    const stream           = getStream(latl);
+    expect(stream).toStrictEqual(tokens);
   })
 })

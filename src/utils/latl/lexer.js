@@ -98,6 +98,10 @@ export const lexer = moo.states({
     },
     identifier:           /[A-Z]+[A-Z_]+/,
     whiteSpace:           /[\t ]+/,
+    openSquareBracket:    /\]/,
+    closeSquareBracket:   /\[/,
+    identifier:           /[A-Z]+[A-Z_]*/,
+    phone:                /[\u00c0-\u03FFa-z]+/,
     newLine:              { match: /\n/, lineBreaks: true }
   },
   

@@ -71,7 +71,7 @@ set VOWELS                            = { ORAL_VOWELS or NASAL_VOWELS }
 
 set PHONES                            = { VOWELS or CONSONANTS }
 
-print [ GLOBAL ]
+; print [ GLOBAL ]
 
 [lateral
   +=
