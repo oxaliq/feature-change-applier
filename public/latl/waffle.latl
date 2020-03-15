@@ -15,7 +15,8 @@
 ; -- -TENSE = æ / ə / ɪ̞ / ɛ / ʌ / ʊ̞ / ɔ
 ; ---- DIPHTHONGS = eə / eɪ̯ / ju̟ / äɪ̞ / ɔɪ̞ / oʊ̞ / aʊ̞ / ɑɹ / iɹ / ɛɹ / ɔɹ / ʊɹ 
 
-; ---- CONSONANTS = p (pʰ) / b (b̥) / t (tʰ)(ɾ)(ʔ) / d (d̥)(ɾ) / tʃ / dʒ (d̥ʒ̊) / k (kʰ) / g (g̊) / f / v (v̥) / θ / ð (ð̥) / s / z (z̥) / ʃ / ʒ (ʒ̊) / h (ɦ)(ç) / m (ɱ)(m̩) / n(n̩) / ŋ / l (l̩)/ ɹ (ɹʲ ~ ɹˤ)(ɹ̩) / w (w̥) / j / x / ʔ
+; ---- CONSONANTS = p (pʰ) / b (b̥) / t (tʰ)(ɾ)(ʔ) / d (d̥)(ɾ) / tʃ / dʒ (d̥ʒ̊) / k (kʰ) / g (g̊) / f / v (v̥) / θ / ð (ð̥) / 
+;                   s / z (z̥) / ʃ / ʒ (ʒ̊) / h (ɦ)(ç) / m (ɱ)(m̩) / n(n̩) / ŋ / l (l̩)/ ɹ (ɹʲ ~ ɹˤ)(ɹ̩) / w (w̥) / j / x / ʔ
 ; -- PLOSIVES = p / p' / pʰ / t / t' / tʰ ɾ / k / k' / kʰ
 ; -- AFFRICATES = tʃ / dʒ
 ; -- FRICATIVES = f / v / θ / ð / s / z / ʃ / ʒ / ç / x
@@ -46,7 +47,8 @@ set PLOSIVES      [ p, pʰ, t, tʼ, tʰ, ɾ, kʼ, k, kʰ ]
 ; { SET_A not SET_B }   left anti join
 ; { SET_A and SET_B }   inner join
 ; { SET_A or SET_B }    full outer join
-; { SET_A nor SET_B }   = { GLOBAL not { SET_A and SET_B } }
+; { not SET_A }             = { GLOBAL not SET_A }
+; { not SET_A nor SET_B }   = { GLOBAL not { SET_A or SET_B } }
 
 ; ---- set character operations - non-mutable!
 ; { [ Xy ] in SET_A }     FILTER:       where X is any character and y is a filtering character
@@ -125,7 +127,7 @@ set PLOSIVES      [ p, pʰ, t, tʼ, tʰ, ɾ, kʼ, k, kʰ ]
     ; ASPIRATED PLOSIVES
     pʰ, tʰ, kʰ,
     ; ASPIRATED AFFRICATES
-  ,
+    
     ; SPREAD LARYNGEALS
     h ɦ  
   -= 
