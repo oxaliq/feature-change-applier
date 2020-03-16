@@ -35,24 +35,36 @@ describe('lexer', () => {
 
   it('lexes multiple set definitions with comma operator', () => {
     const { latl, tokens } = assertionData.setDefinition;
-    const stream = getStream(latl);
+    const stream           = getStream(latl);
     expect(stream).toStrictEqual(tokens);
   });
 
   it('lexes set definition with alias', () => {
     const { latl, tokens } = assertionData.setAliasDefinition;
-    const stream = getStream(latl);
+    const stream           = getStream(latl);
     expect(stream).toStrictEqual(tokens);
   });
 
   it('lexes set definition with set join', () => {
     const { latl, tokens } = assertionData.setDefinitionJoin;
-    const stream = getStream(latl);
+    const stream           = getStream(latl);
     expect(stream).toStrictEqual(tokens);
   });
 
   it('lexes set definition with yield operation', () => {
     const { latl, tokens } = assertionData.setDefinitionYield;
+    const stream           = getStream(latl);
+    expect(stream).toStrictEqual(tokens);
+  });
+
+  it('lexes all set join operations', () => {
+    const { latl, tokens } = assertionData.setOperationsJoin;
+    const stream           = getStream(latl);
+    expect(stream).toStrictEqual(tokens);
+  });
+
+  it('lexes set filter, concat, and dissoc operations', () => {
+    const { latl, tokens } = assertionData.setOperations;
     const stream           = getStream(latl);
     expect(stream).toStrictEqual(tokens);
   })

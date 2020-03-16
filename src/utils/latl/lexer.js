@@ -73,6 +73,7 @@ export const lexer = moo.states({
   },
   
   setDefinition: {
+    comment:              /;.*$/,
     setIdentifier:        { match: /[A-Z]+[A-Z_]*/ },
     openCurlyBracket:     { match: /\{/, push: 'setOperation' },
     equal:                /=/,
@@ -87,13 +88,15 @@ export const lexer = moo.states({
   setOperation: {
     closeCurlyBracket:    { match: /\}/, pop: true },
     // ! restrict identifiers
-    keyword:              { match: ['not', 'and', 'or', 'nor', 'in', 'yield'], type: moo.keywords({
+    keyword:              { match: ['not', 'and', 'or', 'nor', 'in', 'yield', 'concat', 'dissoc'], type: moo.keywords({
       'kw-set-not':       'not' ,
       'kw-set-and':       'and' ,
       'kw-set-or':        'or' ,
       'kw-set-nor':       'nor' ,
       'kw-set-in':        'in' ,
       'kw-set-yield':     'yield' ,
+      'kw-set-concat':    'concat',
+      'kw-set-dissoc':    'dissoc'
       })
     },
     identifier:           /[A-Z]+[A-Z_]+/,
@@ -108,6 +111,7 @@ export const lexer = moo.states({
   commaOperation: {
     // if comma is detected during a definition, the commaOperation consumes all white space and pops back to definition
     // this prevents popping back to main
+    comment:              /\s*;.*$/,
     whiteSpace:           { match: /\s+/, lineBreaks: true, pop: true },
     newLine:              { match: /\n/, lineBreaks: true, pop: true }
   }
