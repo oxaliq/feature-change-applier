@@ -17,7 +17,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "compile-grammar": "nearleyc src/utils/grammar.ne -o src/utils/grammar.js",
+    "compile-grammar": "nearleyc src/utils/latl/grammar.ne -o src/utils/latl/grammar.js",
+    "test-grammar": "nearley-test src/utils/latl/grammar.js --input",
     "flow": "flow",
     "build": "react-scripts build",
     "test": "react-scripts test",

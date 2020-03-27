@@ -16,25 +16,25 @@ describe('lexer', () => {
   }
 
   it('lexes simple comment', () => {
-    lexer.reset('; comment');
-    const token = lexer.next();
-    expect(getToken(token)).toStrictEqual({ type: 'comment', value: '; comment'});
+    const { latl, tokens } = assertionData.simpleComment;
+    const stream           = getStream(latl);
+    expect(stream).toStrictEqual(tokens);
   });
 
-  it('lexes simple * and identifier', () => {
-    lexer.reset('*proto');
-    const stream = [ getToken(lexer.next()), getToken(lexer.next()) ];
-    expect(stream).toStrictEqual([ { type: 'star', value: '*' }, { type: 'identifier', value: 'proto' } ]);
-  })
+  // it('lexes simple * and identifier', () => {
+  //   lexer.reset('*proto');
+  //   const stream = [ getToken(lexer.next()), getToken(lexer.next()) ];
+  //   expect(stream).toStrictEqual([ { type: 'star', value: '*' }, { type: 'identifier', value: 'proto' } ]);
+  // })
 
   it('lexes set and identifier', () => {
-    lexer.reset('set PLOSIVES');
-    const stream = [ getToken(lexer.next()), getToken(lexer.next()), getToken(lexer.next()) ];
-    expect(stream).toStrictEqual([ { type: 'kw-set', value: 'set' }, { type: 'whiteSpace', value: ' ' }, { type: 'setIdentifier', value: 'PLOSIVES' } ]);
+    const { latl, tokens } = assertionData.simpleSetDefinition;
+    const stream           = getStream(latl);
+    expect(stream).toStrictEqual(tokens);
   })
 
   it('lexes multiple set definitions with comma operator', () => {
-    const { latl, tokens } = assertionData.setDefinition;
+    const { latl, tokens } = assertionData.commaSetDefinition;
     const stream           = getStream(latl);
     expect(stream).toStrictEqual(tokens);
   });

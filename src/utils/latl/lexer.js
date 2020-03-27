@@ -1,17 +1,13 @@
 const moo = require('moo');
 
-export const lexer = moo.states({
+const lexer = moo.states({
   main: {
     comment:              /;.*$/,
     star:          { match: /\*/, push: 'epoch' },
     slash:                { match: /\//, push: 'lexicon' },
     // change so that identifiers are always upper, keywords are always lower, phones are always lower
-    'kw-set':             { match: 'set', type: moo.keywords({ 'kw-set': 'set '}), push: 'setDefinition'},
+    'kwSet':             { match: 'set', type: moo.keywords({ 'kwSet': 'set '}), push: 'setDefinition'},
     identifier:           { match: /[A-Za-z]+[\u00c0-\u03FFA-Za-z0-9\\-\\_]*/, },
-    // type: moo.keywords({
-    //   'kw-set': 'set'
-    //   // { match: 'set', push: 'setDefinition' },
-    // })},
     openBracket:          { match: /\[/, push: 'feature' },
     whiteSpace:           { match: /\s+/, lineBreaks: true },
     newLine:              { match: /\n+/, lineBreaks: true }
@@ -117,3 +113,5 @@ export const lexer = moo.states({
   }
   
 });
+
+module.exports = {lexer};

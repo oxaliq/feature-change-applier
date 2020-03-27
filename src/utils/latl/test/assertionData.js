@@ -1,11 +1,25 @@
 export const assertionData = {
-  setDefinition: {
+  simpleComment: {
+    latl: `; comment`,
+    tokens: [
+      { type: 'comment', value: '; comment'}
+    ]
+  },
+  simpleSetDefinition: {
+    latl: `set PLOSIVES`,
+    tokens: [
+      { type: 'kwSet', value: 'set' }, 
+      { type: 'whiteSpace', value: ' ' }, 
+      { type: 'setIdentifier', value: 'PLOSIVES' }
+    ]
+  },
+  commaSetDefinition: {
     latl: `
 set NASAL_PULMONIC_CONSONANTS               = [ m̥, m, ɱ, n̼, n̥, n, ɳ̊, ɳ, ɲ̊, ɲ, ŋ, ̊ŋ, ɴ ],
     STOP_PULMONIC_CONSONANTS                = [ p, b, p̪, b̪, t̼, d̼, t, d, ʈ, ɖ, c, ɟ, k, ɡ, q, ɢ, ʡ, ʔ ]`,
     tokens: [
       { type: 'whiteSpace', value: '\n' },
-      { type: 'kw-set', value: 'set' },
+      { type: 'kwSet', value: 'set' },
       { type: 'whiteSpace', value: ' ' },
       { type: 'setIdentifier', value: 'NASAL_PULMONIC_CONSONANTS' },
       { type: 'whiteSpace', value: '               ' },
@@ -121,7 +135,7 @@ set NASAL_PULMONIC_CONSONANTS               = [ m̥, m, ɱ, n̼, n̥, n, ɳ̊, �
 set NASAL_PULMONIC_CONSONANTS, N            = [ m̥, m, ɱ, n̼, n̥, n, ɳ̊, ɳ, ɲ̊, ɲ, ŋ, ̊ŋ, ɴ ]`,
     tokens: [  
       { type: 'whiteSpace', value: '\n' },
-      { type: 'kw-set', value: 'set' },
+      { type: 'kwSet', value: 'set' },
       { type: 'whiteSpace', value: ' ' },
       { type: 'setIdentifier', value: 'NASAL_PULMONIC_CONSONANTS' },
       { type: 'comma', value: ',' },
@@ -180,7 +194,7 @@ set CLICK_CONSONANTS  = { TENUIS_CLICK_CONSONANTS or VOICED_CLICK_CONSONANTS
                         }`,
     tokens: [
       { type: 'whiteSpace', value: '\n'}, 
-      { type: 'kw-set', value: 'set'}, 
+      { type: 'kwSet', value: 'set'}, 
       { type: 'whiteSpace', value: ' '}, 
       { type: 'setIdentifier', value: 'CLICK_CONSONANTS'}, 
       { type: 'whiteSpace', value: '  '}, 
@@ -215,7 +229,7 @@ set NASAL_VOWELS                      = { [ V ] in ORAL_VOWELS yield [ Ṽ ] },
     LONG_NASAL_VOWELS                 = { [ Vː ] in NASAL_VOWELS }`,
     tokens: [ 
       { type: 'whiteSpace', value: '\n',  }, 
-      { type: 'kw-set', value: 'set',  }, 
+      { type: 'kwSet', value: 'set',  }, 
       { type: 'whiteSpace', value: ' ',  }, 
       { type: 'setIdentifier', value: 'NASAL_VOWELS',  }, 
       { type: 'whiteSpace', value: '                      ',  }, 
@@ -307,7 +321,7 @@ set SET_C = { SET_A not SET_B }, ;  left anti join
       { type: 'whiteSpace', value: '\n',  },
       { type: 'comment', value: '; ---- set join operations non-mutable! ',  },
       { type: 'whiteSpace', value: '\n',  },
-      { type: 'kw-set', value: 'set',  },
+      { type: 'kwSet', value: 'set',  },
       { type: 'whiteSpace', value: ' ',  },
       { type: 'setIdentifier', value: 'SET_C',  },
       { type: 'whiteSpace', value: ' ',  },
@@ -406,7 +420,7 @@ set SET_B = { [ Xy ] in SET_A },    ; FILTER:       where X is any character and
       { type: 'whiteSpace', value: '\n',  },
       { type: 'comment', value: '; ---- set character operations - non-mutable!',  },
       { type: 'whiteSpace', value: '\n',  },
-      { type: 'kw-set', value: 'set',  },
+      { type: 'kwSet', value: 'set',  },
       { type: 'whiteSpace', value: ' ',  },
       { type: 'setIdentifier', value: 'SET_B',  },
       { type: 'whiteSpace', value: ' ',  },
