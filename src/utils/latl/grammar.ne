@@ -1,24 +1,24 @@
 @{%
   const { lexer } = require('./lexer.js');
   const getTerminal = d => d ? d[0] : null;
-  const getAll = d => d.map((item, i) => ({[i]: item}));
-  const flag = token => d => d.map(item => ({[token]: item}))
+  const getAll = d => d.map((item, i) => ({ [i]: item }));
+  const flag = token => d => d.map(item => ({ [token]: item }))
   const clearNull = d => d.filter(t => !!t);
   const flagIndex = d => d.map((item, i) => ({[i]: item}))
   const remove = _ => null;
   const append = d => d.join('');
   const constructSet =  d => d.reduce((acc, t) => { 
-    if (t && t.type === 'setIdentifier')  acc.push({set: t})
-    if (t && t.length)                         acc[acc.length - 1].phones = t;
+    if (t && t.type === 'setIdentifier') acc.push({set: t});
+    if (t && t.length) acc[acc.length - 1].phones = t;
     return acc;
   }, []);
-  const compose = (...funcs) => d => funcs.reduce((acc, func) => func(acc), d)
+  const pipe = (...funcs) => d => funcs.reduce((acc, func) => func(acc), d);
 %}
 
 @lexer lexer
 
-main            -> (statement):* 
-  {% compose(flag('main'), getTerminal) %}
+main            -> (_ statement _):* 
+  {% pipe(clearNull, flag('main'), getTerminal) %}
 
 _               -> (%whiteSpace):? 
   {% remove %}
@@ -26,24 +26,27 @@ _               -> (%whiteSpace):?
 __              -> %whiteSpace 
   {% remove %}
 
-statement       -> comment | definition 
-  {% compose(clearNull, getTerminal) %}
+statement       -> comment | definition
+  {% getTerminal, clearNull %}
 
 comment         -> %comment 
-  {% compose(remove, getTerminal) %}
+  {% pipe(getTerminal, remove) %}
 
 # SETS
-definition      -> %kwSet __ setDefinition {% d => ({token: 'setDefinition', sets: d[2]}) %}
+definition      -> %kwSet __ setDefinition 
+                {% d => ({token: d[0].type, [d[0].value]: d[2]}) %}
 setDefinition   -> (%setIdentifier __ %equal __ setExpression %comma __):* %setIdentifier __ %equal __ setExpression
-  {% constructSet %}
+                # {% pipe(
+                #   //constructSet, 
+                #   getTerminal) %}
 setExpression   -> %openSquareBracket _ phoneList _ %closeSquareBracket
   {% d => d.filter(t => t && t.length) %}
 phoneList       -> (%phone %comma _):* %phone
-  {% d => d.filter(t => t && (t.type === 'phone' || t.length) )
-  .map(t => {
+                # {% clearNull %}
+  {% d => d.filter(t => t && (t.type === 'phone' || t[0]) )
+  .flatMap(t => {
     if (!t.length) return t;
-    t.filter(st => st && st.type === 'phone')
-    return t;
+    return t[0].filter(st => st && st.type === 'phone')
   }) %}
 
 

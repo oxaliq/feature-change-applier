@@ -7,15 +7,14 @@ describe('parser', () => {
     const { latl } = assertionData.simpleComment;
     const AST = parser().feed(latl).results;
     expect(AST.length).toBe(1);
-    console.log(AST[0])
-    // expect(AST[0]).toStrictEqual()
+    expect(AST[0]).toStrictEqual({ main: [ null ]})
   })
 
-  // it('parses multiple set definitions with comma operator', () => {
-  //   const { latl } = assertionData.commaSetDefinition;
-  //   const AST = parser().feed(latl)
-  //   console.log(AST)
-  // });
+  it('parses multiple set definitions with comma operator', () => {
+    const { latl } = assertionData.commaSetDefinition;
+    const AST = parser().feed(latl).results;
+    console.log(AST[0])
+  });
 
   // it('lexes set definition with alias', () => {
   //   const { latl, tokens } = assertionData.setAliasDefinition;
