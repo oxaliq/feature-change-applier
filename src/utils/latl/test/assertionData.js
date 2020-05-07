@@ -3,7 +3,8 @@ export const assertionData = {
     latl: `; comment`,
     tokens: [
       { type: 'comment', value: '; comment'}
-    ]
+    ],
+    code: ''
   },
   simpleSetDefinition: {
     latl: `set PLOSIVES`,

@@ -6,8 +6,8 @@ function id(x) { return x[0]; }
   const { lexer } = require('./lexer.js');
   const getTerminal = d => d ? d[0] : null;
   const getAll = d => d.map((item, i) => ({ [i]: item }));
-  const flag = token => d => d.map(item => ({ [token]: item }))
-  const clearNull = d => d.filter(t => !!t);
+  const flag = token => d => d.map(item => ({ [token]: clearNull(item) }))
+  const clearNull = d => d.filter(t => !!t && (t.length !== 1 || t[0])).map(t => t.length ? clearNull(t) : t);
   const flagIndex = d => d.map((item, i) => ({[i]: item}))
   const remove = _ => null;
   const append = d => d.join('');
@@ -21,16 +21,21 @@ var grammar = {
     Lexer: lexer,
     ParserRules: [
     {"name": "main$ebnf$1", "symbols": []},
-    {"name": "main$ebnf$1$subexpression$1", "symbols": ["_", "statement", "_"]},
+    {"name": "main$ebnf$1$subexpression$1", "symbols": ["_", "statement"]},
     {"name": "main$ebnf$1", "symbols": ["main$ebnf$1", "main$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "main", "symbols": ["main$ebnf$1"], "postprocess": pipe(clearNull, flag('main'), getTerminal)},
+    {"name": "main", "symbols": ["main$ebnf$1", "_"], "postprocess":  pipe(
+        getTerminal,
+        clearNull,
+        flag('main'), 
+        getTerminal,
+        ) },
     {"name": "_$ebnf$1$subexpression$1", "symbols": [(lexer.has("whiteSpace") ? {type: "whiteSpace"} : whiteSpace)]},
     {"name": "_$ebnf$1", "symbols": ["_$ebnf$1$subexpression$1"], "postprocess": id},
     {"name": "_$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
     {"name": "_", "symbols": ["_$ebnf$1"], "postprocess": remove},
     {"name": "__", "symbols": [(lexer.has("whiteSpace") ? {type: "whiteSpace"} : whiteSpace)], "postprocess": remove},
     {"name": "statement", "symbols": ["comment"]},
-    {"name": "statement", "symbols": ["definition"], "postprocess": getTerminal, clearNull},
+    {"name": "statement", "symbols": ["definition"], "postprocess": pipe(getTerminal, clearNull)},
     {"name": "comment", "symbols": [(lexer.has("comment") ? {type: "comment"} : comment)], "postprocess": pipe(getTerminal, remove)},
     {"name": "definition", "symbols": [(lexer.has("kwSet") ? {type: "kwSet"} : kwSet), "__", "setDefinition"], "postprocess": d => ({token: d[0].type, [d[0].value]: d[2]})},
     {"name": "setDefinition$ebnf$1", "symbols": []},
