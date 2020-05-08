@@ -4,6 +4,9 @@ export const assertionData = {
     tokens: [
       { type: 'comment', value: '; comment'}
     ],
+    AST: {
+      main: []
+    },
     code: ''
   },
   simpleSetDefinition: {
@@ -12,7 +15,8 @@ export const assertionData = {
       { type: 'kwSet', value: 'set' }, 
       { type: 'whiteSpace', value: ' ' }, 
       { type: 'setIdentifier', value: 'PLOSIVES' }
-    ]
+    ],
+    code: ''
   },
   commaSetDefinition: {
     latl: `
@@ -129,7 +133,21 @@ set NASAL_PULMONIC_CONSONANTS               = [ m̥, m, ɱ, n̼, n̥, n, ɳ̊, �
       { type: 'phone', value: 'ʔ' }, 
       { type: 'whiteSpace', value: ' ' }, 
       { type: 'closeSquareBracket', value: ']' } 
-    ]
+    ],
+    AST: {
+      main: [
+        { 
+          set: {
+            setIdentifier: 'NASAL_PULMONIC_CONSONANTS',
+            items: [ 'm̥', 'm', 'ɱ', 'n̼', 'n̥', 'n', 'ɳ̊', 'ɳ', 'ɲ̊', 'ɲ', `ŋ`, ' ̊ŋ', 'ɴ' ]
+          },
+          set: {
+            setIdentifier: 'STOP_PULMONIC_CONSONANTS',
+            items: [ 'p', 'b', 'p̪', 'b̪', 't̼', 'd̼', 't', 'd', 'ʈ', 'ɖ', 'c', 'ɟ', 'k', 'ɡ', 'q', 'ɢ', 'ʡ', 'ʔ' ]
+          }
+        }
+      ]
+    }
   },
   setAliasDefinition: {
     latl: `

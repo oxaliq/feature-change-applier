@@ -2,7 +2,7 @@
   const { lexer } = require('./lexer.js');
   const getTerminal = d => d ? d[0] : null;
   const getAll = d => d.map((item, i) => ({ [i]: item }));
-  const flag = token => d => d.map(item => ({ [token]: clearNull(item) }))
+  const flag = token => d => d.map(item => ({ [token]: item }))
   const clearNull = d => d.filter(t => !!t && (t.length !== 1 || t[0])).map(t => t.length ? clearNull(t) : t);
   const flagIndex = d => d.map((item, i) => ({[i]: item}))
   const remove = _ => null;
@@ -32,24 +32,25 @@ __              -> %whiteSpace
   {% remove %}
 
 statement       -> comment | definition
-  {% pipe(getTerminal, clearNull) %}
+  {% pipe(getTerminal) %}
 
 comment         -> %comment 
   {% pipe(getTerminal, remove) %}
 
 # SETS
 definition      -> %kwSet __ setDefinition 
-                {% d => ({token: d[0].type, [d[0].value]: d[2]}) %}
+                {% d => ({[d[0].value]: d[2]}) %}
 setDefinition   -> (%setIdentifier __ %equal __ setExpression %comma __):* %setIdentifier __ %equal __ setExpression
-                # {% pipe(
-                #   //constructSet, 
-                #   getTerminal) %}
+                {% d => {
+                  if (d.type === 'setIdentifier') return { setIdentifier: d.value }
+                  return d
+                } %}
 setExpression   -> %openSquareBracket _ phoneList _ %closeSquareBracket
-  {% d => d.filter(t => t && t.length) %}
+                # {% pipe(d => d.filter(t => t && t.length)) %}
 phoneList       -> (%phone %comma _):* %phone
-                # {% clearNull %}
-  {% d => d.filter(t => t && (t.type === 'phone' || t[0]) )
-  .flatMap(t => {
-    if (!t.length) return t;
-    return t[0].filter(st => st && st.type === 'phone')
-  }) %}
+                {% pipe(d => d ? d.toString() : d) %}
+  # {% d => d.filter(t => t && (t.type === 'phone' || t[0]) )
+  # .flatMap(t => {
+  #   if (!t.length) return t;
+  #   return t[0].filter(st => st && st.type === 'phone')
+  # }) %}
