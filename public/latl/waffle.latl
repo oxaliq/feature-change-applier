@@ -62,11 +62,17 @@ set PLOSIVES      [ p, pʰ, t, tʼ, tʰ, ɾ, kʼ, k, kʰ ]
 
 ; ---- TENTATIVE!
 ; ---- set feature operations - non-mutable!
-; { [ X + feature1 - feature2 ] in SET_A }    FILTER:       where X is any character and feature1 and feature2 are filtering features
+; { [ + feature1 - feature2 ] in SET_A }    FILTER:       where feature1 and feature2 are filtering features
 ; { SET_A yield [ X + feature1 ] }            TRANSFORMATION:  performs transformation with (prepended or) appended character
 ; { SET_A yield [ X - feature1 ] }
 ; { SET_A yield [ X - feature1 + feature2 ] }
-; { [ X + feature1 - feature2 ] in SET_A yield [ - feature1 + feature2 ] }  combined FILTER and TRANSFROMATION
+; { [ X + feature1 - feature2 ] in SET_A yield [ - feature1 + feature2 ] }  combined FILTER and TRANSFORMATION
+
+; ---- MAPPING
+set PLOSIVES = [ p, t, k ],
+    FRICATIVES = [ f, s, x ],
+    ; pairs PLOSIVES with FRICATIVES that have matching features = [ pf, ts, kx ]
+    AFFRICATES = { PLOSIVES yield [ X concat { [ [ X ] - fricative  ] in FRICATIVES } ] }
 
 ; ---- example with join, character, and feature operations
 ; set SET_C = { [ PHONE +feature1 ] in { SET_A or SET_B } yield [ PHONE concat y ] }

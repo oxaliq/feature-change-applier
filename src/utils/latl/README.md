@@ -34,6 +34,16 @@ Sets are collections of pointers to phones. The GLOBAL set contains all phones, 
 #### Global Set
 [ GLOBAL ] is a shorthand for [ GLOBAL.SETS ]
 #### Set Definition
+Sets are defined with the set keyword followed by an equal sign and a set expression:
+```
+set SHORT_VOWELS = [ a, i, u ]
+```
+Lists of sets can be defined using a comma followed by whitespace syntax
+```
+set PLOSIVES = [ p, t, k ],
+    FRICATIVES = [ f, s, x ],
+    LABIALIZED_PLOSIVES = { PLOSIVES yield [ X concat ʷ ] }
+```
 #### Set Usage
 #### Set Operations
 ##### 'and' Operation

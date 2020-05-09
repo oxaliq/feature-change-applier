@@ -14,6 +14,12 @@ Features:
 - multi-character phone support
 - comparative runs for multiple rule sets
 
+## What is LATL?
+
+[Read the specification](/src/utils/latl/README.md)
+
+LATL is a JavaScript targeting compiled language for doing linguistic analysis and transformations.
+
 ## How do I use FCA?
 
 An FCA run requires the user to define three parameters:
