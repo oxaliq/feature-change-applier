@@ -25,8 +25,10 @@ var grammar = {
     {"name": "main$ebnf$1$subexpression$1", "symbols": ["_", "statement"]},
     {"name": "main$ebnf$1", "symbols": ["main$ebnf$1", "main$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
     {"name": "main", "symbols": ["main$ebnf$1", "_"], "postprocess":  pipe(
-          getTerminal,
           clearNull,
+          // recursive call to fix repeat?
+          d => d.map(t => t && t.length === 1 && t[0] ? t[0] : t),
+          d => d.map(t => t && t.length === 1 && t[0] ? t[0] : t),
           flag('main'), 
           getTerminal,
         ) },
@@ -38,26 +40,36 @@ var grammar = {
     {"name": "equal", "symbols": [(lexer.has("equal") ? {type: "equal"} : equal)], "postprocess": remove},
     {"name": "statement", "symbols": ["comment"]},
     {"name": "statement", "symbols": ["definition"], "postprocess":  pipe(
-          objFromArr
+          d => d.flatMap(u => u && u.length ? u.filter(t => t && t.type !== 'comma' && t.type !== 'kwSet') : u),
+          // recursive call to fit repeat?
+          d => d.map(t => t && t.length === 1 && t[0] ? t[0] : t),
+          d => d.map(t => t && t.length === 1 && t[0] ? t[0] : t),
+          // may split from other definition statements
+          d => d.map(t => t && t.length > 1 ? ({ type: 'set', ...objFromArr(t) }) :  null)
         ) },
     {"name": "comment", "symbols": [(lexer.has("comment") ? {type: "comment"} : comment)], "postprocess": pipe(getTerminal, remove)},
-    {"name": "definition", "symbols": [(lexer.has("kwSet") ? {type: "kwSet"} : kwSet), "__", "setDefinition"], "postprocess":  pipe(
-          d => ({[d[0].value]: objFromArr(d[2]) }),
+    {"name": "definition$ebnf$1", "symbols": []},
+    {"name": "definition$ebnf$1$subexpression$1", "symbols": ["setDefinition", (lexer.has("comma") ? {type: "comma"} : comma), "__"]},
+    {"name": "definition$ebnf$1", "symbols": ["definition$ebnf$1", "definition$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
+    {"name": "definition", "symbols": [(lexer.has("kwSet") ? {type: "kwSet"} : kwSet), "__", "definition$ebnf$1", "setDefinition"], "postprocess":  pipe(
+          // not yet sure why this call is required twice
+          d => d.map(u => u && u.length ? u.filter(t => t && t.type !== 'comma' && t.type !== 'kwSet') : u),
+          d => d.map(u => u && u.length ? u.filter(t => t && t.type !== 'comma' && t.type !== 'kwSet') : u),
+          d => d.map(u => u && u.length ? u.map(v => v.length ? v.filter(t => t && t.type !== 'comma' && t.type !== 'kwSet')[0] : v) : u),
+          clearNull,
         ) },
-    {"name": "setDefinition$ebnf$1", "symbols": []},
-    {"name": "setDefinition$ebnf$1$subexpression$1", "symbols": [(lexer.has("setIdentifier") ? {type: "setIdentifier"} : setIdentifier), "__", "equal", "__", "setExpression", (lexer.has("comma") ? {type: "comma"} : comma), "__"]},
-    {"name": "setDefinition$ebnf$1", "symbols": ["setDefinition$ebnf$1", "setDefinition$ebnf$1$subexpression$1"], "postprocess": function arrpush(d) {return d[0].concat([d[1]]);}},
-    {"name": "setDefinition", "symbols": ["setDefinition$ebnf$1", (lexer.has("setIdentifier") ? {type: "setIdentifier"} : setIdentifier), "__", "equal", "__", "setExpression"], "postprocess":  
+    {"name": "setDefinition", "symbols": [(lexer.has("setIdentifier") ? {type: "setIdentifier"} : setIdentifier), "__", "equal", "__", "setExpression"], "postprocess":  
         pipe(
           d => d.filter(t => !!t && t.length !== 0),
           d => d.map(t => t.type === 'setIdentifier' ? { setIdentifier: t.toString() } : t),
-          d => d.map(t => t && t.length && t[0].hasOwnProperty('setExpression') ? t[0] : t)
+          d => d.map(t => t && t.length && t[0].hasOwnProperty('setExpression') ? t[0] : t),
         )    
                         },
     {"name": "setExpression", "symbols": [(lexer.has("openSquareBracket") ? {type: "openSquareBracket"} : openSquareBracket), "_", "phoneList", "_", (lexer.has("closeSquareBracket") ? {type: "closeSquareBracket"} : closeSquareBracket)], "postprocess":  
         pipe(
-          d => d.filter(t => t && t.length), 
-          d => d.map(t => t.map(u => u[0])), 
+          // filters commas and whitespace
+          d => d.filter(t => t && t.length),
+          d => d.map(t => t.map(u => u[0])),
           flag('setExpression') 
         ) },
     {"name": "phoneList$ebnf$1", "symbols": []},

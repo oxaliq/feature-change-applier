@@ -20,8 +20,10 @@
 
 main            -> (_ statement):* _
   {% pipe(
-    getTerminal,
     clearNull,
+    // recursive call to fix repeat?
+    d => d.map(t => t && t.length === 1 && t[0] ? t[0] : t),
+    d => d.map(t => t && t.length === 1 && t[0] ? t[0] : t),
     flag('main'), 
     getTerminal,
   ) %}
@@ -37,31 +39,40 @@ equal           -> %equal
 
 statement       -> comment | definition
   {% pipe(
-    objFromArr
+    d => d.flatMap(u => u && u.length ? u.filter(t => t && t.type !== 'comma' && t.type !== 'kwSet') : u),
+    // recursive call to fit repeat?
+    d => d.map(t => t && t.length === 1 && t[0] ? t[0] : t),
+    d => d.map(t => t && t.length === 1 && t[0] ? t[0] : t),
+    // may split from other definition statements
+    d => d.map(t => t && t.length > 1 ? ({ type: 'set', ...objFromArr(t) }) :  null)
   ) %}
 
 comment         -> %comment 
   {% pipe(getTerminal, remove) %}
 
 # SETS
-definition      -> %kwSet __ setDefinition 
+definition      -> %kwSet __ (setDefinition %comma __):* setDefinition
                 {% pipe(
-                  d => ({[d[0].value]: objFromArr(d[2]) }),
+                  // not yet sure why this call is required twice
+                  d => d.map(u => u && u.length ? u.filter(t => t && t.type !== 'comma' && t.type !== 'kwSet') : u),
+                  d => d.map(u => u && u.length ? u.filter(t => t && t.type !== 'comma' && t.type !== 'kwSet') : u),
+                  d => d.map(u => u && u.length ? u.map(v => v.length ? v.filter(t => t && t.type !== 'comma' && t.type !== 'kwSet')[0] : v) : u),
+                  clearNull,
                 ) %}
-                # {% flag('definition') %}
-setDefinition   -> (%setIdentifier __ equal __ setExpression %comma __):* %setIdentifier __ equal __ setExpression
+setDefinition   -> %setIdentifier __ equal __ setExpression
                 {% 
                   pipe(
                     d => d.filter(t => !!t && t.length !== 0),
                     d => d.map(t => t.type === 'setIdentifier' ? { setIdentifier: t.toString() } : t),
-                    d => d.map(t => t && t.length && t[0].hasOwnProperty('setExpression') ? t[0] : t)
+                    d => d.map(t => t && t.length && t[0].hasOwnProperty('setExpression') ? t[0] : t),
                   )    
                 %}
 setExpression   -> %openSquareBracket _ phoneList _ %closeSquareBracket
                 {% 
                   pipe(
-                    d => d.filter(t => t && t.length), 
-                    d => d.map(t => t.map(u => u[0])), 
+                    // filters commas and whitespace
+                    d => d.filter(t => t && t.length),
+                    d => d.map(t => t.map(u => u[0])),
                     flag('setExpression') 
                   ) %}
 phoneList       -> (%phone (%comma _):* ):*

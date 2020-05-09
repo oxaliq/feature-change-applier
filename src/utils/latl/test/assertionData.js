@@ -33,10 +33,9 @@ export const assertionData = {
     AST: {
       main: [
         {
-          set: {
-            setIdentifier: 'NASAL_PULMONIC_CONSONANTS',
-            setExpression: [ 'm̥', 'm', 'ɱ' ]
-          }
+          type: 'set', 
+          setIdentifier: 'NASAL_PULMONIC_CONSONANTS',
+          setExpression: [ 'm̥', 'm', 'ɱ' ]
         }
       ]
     }
@@ -161,17 +160,15 @@ set NASAL_PULMONIC_CONSONANTS               = [ m̥, m, ɱ, n̼, n̥, n, ɳ̊, �
     ],
     AST: {
       main: [
-        { 
-          set: [
-            {
-              setIdentifier: 'NASAL_PULMONIC_CONSONANTS',
-              items: [ 'm̥', 'm', 'ɱ', 'n̼', 'n̥', 'n', 'ɳ̊', 'ɳ', 'ɲ̊', 'ɲ', `ŋ`, ' ̊ŋ', 'ɴ' ]
-            },
-            {
-              setIdentifier: 'STOP_PULMONIC_CONSONANTS',
-              items: [ 'p', 'b', 'p̪', 'b̪', 't̼', 'd̼', 't', 'd', 'ʈ', 'ɖ', 'c', 'ɟ', 'k', 'ɡ', 'q', 'ɢ', 'ʡ', 'ʔ' ]
-            }
-          ]
+        {
+          type: 'set',
+          setIdentifier: 'NASAL_PULMONIC_CONSONANTS',
+          setExpression: [ 'm̥', 'm', 'ɱ', 'n̼', 'n̥', 'n', 'ɳ̊', 'ɳ', 'ɲ̊', 'ɲ', 'ŋ', '̊ŋ', 'ɴ' ]
+        },
+        {
+          type: 'set',
+          setIdentifier: 'STOP_PULMONIC_CONSONANTS',
+          setExpression: [ 'p', 'b', 'p̪', 'b̪', 't̼', 'd̼', 't', 'd', 'ʈ', 'ɖ', 'c', 'ɟ', 'k', 'ɡ', 'q', 'ɢ', 'ʡ', 'ʔ' ]
         }
       ]
     }
