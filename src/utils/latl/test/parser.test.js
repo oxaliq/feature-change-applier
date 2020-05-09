@@ -10,6 +10,13 @@ describe('parser', () => {
     expect(feedResults[0]).toStrictEqual(AST)
   })
 
+  it('parses simple set definition', () => {
+    const { latl, AST } = assertionData.simpleSetDefinition;
+    const feedResults = parser().feed(latl).results;
+    expect(feedResults.length).toBe(1);
+    expect(feedResults[0]).toStrictEqual(AST);
+  })
+
   it('parses multiple set definitions with comma operator', () => {
     const { latl, AST } = assertionData.commaSetDefinition;
     const feedResults = parser().feed(latl).results;
@@ -17,35 +24,45 @@ describe('parser', () => {
     expect(feedResults[0]).toStrictEqual(AST);
   });
 
-  // it('lexes set definition with alias', () => {
+  it.todo('lexes set definition with alias'
+  // , () => {
   //   const { latl, tokens } = assertionData.setAliasDefinition;
   //   const stream           = getStream(latl);
   //   expect(stream).toStrictEqual(tokens);
-  // });
+  // }
+  );
 
-  // it('lexes set definition with set join', () => {
+  it.todo('lexes set definition with set join'
+  // , () => {
   //   const { latl, tokens } = assertionData.setDefinitionJoin;
   //   const stream           = getStream(latl);
   //   expect(stream).toStrictEqual(tokens);
-  // });
+  // }
+  );
 
-  // it('lexes set definition with yield operation', () => {
+  it.todo('lexes set definition with yield operation'
+  // , () => {
   //   const { latl, tokens } = assertionData.setDefinitionYield;
   //   const stream           = getStream(latl);
   //   expect(stream).toStrictEqual(tokens);
-  // });
+  // }
+  );
 
-  // it('lexes all set join operations', () => {
+  it.todo('lexes all set join operations'
+  // , () => {
   //   const { latl, tokens } = assertionData.setOperationsJoin;
   //   const stream           = getStream(latl);
   //   expect(stream).toStrictEqual(tokens);
-  // });
+  // }
+  );
 
-  // it('lexes set filter, concat, and dissoc operations', () => {
+  it.todo('lexes set filter, concat, and dissoc operations'
+  // , () => {
   //   const { latl, tokens } = assertionData.setOperations;
   //   const stream           = getStream(latl);
   //   expect(stream).toStrictEqual(tokens);
-  // })
+  // }
+  )
 })
 
 // {

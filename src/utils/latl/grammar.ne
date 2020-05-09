@@ -13,6 +13,7 @@
     return acc;
   }, []);
   const pipe = (...funcs) => d => funcs.reduce((acc, func) => func(acc), d);
+  const objFromArr = d => d.reduce((obj, item) => ({ ...obj, ...item }), {});
 %}
 
 @lexer lexer
@@ -23,7 +24,7 @@ main            -> (_ statement):* _
     clearNull,
     flag('main'), 
     getTerminal,
-    ) %}
+  ) %}
 
 _               -> (%whiteSpace):? 
   {% remove %}
@@ -31,26 +32,41 @@ _               -> (%whiteSpace):?
 __              -> %whiteSpace 
   {% remove %}
 
+equal           -> %equal
+  {% remove %}
+
 statement       -> comment | definition
-  {% pipe(getTerminal) %}
+  {% pipe(
+    objFromArr
+  ) %}
 
 comment         -> %comment 
   {% pipe(getTerminal, remove) %}
 
 # SETS
 definition      -> %kwSet __ setDefinition 
-                {% d => ({[d[0].value]: d[2]}) %}
-setDefinition   -> (%setIdentifier __ %equal __ setExpression %comma __):* %setIdentifier __ %equal __ setExpression
-                {% d => {
-                  if (d.type === 'setIdentifier') return { setIdentifier: d.value }
-                  return d
-                } %}
+                {% pipe(
+                  d => ({[d[0].value]: objFromArr(d[2]) }),
+                ) %}
+                # {% flag('definition') %}
+setDefinition   -> (%setIdentifier __ equal __ setExpression %comma __):* %setIdentifier __ equal __ setExpression
+                {% 
+                  pipe(
+                    d => d.filter(t => !!t && t.length !== 0),
+                    d => d.map(t => t.type === 'setIdentifier' ? { setIdentifier: t.toString() } : t),
+                    d => d.map(t => t && t.length && t[0].hasOwnProperty('setExpression') ? t[0] : t)
+                  )    
+                %}
 setExpression   -> %openSquareBracket _ phoneList _ %closeSquareBracket
-                # {% pipe(d => d.filter(t => t && t.length)) %}
-phoneList       -> (%phone %comma _):* %phone
-                {% pipe(d => d ? d.toString() : d) %}
-  # {% d => d.filter(t => t && (t.type === 'phone' || t[0]) )
-  # .flatMap(t => {
-  #   if (!t.length) return t;
-  #   return t[0].filter(st => st && st.type === 'phone')
-  # }) %}
+                {% 
+                  pipe(
+                    d => d.filter(t => t && t.length), 
+                    d => d.map(t => t.map(u => u[0])), 
+                    flag('setExpression') 
+                  ) %}
+phoneList       -> (%phone (%comma _):* ):*
+                {% 
+                  pipe(
+                    d => d ? d[0].map(t => t.filter(u => u.type === 'phone').map(u => u.toString())) : d
+                  )
+                %}

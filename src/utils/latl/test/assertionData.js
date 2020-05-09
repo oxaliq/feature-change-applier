@@ -10,12 +10,37 @@ export const assertionData = {
     code: ''
   },
   simpleSetDefinition: {
-    latl: `set PLOSIVES`,
+    latl: `set NASAL_PULMONIC_CONSONANTS = [ m̥, m, ɱ ]`,
     tokens: [
       { type: 'kwSet', value: 'set' }, 
       { type: 'whiteSpace', value: ' ' }, 
-      { type: 'setIdentifier', value: 'PLOSIVES' }
+      { type: 'setIdentifier', value: "NASAL_PULMONIC_CONSONANTS" }, 
+      { type: "whiteSpace", value: " ", }, 
+      { type: "equal", value: "=", }, 
+      { type: "whiteSpace", value: " ", }, 
+      { type: "openSquareBracket", value: "[", }, 
+      { type: "whiteSpace", value: " ", }, 
+      { type: "phone", value: "m̥", }, 
+      { type: "comma", value: ",", }, 
+      { type: "whiteSpace", value: " ", }, 
+      { type: "phone", value: "m", }, 
+      { type: "comma", value: ",", }, 
+      { type: "whiteSpace", value: " ", }, 
+      { type: "phone", value: "ɱ", }, 
+      { type: "whiteSpace", value: " ", }, 
+      { type: "closeSquareBracket", value: "]"}
     ],
+    AST: {
+      main: [
+        {
+          set: {
+            setIdentifier: 'NASAL_PULMONIC_CONSONANTS',
+            setExpression: [ 'm̥', 'm', 'ɱ' ]
+          }
+        }
+      ]
+    }
+    ,
     code: ''
   },
   commaSetDefinition: {
@@ -137,14 +162,16 @@ set NASAL_PULMONIC_CONSONANTS               = [ m̥, m, ɱ, n̼, n̥, n, ɳ̊, �
     AST: {
       main: [
         { 
-          set: {
-            setIdentifier: 'NASAL_PULMONIC_CONSONANTS',
-            items: [ 'm̥', 'm', 'ɱ', 'n̼', 'n̥', 'n', 'ɳ̊', 'ɳ', 'ɲ̊', 'ɲ', `ŋ`, ' ̊ŋ', 'ɴ' ]
-          },
-          set: {
-            setIdentifier: 'STOP_PULMONIC_CONSONANTS',
-            items: [ 'p', 'b', 'p̪', 'b̪', 't̼', 'd̼', 't', 'd', 'ʈ', 'ɖ', 'c', 'ɟ', 'k', 'ɡ', 'q', 'ɢ', 'ʡ', 'ʔ' ]
-          }
+          set: [
+            {
+              setIdentifier: 'NASAL_PULMONIC_CONSONANTS',
+              items: [ 'm̥', 'm', 'ɱ', 'n̼', 'n̥', 'n', 'ɳ̊', 'ɳ', 'ɲ̊', 'ɲ', `ŋ`, ' ̊ŋ', 'ɴ' ]
+            },
+            {
+              setIdentifier: 'STOP_PULMONIC_CONSONANTS',
+              items: [ 'p', 'b', 'p̪', 'b̪', 't̼', 'd̼', 't', 'd', 'ʈ', 'ɖ', 'c', 'ɟ', 'k', 'ɡ', 'q', 'ɢ', 'ʡ', 'ʔ' ]
+            }
+          ]
         }
       ]
     }
