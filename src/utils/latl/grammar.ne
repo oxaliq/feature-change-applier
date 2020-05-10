@@ -59,14 +59,26 @@ definition      -> %kwSet __ (setDefinition %comma __):* setDefinition
                   d => d.map(u => u && u.length ? u.map(v => v.length ? v.filter(t => t && t.type !== 'comma' && t.type !== 'kwSet')[0] : v) : u),
                   clearNull,
                 ) %}
-setDefinition   -> %setIdentifier __ equal __ setExpression
+setDefinition   -> %setIdentifier (setAlias):? __ equal __ setExpression
                 {% 
                   pipe(
                     d => d.filter(t => !!t && t.length !== 0),
+                    d => d.map(u => u && u.length ? u.map(t => t && t.length ? t.filter(v => v && v.type !== 'comma') : t) : u),
                     d => d.map(t => t.type === 'setIdentifier' ? { setIdentifier: t.toString() } : t),
                     d => d.map(t => t && t.length && t[0].hasOwnProperty('setExpression') ? t[0] : t),
+                    d => d.map(t => t.length ?
+                      // pretty ugly ([ { type: 'aias', alias: [ string ] }] ) => { setAlias: str }
+                      { setAlias: t.reduce((aliases, token) => token.type === 'alias' ? [...aliases, ...token.alias] : aliases, [])[0] }
+                    : t),
                   )    
                 %}
+setAlias        -> %comma _ %setIdentifier
+                {% pipe(
+                  d => d && d.length ? d.filter(t => !!t) : d,
+                  d => d.map(t => t.type === 'setIdentifier' ? t.toString() : null),
+                  d => d.filter(t => !!t),
+                  d => ({type: 'alias', alias: d }),
+                ) %}
 setExpression   -> %openSquareBracket _ phoneList _ %closeSquareBracket
                 {% 
                   pipe(

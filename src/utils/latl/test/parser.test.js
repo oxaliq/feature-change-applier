@@ -24,12 +24,12 @@ describe('parser', () => {
     expect(feedResults[0]).toStrictEqual(AST);
   });
 
-  it.todo('lexes set definition with alias'
-  // , () => {
-  //   const { latl, tokens } = assertionData.setAliasDefinition;
-  //   const stream           = getStream(latl);
-  //   expect(stream).toStrictEqual(tokens);
-  // }
+  it('lexes set definition with alias'
+  , () => {
+    const { latl, AST } = assertionData.setAliasDefinition;
+    const feedResults = parser().feed(latl).results;
+    expect(feedResults[0]).toStrictEqual(AST);
+  }
   );
 
   it.todo('lexes set definition with set join'

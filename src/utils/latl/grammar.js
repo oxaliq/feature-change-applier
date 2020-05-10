@@ -58,13 +58,27 @@ var grammar = {
           d => d.map(u => u && u.length ? u.map(v => v.length ? v.filter(t => t && t.type !== 'comma' && t.type !== 'kwSet')[0] : v) : u),
           clearNull,
         ) },
-    {"name": "setDefinition", "symbols": [(lexer.has("setIdentifier") ? {type: "setIdentifier"} : setIdentifier), "__", "equal", "__", "setExpression"], "postprocess":  
+    {"name": "setDefinition$ebnf$1$subexpression$1", "symbols": ["setAlias"]},
+    {"name": "setDefinition$ebnf$1", "symbols": ["setDefinition$ebnf$1$subexpression$1"], "postprocess": id},
+    {"name": "setDefinition$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "setDefinition", "symbols": [(lexer.has("setIdentifier") ? {type: "setIdentifier"} : setIdentifier), "setDefinition$ebnf$1", "__", "equal", "__", "setExpression"], "postprocess":  
         pipe(
           d => d.filter(t => !!t && t.length !== 0),
+          d => d.map(u => u && u.length ? u.map(t => t && t.length ? t.filter(v => v && v.type !== 'comma') : t) : u),
           d => d.map(t => t.type === 'setIdentifier' ? { setIdentifier: t.toString() } : t),
           d => d.map(t => t && t.length && t[0].hasOwnProperty('setExpression') ? t[0] : t),
+          d => d.map(t => t.length ?
+            // pretty ugly ([ { type: 'aias', alias: [ string ] }] ) => { setAlias: str }
+            { setAlias: t.reduce((aliases, token) => token.type === 'alias' ? [...aliases, ...token.alias] : aliases, [])[0] }
+          : t),
         )    
                         },
+    {"name": "setAlias", "symbols": [(lexer.has("comma") ? {type: "comma"} : comma), "_", (lexer.has("setIdentifier") ? {type: "setIdentifier"} : setIdentifier)], "postprocess":  pipe(
+          d => d && d.length ? d.filter(t => !!t) : d,
+          d => d.map(t => t.type === 'setIdentifier' ? t.toString() : null),
+          d => d.filter(t => !!t),
+          d => ({type: 'alias', alias: d }),
+        ) },
     {"name": "setExpression", "symbols": [(lexer.has("openSquareBracket") ? {type: "openSquareBracket"} : openSquareBracket), "_", "phoneList", "_", (lexer.has("closeSquareBracket") ? {type: "closeSquareBracket"} : closeSquareBracket)], "postprocess":  
         pipe(
           // filters commas and whitespace

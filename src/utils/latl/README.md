@@ -38,6 +38,13 @@ Sets are defined with the set keyword followed by an equal sign and a set expres
 ```
 set SHORT_VOWELS = [ a, i, u ]
 ```
+
+A single alias can be provided to the set during definition:
+```
+; the alias N can be used to refer to this set
+set NASAL_PULMONIC_CONSONANTS, N            = [ m, ɱ, n̼, n, ɳ, ɲ, ŋ, ɴ ]
+```
+
 Lists of sets can be defined using a comma followed by whitespace syntax
 ```
 set PLOSIVES = [ p, t, k ],

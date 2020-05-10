@@ -228,7 +228,17 @@ set NASAL_PULMONIC_CONSONANTS, N            = [ m̥, m, ɱ, n̼, n̥, n, ɳ̊, �
       { type: 'phone', value: 'ɴ' },
       { type: 'whiteSpace', value: ' ' },
       { type: 'closeSquareBracket', value: ']' },
-    ]
+    ],
+    AST: {
+      main: [
+        {
+          type: 'set',
+          setIdentifier: 'NASAL_PULMONIC_CONSONANTS',
+          setAlias: 'N',
+          setExpression: [ 'm̥', 'm', 'ɱ', 'n̼', 'n̥', 'n', 'ɳ̊', 'ɳ', 'ɲ̊', 'ɲ', 'ŋ', '̊ŋ', 'ɴ' ]
+        }
+      ]
+    }
   },
   setDefinitionJoin: {
     latl: `
