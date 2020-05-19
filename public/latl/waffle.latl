@@ -29,16 +29,16 @@
 
 ; -------- distinctive groups
 
-set PLOSIVES      [ p, pʰ, t, tʼ, tʰ, ɾ, kʼ, k, kʰ ]
-    AFFRICATES    [ tʃʰ, dʒ ]
-    FRICATIVES    [ f, v, θ, ð, s, z, ʃ, ʒ, ç, x ]
-    NASALS        [ m, ɱ, n, ŋ ]
-    LIQUIDS       [ l, ɹ, ɹʲ, ɹˤ ]
-    SYLLABICS     [ m̩, n̩, l̩, ɹ̩ ]
-    VOWELS        [ æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟ ]
-    GLIDES        [ j, w ]
-    LARYNGEALS    [ h, ɦ, ʔ ]
-    VOWELS        [ æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟ ]
+set PLOSIVES    = [ p, pʰ, t, tʼ, tʰ, ɾ, kʼ, k, kʰ ]
+    AFFRICATES  = [ tʃʰ, dʒ ]
+    FRICATIVES  = [ f, v, θ, ð, s, z, ʃ, ʒ, ç, x ]
+    NASALS      = [ m, ɱ, n, ŋ ]
+    LIQUIDS     = [ l, ɹ, ɹʲ, ɹˤ ]
+    SYLLABICS   = [ m̩, n̩, l̩, ɹ̩ ]
+    VOWELS      = [ æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟ ]
+    GLIDES      = [ j, w ]
+    LARYNGEALS  = [ h, ɦ, ʔ ]
+    VOWELS      = [ æ, e, ə, ɑ, ɔ, ɪ̞, ɛ, ʌ, ʊ̞, i, u̟ ]
 
 ; ---- implicit
 ; GLOBAL          { all sets }
