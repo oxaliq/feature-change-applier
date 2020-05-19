@@ -273,7 +273,51 @@ set CLICK_CONSONANTS  = { TENUIS_CLICK_CONSONANTS or VOICED_CLICK_CONSONANTS
       { type: 'newLine', value: '\n'}, 
       { type: 'whiteSpace', value: '                        '}, 
       { type: 'closeCurlyBracket', value: '}'}
-    ]
+    ],
+    AST: {
+      main: [
+        {
+          type: 'set',
+          setIdentifier: 'CLICK_CONSONANTS',
+          setExpression: [ 
+            { 
+              type: 'operator',
+              operator: 'or ', 
+              operands: [ 
+                { 
+                  type: 'identifier',
+                  identifier: 'TENUIS_CLICK_CONSONANTS' 
+                }, 
+                {
+                  type: 'operator',
+                  operator: 'or',
+                  operands: [
+                    { 
+                      type: 'identifier',
+                      identifier: 'VOICED_CLICK_CONSONANTS' 
+                    }, 
+                    {
+                      type: 'operator',
+                      operator: 'or',
+                      operands: [
+                        { 
+                          type: 'identifier',
+                          identifier: 'NASAL_CLICK_CONSONANTS' 
+                        }, 
+                        {
+                          type: 'identifier',
+                          operands: 'L_CLICK_CONSONANTS'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
   },
   setDefinitionYield: {
     latl: `

@@ -32,12 +32,11 @@ describe('parser', () => {
   }
   );
 
-  it.todo('lexes set definition with set join'
-  // , () => {
-  //   const { latl, tokens } = assertionData.setDefinitionJoin;
-  //   const stream           = getStream(latl);
-  //   expect(stream).toStrictEqual(tokens);
-  // }
+  it('lexes set definition with set join', () => {
+    const { latl, AST } = assertionData.setDefinitionJoin;
+    const feedResults = parser().feed(latl).results;
+    expect(feedResults[0]).toStrictEqual(AST);
+  }
   );
 
   it.todo('lexes set definition with yield operation'
