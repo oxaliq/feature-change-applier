@@ -85,23 +85,22 @@ const lexer = moo.states({
     closeCurlyBracket:    { match: /\}/, pop: true },
     // ! restrict identifiers
     keyword:              { match: ['not', 'and', 'or', 'nor', 'in', 'yield', 'concat', 'dissoc'], type: moo.keywords({
-      'kw-set-not':       'not' ,
-      'kw-set-and':       'and' ,
-      'kw-set-or':        'or' ,
-      'kw-set-nor':       'nor' ,
-      'kw-set-in':        'in' ,
-      'kw-set-yield':     'yield' ,
-      'kw-set-concat':    'concat',
-      'kw-set-dissoc':    'dissoc'
+      'kwSetNot':       'not' ,
+      'kwSetAnd':       'and' ,
+      'kwSetOr':        'or' ,
+      'kwSetNor':       'nor' ,
+      'kwSetIn':        'in' ,
+      'kwSetYield':     'yield' ,
+      'kwSetConcat':    'concat',
+      'kwSetDissoc':    'dissoc'
       })
     },
     identifier:           /[A-Z]+[A-Z_]+/,
-    whiteSpace:           /[\t ]+/,
+    whiteSpace:           { match: /\s+/, lineBreaks: true },
     openSquareBracket:    /\]/,
     closeSquareBracket:   /\[/,
     identifier:           /[A-Z]+[A-Z_]*/,
     phone:                /[\u00c0-\u03FFa-z]+/,
-    newLine:              { match: /\n/, lineBreaks: true }
   },
   
   commaOperation: {

@@ -69,7 +69,7 @@ var grammar = {
           d => d.map(t => t && t.length && t[0].hasOwnProperty('setExpression') ? t[0] : t),
           d => d.map(t => t.length ?
             // pretty ugly ([ { type: 'aias', alias: [ string ] }] ) => { setAlias: str }
-            { setAlias: t.reduce((aliases, token) => token.type === 'alias' ? [...aliases, ...token.alias] : aliases, [])[0] }
+            { setAlias: t.reduce((aliases, token) => token && token.type === 'alias' ? [...aliases, ...token.alias] : aliases, [])[0] }
           : t),
         )    
                         },
@@ -79,7 +79,11 @@ var grammar = {
           d => d.filter(t => !!t),
           d => ({type: 'alias', alias: d }),
         ) },
-    {"name": "setExpression", "symbols": [(lexer.has("openSquareBracket") ? {type: "openSquareBracket"} : openSquareBracket), "_", "phoneList", "_", (lexer.has("closeSquareBracket") ? {type: "closeSquareBracket"} : closeSquareBracket)], "postprocess":  
+    {"name": "setExpression", "symbols": [(lexer.has("openSquareBracket") ? {type: "openSquareBracket"} : openSquareBracket), "_", "phoneList", "_", (lexer.has("closeSquareBracket") ? {type: "closeSquareBracket"} : closeSquareBracket)]},
+    {"name": "setExpression$ebnf$1$subexpression$1", "symbols": ["setOperation"]},
+    {"name": "setExpression$ebnf$1", "symbols": ["setExpression$ebnf$1$subexpression$1"], "postprocess": id},
+    {"name": "setExpression$ebnf$1", "symbols": [], "postprocess": function(d) {return null;}},
+    {"name": "setExpression", "symbols": [(lexer.has("openCurlyBracket") ? {type: "openCurlyBracket"} : openCurlyBracket), "_", "setExpression$ebnf$1", "_", (lexer.has("closeCurlyBracket") ? {type: "closeCurlyBracket"} : closeCurlyBracket)], "postprocess":  
         pipe(
           // filters commas and whitespace
           d => d.filter(t => t && t.length),
@@ -96,7 +100,15 @@ var grammar = {
         pipe(
           d => d ? d[0].map(t => t.filter(u => u.type === 'phone').map(u => u.toString())) : d
         )
-                        }
+                        },
+    {"name": "setOperation", "symbols": ["orOperation"]},
+    {"name": "setOperation", "symbols": [(lexer.has("identifier") ? {type: "identifier"} : identifier)], "postprocess":  pipe(
+          d => d.type ? d : ({ identifier: d.toString(), type: 'identifier' })
+        )},
+    {"name": "orOperation", "symbols": ["_", "setOperation", "__", (lexer.has("kwSetOr") ? {type: "kwSetOr"} : kwSetOr), "__", "setOperation", "_"], "postprocess":  pipe(
+          d => d.filter(d => !!d),
+          d => ({ type: 'operator', operator: 'or', operands: [ d[0], d[2] ] }),
+        ) }
 ]
   , ParserStart: "main"
 }

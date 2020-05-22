@@ -36,8 +36,7 @@ describe('parser', () => {
     const { latl, AST } = assertionData.setDefinitionJoin;
     const feedResults = parser().feed(latl).results;
     expect(feedResults[0]).toStrictEqual(AST);
-  }
-  );
+  });
 
   it.todo('lexes set definition with yield operation'
   // , () => {

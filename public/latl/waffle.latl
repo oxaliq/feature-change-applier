@@ -48,6 +48,8 @@ set PLOSIVES    = [ p, pʰ, t, tʼ, tʰ, ɾ, kʼ, k, kʰ ]
 ; { SET_A and SET_B }   inner join
 ; { SET_A or SET_B }    full outer join
 ; { not SET_A }             = { GLOBAL not SET_A }
+
+; ---- unnecessary sugar
 ; { not SET_A nor SET_B }   = { GLOBAL not { SET_A or SET_B } }
 
 ; ---- set character operations - non-mutable!

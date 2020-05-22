@@ -68,7 +68,7 @@ setDefinition   -> %setIdentifier (setAlias):? __ equal __ setExpression
                     d => d.map(t => t && t.length && t[0].hasOwnProperty('setExpression') ? t[0] : t),
                     d => d.map(t => t.length ?
                       // pretty ugly ([ { type: 'aias', alias: [ string ] }] ) => { setAlias: str }
-                      { setAlias: t.reduce((aliases, token) => token.type === 'alias' ? [...aliases, ...token.alias] : aliases, [])[0] }
+                      { setAlias: t.reduce((aliases, token) => token && token.type === 'alias' ? [...aliases, ...token.alias] : aliases, [])[0] }
                     : t),
                   )    
                 %}
@@ -80,6 +80,7 @@ setAlias        -> %comma _ %setIdentifier
                   d => ({type: 'alias', alias: d }),
                 ) %}
 setExpression   -> %openSquareBracket _ phoneList _ %closeSquareBracket
+                | %openCurlyBracket _ (setOperation):? _ %closeCurlyBracket
                 {% 
                   pipe(
                     // filters commas and whitespace
@@ -93,3 +94,14 @@ phoneList       -> (%phone (%comma _):* ):*
                     d => d ? d[0].map(t => t.filter(u => u.type === 'phone').map(u => u.toString())) : d
                   )
                 %}
+setOperation    -> orOperation 
+                |  %identifier
+                {% pipe(
+                  d => d.type ? d : ({ identifier: d.toString(), type: 'identifier' })
+                )%}
+
+orOperation     -> _ setOperation __ %kwSetOr __ setOperation _
+                {% pipe(
+                  d => d.filter(d => !!d),
+                  d => ({ type: 'operator', operator: 'or', operands: [ d[0], d[2] ] }),
+                ) %}
