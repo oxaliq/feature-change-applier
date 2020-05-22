@@ -73,12 +73,6 @@ var grammar = {
           : t),
         )    
                         },
-    {"name": "setAlias", "symbols": [(lexer.has("comma") ? {type: "comma"} : comma), "_", (lexer.has("setIdentifier") ? {type: "setIdentifier"} : setIdentifier)], "postprocess":  pipe(
-          d => d && d.length ? d.filter(t => !!t) : d,
-          d => d.map(t => t.type === 'setIdentifier' ? t.toString() : null),
-          d => d.filter(t => !!t),
-          d => ({type: 'alias', alias: d }),
-        ) },
     {"name": "setExpression", "symbols": [(lexer.has("openSquareBracket") ? {type: "openSquareBracket"} : openSquareBracket), "_", "phoneList", "_", (lexer.has("closeSquareBracket") ? {type: "closeSquareBracket"} : closeSquareBracket)]},
     {"name": "setExpression$ebnf$1$subexpression$1", "symbols": ["setOperation"]},
     {"name": "setExpression$ebnf$1", "symbols": ["setExpression$ebnf$1$subexpression$1"], "postprocess": id},
@@ -89,6 +83,12 @@ var grammar = {
           d => d.filter(t => t && t.length),
           d => d.map(t => t.map(u => u[0])),
           flag('setExpression') 
+        ) },
+    {"name": "setAlias", "symbols": [(lexer.has("comma") ? {type: "comma"} : comma), "_", (lexer.has("setIdentifier") ? {type: "setIdentifier"} : setIdentifier)], "postprocess":  pipe(
+          d => d && d.length ? d.filter(t => !!t) : d,
+          d => d.map(t => t.type === 'setIdentifier' ? t.toString() : null),
+          d => d.filter(t => !!t),
+          d => ({type: 'alias', alias: d }),
         ) },
     {"name": "phoneList$ebnf$1", "symbols": []},
     {"name": "phoneList$ebnf$1$subexpression$1$ebnf$1", "symbols": []},

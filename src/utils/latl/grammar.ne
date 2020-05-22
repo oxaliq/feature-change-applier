@@ -72,13 +72,6 @@ setDefinition   -> %setIdentifier (setAlias):? __ equal __ setExpression
                     : t),
                   )    
                 %}
-setAlias        -> %comma _ %setIdentifier
-                {% pipe(
-                  d => d && d.length ? d.filter(t => !!t) : d,
-                  d => d.map(t => t.type === 'setIdentifier' ? t.toString() : null),
-                  d => d.filter(t => !!t),
-                  d => ({type: 'alias', alias: d }),
-                ) %}
 setExpression   -> %openSquareBracket _ phoneList _ %closeSquareBracket
                 | %openCurlyBracket _ (setOperation):? _ %closeCurlyBracket
                 {% 
@@ -88,6 +81,15 @@ setExpression   -> %openSquareBracket _ phoneList _ %closeSquareBracket
                     d => d.map(t => t.map(u => u[0])),
                     flag('setExpression') 
                   ) %}
+
+setAlias        -> %comma _ %setIdentifier
+                {% pipe(
+                  d => d && d.length ? d.filter(t => !!t) : d,
+                  d => d.map(t => t.type === 'setIdentifier' ? t.toString() : null),
+                  d => d.filter(t => !!t),
+                  d => ({type: 'alias', alias: d }),
+                ) %}
+
 phoneList       -> (%phone (%comma _):* ):*
                 {% 
                   pipe(
